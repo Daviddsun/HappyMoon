@@ -14,6 +14,7 @@
 #include "Bluetooth.h"
 #include "Usart1toOdroid.h"
 #include "Sensor.h"
+#include "UsbDriver.h"
 
 void Board_Init(void);
 

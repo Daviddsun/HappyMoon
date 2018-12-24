@@ -25,12 +25,14 @@ void Board_Init(void){
 	SPI1_Configuration();
 	// pwm定时器初始化用于电调信号 500hz频率
 	PWM_Init(); 
-	// Odroid通信口打开 用于与高性能板载ARM或板载PC通信 波特率230400
+	// 用于与高性能板载ARM或板载PC通信 波特率230400
 	Usart1toOdroid_Init(230400); 
 	// 蓝牙串口打开，用于与地面站通信
 	Bluetooth_Init();
 	// GPIO初始化 一些通用GPIO口可以在这里配置
 	GeneralGpio_Init(); 	
+	//USB转串口初始化
+  Usb_Init();
 }
 
 

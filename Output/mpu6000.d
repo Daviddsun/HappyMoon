@@ -3,7 +3,7 @@
 ..\output\mpu6000.o: ..\Hardware\SPI\SPI1.h
 ..\output\mpu6000.o: ..\Core\stm32f4xx.h
 ..\output\mpu6000.o: ..\Core\core_cm4.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\mpu6000.o: ..\Core\core_cmInstr.h
 ..\output\mpu6000.o: ..\Core\core_cmFunc.h
 ..\output\mpu6000.o: ..\Core\core_cm4_simd.h
@@ -23,7 +23,7 @@
 ..\output\mpu6000.o: ..\System\explore_systick.h
 ..\output\mpu6000.o: ..\System\explore_system.h
 ..\output\mpu6000.o: ..\Parameter\DronePara.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 ..\output\mpu6000.o: ..\User\Task.h
 ..\output\mpu6000.o: ..\uCOS-III\Config\os_app_hooks.h
 ..\output\mpu6000.o: ..\uCOS-III\Core\os.h
@@ -41,12 +41,12 @@
 ..\output\mpu6000.o: ..\uCOS-III\Core\os_type.h
 ..\output\mpu6000.o: ..\uCOS-III\Port\os_cpu.h
 ..\output\mpu6000.o: ..\uCOS-III\Config\includes.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
-..\output\mpu6000.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+..\output\mpu6000.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\mpu6000.o: ..\uCOS-III\Lib\lib_math.h
 ..\output\mpu6000.o: ..\uCOS-III\Config\app_cfg.h
 ..\output\mpu6000.o: ..\uCOS-III\Bsp\bsp.h

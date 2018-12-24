@@ -2,7 +2,7 @@
 ..\output\adc_battery.o: ..\Hardware\ADC_BATTERY\Adc_Battery.h
 ..\output\adc_battery.o: ..\Core\stm32f4xx.h
 ..\output\adc_battery.o: ..\Core\core_cm4.h
-..\output\adc_battery.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\adc_battery.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\adc_battery.o: ..\Core\core_cmInstr.h
 ..\output\adc_battery.o: ..\Core\core_cmFunc.h
 ..\output\adc_battery.o: ..\Core\core_cm4_simd.h

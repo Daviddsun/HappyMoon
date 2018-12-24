@@ -2,7 +2,7 @@
 ..\output\spi1.o: ..\Hardware\SPI\SPI1.h
 ..\output\spi1.o: ..\Core\stm32f4xx.h
 ..\output\spi1.o: ..\Core\core_cm4.h
-..\output\spi1.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\spi1.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\spi1.o: ..\Core\core_cmInstr.h
 ..\output\spi1.o: ..\Core\core_cmFunc.h
 ..\output\spi1.o: ..\Core\core_cm4_simd.h

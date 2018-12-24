@@ -4,7 +4,7 @@
 ..\output\sensor.o: ..\Hardware\SPI\SPI1.h
 ..\output\sensor.o: ..\Core\stm32f4xx.h
 ..\output\sensor.o: ..\Core\core_cm4.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\sensor.o: ..\Core\core_cmInstr.h
 ..\output\sensor.o: ..\Core\core_cmFunc.h
 ..\output\sensor.o: ..\Core\core_cm4_simd.h
@@ -24,7 +24,7 @@
 ..\output\sensor.o: ..\System\explore_systick.h
 ..\output\sensor.o: ..\System\explore_system.h
 ..\output\sensor.o: ..\Parameter\DronePara.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 ..\output\sensor.o: ..\User\Task.h
 ..\output\sensor.o: ..\uCOS-III\Config\os_app_hooks.h
 ..\output\sensor.o: ..\uCOS-III\Core\os.h
@@ -42,12 +42,12 @@
 ..\output\sensor.o: ..\uCOS-III\Core\os_type.h
 ..\output\sensor.o: ..\uCOS-III\Port\os_cpu.h
 ..\output\sensor.o: ..\uCOS-III\Config\includes.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
-..\output\sensor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+..\output\sensor.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\sensor.o: ..\uCOS-III\Lib\lib_math.h
 ..\output\sensor.o: ..\uCOS-III\Config\app_cfg.h
 ..\output\sensor.o: ..\uCOS-III\Bsp\bsp.h

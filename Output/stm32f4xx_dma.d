@@ -2,7 +2,7 @@
 ..\output\stm32f4xx_dma.o: ..\Libraries\inc\stm32f4xx_dma.h
 ..\output\stm32f4xx_dma.o: ..\Core\stm32f4xx.h
 ..\output\stm32f4xx_dma.o: ..\Core\core_cm4.h
-..\output\stm32f4xx_dma.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\stm32f4xx_dma.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\stm32f4xx_dma.o: ..\Core\core_cmInstr.h
 ..\output\stm32f4xx_dma.o: ..\Core\core_cmFunc.h
 ..\output\stm32f4xx_dma.o: ..\Core\core_cm4_simd.h

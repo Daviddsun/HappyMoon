@@ -54,6 +54,7 @@
 "..\output\bluetooth.o"
 "..\output\spi1.o"
 "..\output\usart1toodroid.o"
+"..\output\usbdriver.o"
 "..\output\attitude_control.o"
 "..\output\position_control.o"
 "..\output\pid_control.o"
@@ -70,6 +71,15 @@
 "..\output\mathtool.o"
 "..\output\sensor.o"
 "..\output\mpu6000.o"
+"..\output\usb_core.o"
+"..\output\usb_dcd.o"
+"..\output\usb_dcd_int.o"
+"..\output\usbd_core.o"
+"..\output\usbd_ioreq.o"
+"..\output\usbd_req.o"
+"..\output\usbd_cdc_core.o"
+"..\output\usb_bsp.o"
+"..\output\usbd_desc.o"
 --strict --scatter "..\Output\STM32F4.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

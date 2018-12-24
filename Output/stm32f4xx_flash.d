@@ -2,7 +2,7 @@
 ..\output\stm32f4xx_flash.o: ..\Libraries\inc\stm32f4xx_flash.h
 ..\output\stm32f4xx_flash.o: ..\Core\stm32f4xx.h
 ..\output\stm32f4xx_flash.o: ..\Core\core_cm4.h
-..\output\stm32f4xx_flash.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\stm32f4xx_flash.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\stm32f4xx_flash.o: ..\Core\core_cmInstr.h
 ..\output\stm32f4xx_flash.o: ..\Core\core_cmFunc.h
 ..\output\stm32f4xx_flash.o: ..\Core\core_cm4_simd.h

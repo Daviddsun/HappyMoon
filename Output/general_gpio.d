@@ -2,7 +2,7 @@
 ..\output\general_gpio.o: ..\Hardware\General_Gpio\General_Gpio.h
 ..\output\general_gpio.o: ..\Core\stm32f4xx.h
 ..\output\general_gpio.o: ..\Core\core_cm4.h
-..\output\general_gpio.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\general_gpio.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\general_gpio.o: ..\Core\core_cmInstr.h
 ..\output\general_gpio.o: ..\Core\core_cmFunc.h
 ..\output\general_gpio.o: ..\Core\core_cm4_simd.h

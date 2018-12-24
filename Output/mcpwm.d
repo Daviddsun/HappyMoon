@@ -2,7 +2,7 @@
 ..\output\mcpwm.o: ..\Hardware\MCPWM\mcpwm.h
 ..\output\mcpwm.o: ..\Core\stm32f4xx.h
 ..\output\mcpwm.o: ..\Core\core_cm4.h
-..\output\mcpwm.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\mcpwm.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\mcpwm.o: ..\Core\core_cmInstr.h
 ..\output\mcpwm.o: ..\Core\core_cmFunc.h
 ..\output\mcpwm.o: ..\Core\core_cm4_simd.h

@@ -10,7 +10,6 @@
       <TargetName>HappyMoon</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F405RGTx</Device>
@@ -125,6 +124,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>1</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>BIN\UL2CM3.DLL</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -189,7 +229,6 @@
             <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
-            <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
@@ -326,13 +365,11 @@
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
-            <vShortEn>1</vShortEn>
-            <vShortWch>1</vShortWch>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1, __FPU_USED =1, __CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Hardware\SPI;..\Hardware\IMU_AHRS;..\Libraries\CMSIS\Include;..\Parameter;..\Hardware\Flash;..\Hardware\MCPWM;..\Hardware\ADC_BATTERY;..\Hardware\General_Gpio;..\Hardware\Bluetooth;..\Hardware\USART_BLUETOOTH;..\Control\Attitude_control;..\Control\Position_control;..\Control\PID_control;..\Hardware\USART_Odroid;..\Sensor;..\Mymath</IncludePath>
+              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Hardware\SPI;..\Hardware\IMU_AHRS;..\Libraries\CMSIS\Include;..\Parameter;..\Hardware\Flash;..\Hardware\MCPWM;..\Hardware\ADC_BATTERY;..\Hardware\General_Gpio;..\Hardware\Bluetooth;..\Hardware\USART_BLUETOOTH;..\Control\Attitude_control;..\Control\Position_control;..\Control\PID_control;..\Hardware\USART_Odroid;..\Sensor;..\Mymath;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Hardware</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -750,6 +787,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\USART_Odroid\Usart1toOdroid.c</FilePath>
             </File>
+            <File>
+              <FileName>UsbDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\UsbDriver.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -854,6 +896,56 @@
               <FileName>MPU6000.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Sensor\MPU6000.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Usb</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_dcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_OTG_Driver\src\usb_dcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_dcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_OTG_Driver\src\usb_dcd_int.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_Device_Library\Core\src\usbd_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_Device_Library\Core\src\usbd_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_req.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_Device_Library\Core\src\usbd_req.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_cdc_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\src\usbd_cdc_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\usb_bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_desc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\USB\usbd_desc.c</FilePath>
             </File>
           </Files>
         </Group>

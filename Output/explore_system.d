@@ -2,7 +2,7 @@
 ..\output\explore_system.o: ..\System\explore_system.h
 ..\output\explore_system.o: ..\Core\stm32f4xx.h
 ..\output\explore_system.o: ..\Core\core_cm4.h
-..\output\explore_system.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\output\explore_system.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\explore_system.o: ..\Core\core_cmInstr.h
 ..\output\explore_system.o: ..\Core\core_cmFunc.h
 ..\output\explore_system.o: ..\Core\core_cm4_simd.h
