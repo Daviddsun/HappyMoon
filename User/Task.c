@@ -24,13 +24,13 @@ Quaternion quaternion;
 /**
  * @Description IMU本机解算
  */
-void IMU_task(void *p_arg)
+void AHRS_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
 	OffsetData.success = true;
 	while(1){
- 		IMU_getInfo();
+// 		IMU_getInfo();
 		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
@@ -167,21 +167,21 @@ void Battery_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
-	float Battery_Array[10];
+//	float Battery_Array[10];
 	while(1){
-		/* 电压读取 */
-		RT_Info.batteryVoltage = Average_Filter(Get_battery(),10,Battery_Array);
-		/* 电压低于14.8V不允许起飞 */
-		if(RT_Info.batteryVoltage<14.80f && (FlightControl.OnOff != Drone_On)){
-			RT_Info.lowPowerFlag = 1;
-		}
-		else{
-			/* 空中飞行时电压低于14.0V自动降落 */
-			if(RT_Info.batteryVoltage < 14.00f){
-				FlightControl.landFlag = 1;
-			}
-			RT_Info.lowPowerFlag = 0;
-		}
+//		/* 电压读取 */
+//		RT_Info.batteryVoltage = Average_Filter(Get_battery(),10,Battery_Array);
+//		/* 电压低于14.8V不允许起飞 */
+//		if(RT_Info.batteryVoltage<14.80f && (FlightControl.OnOff != Drone_On)){
+//			RT_Info.lowPowerFlag = 1;
+//		}
+//		else{
+//			/* 空中飞行时电压低于14.0V自动降落 */
+//			if(RT_Info.batteryVoltage < 14.00f){
+//				FlightControl.landFlag = 1;
+//			}
+//			RT_Info.lowPowerFlag = 0;
+//		}
 		OSTimeDlyHMSM(0,0,0,100,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }

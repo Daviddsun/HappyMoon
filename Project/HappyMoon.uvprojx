@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1, __FPU_USED =1, __CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Hardware\SPI;..\Hardware\IMU_AHRS;..\Libraries\CMSIS\Include;..\Parameter;..\Mymath\Limits;..\Hardware\Flash;..\Hardware\MCPWM;..\Hardware\ADC_BATTERY;..\Hardware\General_Gpio;..\Hardware\Bluetooth;..\Hardware\USART_BLUETOOTH;..\Mymath\Digital_filter;..\Mymath\SimpleDigitalFilter;..\Control\Attitude_control;..\Control\Position_control;..\Control\PID_control;..\Mymath\MahonyAHRS;..\Hardware\MPU6000;..\Hardware\USART_Odroid;..\Hardware\TIMER_Timing;..\Mymath\LevenbergMarquardt</IncludePath>
+              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Hardware\SPI;..\Hardware\IMU_AHRS;..\Libraries\CMSIS\Include;..\Parameter;..\Hardware\Flash;..\Hardware\MCPWM;..\Hardware\ADC_BATTERY;..\Hardware\General_Gpio;..\Hardware\Bluetooth;..\Hardware\USART_BLUETOOTH;..\Control\Attitude_control;..\Control\Position_control;..\Control\PID_control;..\Hardware\USART_Odroid;..\Sensor;..\Mymath</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -700,16 +700,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\Task.c</FilePath>
             </File>
+            <File>
+              <FileName>Board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Board.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Hardware</GroupName>
           <Files>
-            <File>
-              <FileName>IMU_AHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\IMU_AHRS\IMU_AHRS.c</FilePath>
-            </File>
             <File>
               <FileName>Flash.c</FileName>
               <FileType>1</FileType>
@@ -741,11 +741,6 @@
               <FilePath>..\Hardware\Bluetooth\Bluetooth.c</FilePath>
             </File>
             <File>
-              <FileName>MPU6000.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\MPU6000\MPU6000.c</FilePath>
-            </File>
-            <File>
               <FileName>SPI1.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\SPI\SPI1.c</FilePath>
@@ -754,11 +749,6 @@
               <FileName>Usart1toOdroid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\USART_Odroid\Usart1toOdroid.c</FilePath>
-            </File>
-            <File>
-              <FileName>Timer5_Timing.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\TIMER_Timing\Timer5_Timing.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -783,7 +773,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Parameter</GroupName>
+          <GroupName>Message</GroupName>
           <Files>
             <File>
               <FileName>DronePara.h</FileName>
@@ -821,29 +811,49 @@
           <GroupName>Mymath</GroupName>
           <Files>
             <File>
-              <FileName>Limits.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\Limits\Limits.c</FilePath>
-            </File>
-            <File>
               <FileName>digital_filter.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Mymath\Digital_filter\digital_filter.c</FilePath>
-            </File>
-            <File>
-              <FileName>SimpleDigitalFiltering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\SimpleDigitalFilter\SimpleDigitalFiltering.c</FilePath>
-            </File>
-            <File>
-              <FileName>MahonyAHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\MahonyAHRS\MahonyAHRS.c</FilePath>
+              <FilePath>..\Mymath\digital_filter.c</FilePath>
             </File>
             <File>
               <FileName>LevenbergMarquardt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Mymath\LevenbergMarquardt\LevenbergMarquardt.c</FilePath>
+              <FilePath>..\Mymath\LevenbergMarquardt.c</FilePath>
+            </File>
+            <File>
+              <FileName>Limits.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\Limits.c</FilePath>
+            </File>
+            <File>
+              <FileName>MahonyAHRS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\MahonyAHRS.c</FilePath>
+            </File>
+            <File>
+              <FileName>Vector3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\Vector3.c</FilePath>
+            </File>
+            <File>
+              <FileName>MathTool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\MathTool.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Sensor</GroupName>
+          <Files>
+            <File>
+              <FileName>Sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Sensor\Sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6000.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Sensor\MPU6000.c</FilePath>
             </File>
           </Files>
         </Group>

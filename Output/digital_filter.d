@@ -1,5 +1,5 @@
-..\output\digital_filter.o: ..\Mymath\Digital_filter\digital_filter.c
-..\output\digital_filter.o: ..\Mymath\Digital_filter\digital_filter.h
+..\output\digital_filter.o: ..\Mymath\digital_filter.c
+..\output\digital_filter.o: ..\Mymath\digital_filter.h
 ..\output\digital_filter.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\output\digital_filter.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 ..\output\digital_filter.o: ..\Libraries\CMSIS\Include\arm_math.h

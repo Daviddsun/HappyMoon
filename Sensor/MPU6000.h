@@ -9,6 +9,24 @@
 #include "Task.h"
 #include "LevenbergMarquardt.h"
 
+#define MPU_LPF_256HZ       0
+#define MPU_LPF_188HZ       1
+#define MPU_LPF_98HZ        2
+#define MPU_LPF_42HZ        3
+#define MPU_LPF_20HZ        4
+#define MPU_LPF_10HZ        5
+#define MPU_LPF_5HZ         6
+
+#define MPU_A_2mg                ((float)0.00006103f)  //g/LSB
+#define MPU_A_4mg                ((float)0.00012207f)  //g/LSB
+#define MPU_A_8mg                ((float)0.00024414f)  //g/LSB
+#define MPU_A_16mg               ((float)0.00048828f)	 //g/LSB
+
+#define MPU_G_s250dps            ((float)0.0076296f)  //dps/LSB
+#define MPU_G_s500dps            ((float)0.0152592f)  //dps/LSB
+#define MPU_G_s1000dps           ((float)0.0305185f)  //dps/LSB
+#define MPU_G_s2000dps           ((float)0.0610370f)  //dps/LSB
+
 enum gyro_fsr_e {
     INV_FSR_250DPS = 0,
     INV_FSR_500DPS,
@@ -168,8 +186,8 @@ enum accel_fsr_e {
 #define MPU_RA_FIFO_R_W         0x74
 #define MPU_RA_WHO_AM_I         0x75
 
-void MPU6000_initialize(void);
-void MPU6000_initOffset(void);
+void MPU6000_Initialize(void);
+void MPU6000_InitOffset(void);
 void MPU6000_readGyro_Acc(int16_t *gyro,int16_t *acc);
 void IMU_getValues(void);
 void ImuOrientationDetect(float accx,float accy,float accz);

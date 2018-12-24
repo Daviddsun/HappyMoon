@@ -82,7 +82,7 @@ void Write_config(void)
 	STMFLASH_Write(0X080E0004,ptr,sizeof(flashData));
 }
 
-void Load_config(void){
+void Load_Config(void){
 	
 	u32 *ptr = &flashData.isGood;
 	STMFLASH_Read(0X080E0004,ptr,sizeof(flashData));

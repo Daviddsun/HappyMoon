@@ -15,7 +15,6 @@
 #include "Adc_Battery.h"
 #include "Usart3toBluetooth.h"
 #include "General_Gpio.h"
-#include "SimpleDigitalFiltering.h"
 #include "Attitude_control.h"
 #include "Position_control.h"
 #include "Data_Odroid.h"

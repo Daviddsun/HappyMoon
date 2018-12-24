@@ -1,10 +1,12 @@
-/******************* (C) COPYRIGHT 2015-20~~ YUEYU Tech ************************
- * 作者    ：HappyMoon
- * 文件名  ：main.c
- * 描述    ：主循环
- * 官网    ：https://yuyingjin0111.github.io/
+/******************* (C) COPYRIGHT 2015-20~~ HappyMoon **************************
+ * @文件     main.c
+ * @说明     程序入口
+ * @作者     YuyingJin
+ * @网站     https://yuyingjin0111.github.io/
+ * @日期     2018 ~
 *********************************************************************************/
-#include "Head_File.h"
+#include "Board.h"
+
 #define START_TASK_PRIO 3						                     // 任务优先级
 #define START_STK_SIZE 512						                   // 任务堆栈大小
 OS_TCB StartTaskTCB;							                       // 任务控制块
@@ -12,11 +14,11 @@ CPU_STK START_TASK_STK[START_STK_SIZE];					         // 任务堆栈
 void start_task(void *p_arg);						                 // 任务函数
 
 //IMU任务
-#define IMU_TASK_PRIO 4						
-#define IMU_STK_SIZE 512						
-OS_TCB IMUTaskTCB;				
-CPU_STK IMU_TASK_STK[IMU_STK_SIZE];					
-void IMU_task(void *p_arg);
+#define AHRS_TASK_PRIO 4						
+#define AHRS_STK_SIZE 512						
+OS_TCB AHRSTaskTCB;				
+CPU_STK AHRS_TASK_STK[AHRS_STK_SIZE];					
+void AHRS_task(void *p_arg);
 
 //姿态环任务
 #define Attitude_TASK_PRIO 5						
@@ -67,18 +69,12 @@ int main(void)
 {
 	OS_ERR err;
 	CPU_SR_ALLOC();
-	Systick_Init(168);								                       // 时钟初始化
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);			     // 中断分组配置
-	delay_ms(10000);                                         // 系统延时10s
-	Load_config();                                           // 配置用户信息
-	Timer5_Timinginit();                                     // 记录时间定时器
-	Adc_Batteryinit();                                       // 电池电压ADC初始化
-	SPI1_Configuration();  									                 // SPI1初始化
-	IMU_HardwareInit();                                      // IMU各个传感器寄存器配置
-	PWM_Init();                                              // pwm定时器初始化	 
-	Usart1toOdroid_Init(230400);								             // Odroid通信口打开
-	Bluetooth_init();                                        // 蓝牙串口
-	General_Gpioinit();											                 // GPIO初始化 
+	/** 飞控板各个硬件初始化 **/
+	Board_Init();
+	/** 飞控参数初始化 **/
+	Load_Config();
+	/** 各个传感器初始化 **/
+	Sensor_Init();
 	OSInit(&err);												                     // 初始化UCOSIII
 	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务
@@ -125,14 +121,14 @@ void start_task(void *p_arg)
 
 	OS_CRITICAL_ENTER();																// 进入临界区
 	OSTaskCreate(																				// 创建姿态IMU任务
-		(OS_TCB*)&IMUTaskTCB,
-		(CPU_CHAR*)"IMU task",
-		(OS_TASK_PTR )IMU_task,
+		(OS_TCB*)&AHRSTaskTCB,
+		(CPU_CHAR*)"AHRS task",
+		(OS_TASK_PTR )AHRS_task,
 		(void*)0,
-		(OS_PRIO)IMU_TASK_PRIO,
-		(CPU_STK*)&IMU_TASK_STK[0],
-		(CPU_STK_SIZE)IMU_STK_SIZE/10,
-		(CPU_STK_SIZE)IMU_STK_SIZE,
+		(OS_PRIO)AHRS_TASK_PRIO,
+		(CPU_STK*)&AHRS_TASK_STK[0],
+		(CPU_STK_SIZE)AHRS_STK_SIZE/10,
+		(CPU_STK_SIZE)AHRS_STK_SIZE,
 		(OS_MSG_QTY)0,
 		(OS_TICK)0,
 		(void*)0,

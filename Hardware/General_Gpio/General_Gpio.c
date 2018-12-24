@@ -1,5 +1,5 @@
 #include "General_Gpio.h"
-void General_Gpioinit(){
+void GeneralGpio_Init(){
 	GPIO_InitTypeDef GPIO_InitStructure;																					
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC, ENABLE);
 	

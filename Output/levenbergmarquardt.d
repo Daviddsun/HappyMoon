@@ -1,5 +1,5 @@
-..\output\levenbergmarquardt.o: ..\Mymath\LevenbergMarquardt\LevenbergMarquardt.c
-..\output\levenbergmarquardt.o: ..\Mymath\LevenbergMarquardt\LevenbergMarquardt.h
+..\output\levenbergmarquardt.o: ..\Mymath\LevenbergMarquardt.c
+..\output\levenbergmarquardt.o: ..\Mymath\LevenbergMarquardt.h
 ..\output\levenbergmarquardt.o: ..\Parameter\DronePara.h
 ..\output\levenbergmarquardt.o: ..\Core\stm32f4xx.h
 ..\output\levenbergmarquardt.o: ..\Core\core_cm4.h
@@ -22,3 +22,5 @@
 ..\output\levenbergmarquardt.o: ..\Libraries\inc\misc.h
 ..\output\levenbergmarquardt.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 ..\output\levenbergmarquardt.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+..\output\levenbergmarquardt.o: ..\Mymath\MathTool.h
+..\output\levenbergmarquardt.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h

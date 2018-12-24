@@ -56,14 +56,13 @@
 ..\output\position_control.o: ..\Hardware\USART_BLUETOOTH\Usart3toBluetooth.h
 ..\output\position_control.o: ..\Parameter\Data_deal.h
 ..\output\position_control.o: ..\Hardware\Flash\Flash.h
-..\output\position_control.o: ..\Hardware\MPU6000\MPU6000.h
+..\output\position_control.o: ..\Sensor\MPU6000.h
 ..\output\position_control.o: ..\Hardware\SPI\SPI1.h
-..\output\position_control.o: ..\Mymath\LevenbergMarquardt\LevenbergMarquardt.h
+..\output\position_control.o: ..\Mymath\LevenbergMarquardt.h
+..\output\position_control.o: ..\Mymath\MathTool.h
 ..\output\position_control.o: ..\Parameter\Visiondata_deal.h
-..\output\position_control.o: ..\Mymath\SimpleDigitalFilter\SimpleDigitalFiltering.h
 ..\output\position_control.o: ..\Libraries\CMSIS\Include\arm_math.h
 ..\output\position_control.o: ..\Libraries\CMSIS\Include\core_cm4.h
-..\output\position_control.o: ..\Hardware\TIMER_Timing\Timer5_Timing.h
 ..\output\position_control.o: ..\Hardware\ADC_BATTERY\Adc_Battery.h
 ..\output\position_control.o: ..\Hardware\General_Gpio\General_Gpio.h
 ..\output\position_control.o: ..\Control\Attitude_control\Attitude_control.h
@@ -71,4 +70,4 @@
 ..\output\position_control.o: ..\Parameter\Data_Odroid.h
 ..\output\position_control.o: ..\Hardware\USART_Odroid\Usart1toOdroid.h
 ..\output\position_control.o: ..\Control\PID_control\PID_control.h
-..\output\position_control.o: ..\Mymath\Limits\Limits.h
+..\output\position_control.o: ..\Mymath\Limits.h

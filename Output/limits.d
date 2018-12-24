@@ -1,5 +1,5 @@
-..\output\limits.o: ..\Mymath\Limits\Limits.c
-..\output\limits.o: ..\Mymath\Limits\Limits.h
+..\output\limits.o: ..\Mymath\Limits.c
+..\output\limits.o: ..\Mymath\Limits.h
 ..\output\limits.o: ..\Core\stm32f4xx.h
 ..\output\limits.o: ..\Core\core_cm4.h
 ..\output\limits.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h

@@ -1,5 +1,5 @@
-..\output\mahonyahrs.o: ..\Mymath\MahonyAHRS\MahonyAHRS.c
-..\output\mahonyahrs.o: ..\Mymath\MahonyAHRS\MahonyAHRS.h
+..\output\mahonyahrs.o: ..\Mymath\MahonyAHRS.c
+..\output\mahonyahrs.o: ..\Mymath\MahonyAHRS.h
 ..\output\mahonyahrs.o: ..\Libraries\CMSIS\Include\arm_math.h
 ..\output\mahonyahrs.o: ..\Libraries\CMSIS\Include\core_cm4.h
 ..\output\mahonyahrs.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h

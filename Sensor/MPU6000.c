@@ -1,13 +1,8 @@
 #include "MPU6000.h"
 
-#define mpu6000Buf_SIZE  10	  
-
-int16_t  MPU6000_FIFO[7][mpu6000Buf_SIZE];
-uint8_t MPU6000Wr_Index = 0;
 float MPU6000Gx_offset,MPU6000Gy_offset,MPU6000Gz_offset;
 enum ORIENTATION_STATUS orientationStatus;
 uint8_t placement;
-u8 testdata[2];
 
 /**********************************************************************************************************
 *函 数 名: GetImuOrientation
@@ -31,20 +26,6 @@ uint8_t GetPlaceStatus(void)
     return placement;
 }
 
-void MPU6000_NewVal(int16_t* buf,int16_t val) {
-  	buf[MPU6000Wr_Index] = val;
-}
-
-int16_t MPU6000_GetAvg(int16_t* buf)
-{
-  int i;
-	int32_t	sum = 0;
-	for(i=0;i<mpu6000Buf_SIZE;i++)
-		sum += buf[i];
-	sum = sum / mpu6000Buf_SIZE;
-	return (int16_t)sum;
-}
-
 void MPU6000_writeReg(u8 reg, u8 data)
 {
 	MPU6000_CSL();
@@ -53,32 +34,45 @@ void MPU6000_writeReg(u8 reg, u8 data)
 	MPU6000_CSH();	
 }
 
-void MPU6000_initialize(void)
+void MPU6000_Initialize(void)
 { 
-
-	MPU6000_writeReg(MPU_RA_PWR_MGMT_1,BIT_H_RESET); 			
-	delay_ms(150);
-	MPU6000_writeReg(MPU_RA_SIGNAL_PATH_RESET,BIT_GYRO | BIT_ACC | BIT_TEMP);
-	delay_ms(150);
 	
-	MPU6000_writeReg(MPU_RA_PWR_MGMT_1,MPU_CLK_SEL_PLLGYROZ); 		
+	MPU6000_writeReg(MPU_RA_PWR_MGMT_1, 0x80);
+	delay_ms(150);
+
+	MPU6000_writeReg(MPU_RA_SIGNAL_PATH_RESET, BIT_GYRO | BIT_ACC | BIT_TEMP);
+	delay_ms(150);
+
+	MPU6000_writeReg(MPU_RA_PWR_MGMT_1, 0x00);
 	delay_ms(15);
-	//Disable i2c 
-	MPU6000_writeReg(MPU_RA_USER_CTRL,BIT_I2C_IF_DIS); 		
+
+	MPU6000_writeReg(MPU_RA_USER_CTRL, 0x10);
 	delay_ms(15);
-	MPU6000_writeReg(MPU_RA_PWR_MGMT_2,0x00); 		
+
+	MPU6000_writeReg(MPU_RA_PWR_MGMT_2, 0x00);
 	delay_ms(15);
-	MPU6000_writeReg(MPU_RA_SMPLRT_DIV,0x00);			
+
+	//陀螺仪采样率0x00(1000Hz)   采样率 = 陀螺仪的输出率 / (1 + SMPLRT_DIV)
+	MPU6000_writeReg(MPU_RA_SMPLRT_DIV, (1000/1000 - 1));
 	delay_ms(15);
-	//DLPF enable
-	MPU6000_writeReg(MPU_RA_CONFIG,0x02);
+
+	//i2c旁路模式
+	// INT_PIN_CFG   -- INT_LEVEL_HIGH, INT_OPEN_DIS, LATCH_INT_DIS, INT_RD_CLEAR_DIS, FSYNC_INT_LEVEL_HIGH, FSYNC_INT_DIS, I2C_BYPASS_EN, CLOCK_DIS
+	MPU6000_writeReg(MPU_RA_INT_PIN_CFG, 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 1 << 1 | 0 << 0);
 	delay_ms(15);
-	//Gyro +/- 2000 DPS Full Scale
-	MPU6000_writeReg(MPU_RA_GYRO_CONFIG,INV_FSR_2000DPS << 3);  					
+
+	//低通滤波频率
+	MPU6000_writeReg(MPU_RA_CONFIG, MPU_LPF_42HZ);
 	delay_ms(15);
-	//Accel +/- 16 G Full Scale
-	MPU6000_writeReg(MPU_RA_ACCEL_CONFIG,INV_FSR_16G << 3); 			
+
+	//陀螺仪自检及测量范围，典型值0x18(不自检，2000deg/s) (0x10 1000deg/s) (0x10 1000deg/s) (0x08 500deg/s)
+	MPU6000_writeReg(MPU_RA_GYRO_CONFIG, 0x10);
 	delay_ms(15);
+
+	//加速度自检、测量范围(不自检，+-8G)
+	MPU6000_writeReg(MPU_RA_ACCEL_CONFIG, 2 << 3);
+
+	delay_ms(5);
 }
 
 void MPU6000_readGyro_Acc(int16_t *gyro,int16_t *acc)
@@ -90,34 +84,43 @@ void MPU6000_readGyro_Acc(int16_t *gyro,int16_t *acc)
 	SPI1_readRegs(MPU_RA_ACCEL_XOUT_H,14,buf);
 	MPU6000_CSH();
 	//acc
-	MPU6000_NewVal(&MPU6000_FIFO[0][0],(int16_t)(((int16_t)buf[0]) << 8 | buf[1]));
-	MPU6000_NewVal(&MPU6000_FIFO[1][0],(int16_t)(((int16_t)buf[2]) << 8 | buf[3]));
-	MPU6000_NewVal(&MPU6000_FIFO[2][0],(int16_t)(((int16_t)buf[4]) << 8 | buf[5]));
-	//temp
-//	MPU6000_NewVal(&MPU6000_FIFO[3][0],(int16_t)(((int16_t)buf[6]) << 8 | buf[7]));
+	ax = ((((int16_t)buf[0]) << 8) | buf[1]);
+	ay = ((((int16_t)buf[2]) << 8) | buf[3]);
+	az = ((((int16_t)buf[4]) << 8) | buf[5]);
 	//gyro
-	MPU6000_NewVal(&MPU6000_FIFO[4][0],(int16_t)(((int16_t)buf[8]) << 8 | buf[9]));
-	MPU6000_NewVal(&MPU6000_FIFO[5][0],(int16_t)(((int16_t)buf[10]) << 8 | buf[11]));
-	MPU6000_NewVal(&MPU6000_FIFO[6][0],(int16_t)(((int16_t)buf[12]) << 8 | buf[13]));
-	
-	MPU6000Wr_Index = (MPU6000Wr_Index + 1) % mpu6000Buf_SIZE;
-
-	gx =  MPU6000_GetAvg(&MPU6000_FIFO[4][0]);
-	gy =  MPU6000_GetAvg(&MPU6000_FIFO[5][0]);
-	gz =  MPU6000_GetAvg(&MPU6000_FIFO[6][0]);
+	gx = ((((int16_t)buf[8]) << 8) | buf[9]);
+	gy = ((((int16_t)buf[10]) << 8) | buf[11]);
+	gz = ((((int16_t)buf[12]) << 8) | buf[13]);
 	
 	gyro[0] = gx - MPU6000Gx_offset;
 	gyro[1] = gy - MPU6000Gy_offset;
 	gyro[2] = gz - MPU6000Gz_offset;
-			  
-	ax = 	MPU6000_GetAvg(&MPU6000_FIFO[0][0]);
-	ay = 	MPU6000_GetAvg(&MPU6000_FIFO[1][0]);
-	az = 	MPU6000_GetAvg(&MPU6000_FIFO[2][0]);
 				
 	acc[0] = ax;
 	acc[1] = ay;
 	acc[2] = az;	
 }
+
+void MPU6000_InitOffset(void){
+	unsigned int i;
+	int16_t temp[3],temp2[3];
+	int32_t tempgx=0,tempgy=0,tempgz=0;
+	MPU6000Gx_offset=0;
+	MPU6000Gy_offset=0;
+	MPU6000Gz_offset=0;
+
+	for(i=0;i<500;i++){
+		delay_us(200);
+		MPU6000_readGyro_Acc(temp,temp2);
+		tempgx += temp[0];
+		tempgy += temp[1];
+		tempgz += temp[2];
+	}
+	MPU6000Gx_offset=tempgx/500;
+	MPU6000Gy_offset=tempgy/500;
+	MPU6000Gz_offset=tempgz/500;
+}
+
 
 void IMU_getValues() 
 { 
@@ -152,25 +155,7 @@ void IMU_getValues()
 	RT_Info.Calibra_accZaxis = (RT_Info.accZaxis - OffsetData.acc_offectz) * OffsetData.acc_scalez;		
 }
 
-void MPU6000_initOffset(void){
-	unsigned int i;
-	int16_t temp[3],temp2[3];
-	int32_t tempgx=0,tempgy=0,tempgz=0;
-	MPU6000Gx_offset=0;
-	MPU6000Gy_offset=0;
-	MPU6000Gz_offset=0;
 
-	for(i=0;i<500;i++){
-		delay_us(200);
-		MPU6000_readGyro_Acc(temp,temp2);
-		tempgx += temp[0];
-		tempgy += temp[1];
-		tempgz += temp[2];
-	}
-	MPU6000Gx_offset=tempgx/500;
-	MPU6000Gy_offset=tempgy/500;
-	MPU6000Gz_offset=tempgz/500;
-}
 
 /**********************************************************************************************************
 *函 数 名: ImuOrientationDetect

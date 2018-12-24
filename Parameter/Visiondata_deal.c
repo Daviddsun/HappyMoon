@@ -3,13 +3,7 @@
 float_union position_x,position_y,position_z,velocity_x,velocity_y,velocity_z,
 								Quaternion0,Quaternion1,Quaternion2,Quaternion3,reference_posx,reference_posy,reference_posz;
 
-void Vision_datadeal(_Data_Rx rx){
-	static unsigned int tPre=0;
-	unsigned int t;
-	t=micros();
-	RT_Info.frequency	= (tPre>0)?((t-tPre)/1000000.0f):1;
-	tPre=t;
-	
+void Vision_datadeal(_Data_Rx rx){	
 	if(rx.len==56 && rx.buf[0]==0x55 && rx.buf[1]==0xAA && rx.buf[55]==0xAA){
 		
 		if(rx.buf[2] == 0x30){

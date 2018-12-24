@@ -10,7 +10,7 @@
 u8 bluetooth_bound[8]="AT+BAUD8";
 u8 bluetooth_name[13]="AT+NAMExiluna";
 
-void Bluetooth_init()
+void Bluetooth_Init(void)
 {
 	/*蓝牙第一次初始化有用，后面没用，因为波特率已经变成115200*/
 //	Usart3toBluetooth_Init(9600);

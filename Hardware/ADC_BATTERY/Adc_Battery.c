@@ -1,15 +1,9 @@
-/******************** (C) COPYRIGHT 2015-2017 Xiluna Tech ************************
- * 作者 	:Xiluna Tech
- * 文件名 :Adc_Battery.c
- * 描述   :电池检测文件
- * 官网   :http://xiluna.com/
- * 公众号 :XilunaTech
-**********************************************************************************/
+
 #include "Adc_Battery.h"
 
 volatile u16 Adc_Battery[10];
 
-void Adc_Batteryinit()
+void AdcBattery_Init()
 {	
 	DMA_InitTypeDef DMA_InitStructure;
 	GPIO_InitTypeDef  GPIO_InitStructure;

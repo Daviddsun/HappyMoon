@@ -3,7 +3,7 @@
 
 #include "stm32f4xx.h"
 
-void General_Gpioinit(void);
+void GeneralGpio_Init(void);
 
 #define LED_OFF GPIO_ResetBits(GPIOB,GPIO_Pin_9)
 #define LED_ON  GPIO_SetBits(GPIOB,GPIO_Pin_9)

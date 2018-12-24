@@ -62,7 +62,6 @@
 ..\output\imu_ahrs.o: ..\Mymath\SimpleDigitalFilter\SimpleDigitalFiltering.h
 ..\output\imu_ahrs.o: ..\Libraries\CMSIS\Include\arm_math.h
 ..\output\imu_ahrs.o: ..\Libraries\CMSIS\Include\core_cm4.h
-..\output\imu_ahrs.o: ..\Hardware\TIMER_Timing\Timer5_Timing.h
 ..\output\imu_ahrs.o: ..\Hardware\ADC_BATTERY\Adc_Battery.h
 ..\output\imu_ahrs.o: ..\Hardware\General_Gpio\General_Gpio.h
 ..\output\imu_ahrs.o: ..\Control\Attitude_control\Attitude_control.h

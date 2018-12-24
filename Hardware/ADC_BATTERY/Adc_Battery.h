@@ -3,7 +3,7 @@
 
 #include "stm32f4xx.h"
 
-void Adc_Batteryinit(void);
+void AdcBattery_Init(void);
 float Get_battery(void);
 
 #endif 
