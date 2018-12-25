@@ -12,11 +12,17 @@ OS_Q messageQueue[QUEUE_NUM];
 **********************************************************************************************************/
 void MessageQueueCreate(OS_ERR p_err)
 {	
-	OSQCreate(&messageQueue[ACC_SENSOR_READ],"ACC_SENSOR_READ",24,&p_err);
-	OSQCreate(&messageQueue[GYRO_SENSOR_READ],"GYRO_SENSOR_READ",24,&p_err);
-	OSQCreate(&messageQueue[TEMP_SENSOR_READ],"TEMP_SENSOR_READ",24,&p_err);
+	OSQCreate((OS_Q *)&messageQueue[ACC_SENSOR_READ],
+												(CPU_CHAR *)"ACC_SENSOR_READ",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
+	OSQCreate((OS_Q *)&messageQueue[GYRO_SENSOR_READ],
+												(CPU_CHAR *)"GYRO_SENSOR_READ",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
+	OSQCreate((OS_Q *)&messageQueue[TEMP_SENSOR_READ],
+												(CPU_CHAR *)"TEMP_SENSOR_READ",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
 	
-	OSQCreate(&messageQueue[ACC_DATA_PRETREAT],"ACC_DATA_PRETREAT",24,&p_err);
-	OSQCreate(&messageQueue[GYRO_DATA_PRETREAT],"GYRO_DATA_PRETREAT",24,&p_err);
-	OSQCreate(&messageQueue[GYRO_FOR_CONTROL],"GYRO_FOR_CONTROL",24,&p_err);
+	OSQCreate((OS_Q *)&messageQueue[ACC_DATA_PRETREAT],
+												(CPU_CHAR *)"ACC_DATA_PRETREAT",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
+	OSQCreate((OS_Q *)&messageQueue[GYRO_DATA_PRETREAT],
+												(CPU_CHAR *)"GYRO_DATA_PRETREAT",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
+	OSQCreate((OS_Q *)&messageQueue[GYRO_FOR_CONTROL],
+												(CPU_CHAR *)"GYRO_FOR_CONTROL",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
 }

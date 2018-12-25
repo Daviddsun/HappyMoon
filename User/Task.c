@@ -36,10 +36,10 @@ void SensorRead_task(void *p_arg){
 //		//陀螺仪数据处理
 //		GyroDataPreTreat(*gyroRawData, gyroCalibData);
 		//更新消息队列
-		OSQPost(&messageQueue[ACC_DATA_PRETREAT],&accRawData,sizeof(accRawData),OS_OPT_POST_FIFO,&err);
+		OSQPost(&messageQueue[ACC_SENSOR_READ],&accRawData,sizeof(accRawData),OS_OPT_POST_FIFO,&err);
 //		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],&gyroRawData,sizeof(gyroRawData),OS_OPT_POST_FIFO,&err);
-		//睡眠一个时钟节拍，1ms
-		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err);
+		//睡眠一个时钟节拍，2ms
+		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 /**
@@ -48,14 +48,13 @@ void SensorRead_task(void *p_arg){
 void Navigation_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
-	void        *p_msg;
+	char        *p_msg;
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
 	int a = 0;
 	while(1){
 		p_msg = OSQPend(&messageQueue[ACC_DATA_PRETREAT],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
-		a++;
-//		p_msg = OSQPend(&messageQueue[GYRO_DATA_PRETREAT],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
+		a ++;
 	}
 }
 

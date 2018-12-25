@@ -42,8 +42,6 @@ int main(void)
 	Sensor_Init();
 	/** 启动操作系统 **/
 	OSInit(&err);	
-	/** 创建一个消息队列 **/
-	MessageQueueCreate(err);
 	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务
 		(OS_TCB*)&StartTaskTCB,									               // 任务控制块
@@ -87,6 +85,9 @@ void start_task(void *p_arg)
 #endif
 
 	OS_CRITICAL_ENTER();																// 进入临界区
+	/** 创建一个消息队列 **/
+	MessageQueueCreate(err);
+	
 	OSTaskCreate(																				// 传感器数据读取任务
 		(OS_TCB*)&SensorReadTaskTCB,
 		(CPU_CHAR*)"SensorRead task",
