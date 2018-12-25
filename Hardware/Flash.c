@@ -145,6 +145,14 @@ void Load_Config(void){
 		OffsetData.acc_scaley=flashData.Offset_Data.acc_scaley;
 		OffsetData.acc_scalez=flashData.Offset_Data.acc_scalez;
 		
+		OffsetData.gyro_offectx=flashData.Offset_Data.gyro_offectx;
+		OffsetData.gyro_offecty=flashData.Offset_Data.gyro_offecty;
+		OffsetData.gyro_offectz=flashData.Offset_Data.gyro_offectz;
+		
+		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex;
+		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley;
+		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez;
+		
 	}else{
 		
 		flashData.isGood=0xA55A5AA5;
@@ -203,6 +211,14 @@ void Load_Config(void){
 		OffsetData.acc_scalex=flashData.Offset_Data.acc_scalex = 1;
 		OffsetData.acc_scaley=flashData.Offset_Data.acc_scaley = 1;
 		OffsetData.acc_scalez=flashData.Offset_Data.acc_scalez = 1;
+		
+		OffsetData.gyro_offectx=flashData.Offset_Data.gyro_offectx = 0;
+		OffsetData.gyro_offecty=flashData.Offset_Data.gyro_offecty = 0;
+		OffsetData.gyro_offectz=flashData.Offset_Data.gyro_offectz = 0;
+		
+		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex = 1;
+		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley = 1;
+		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez = 1;
 	
 		Write_config();	
 	}

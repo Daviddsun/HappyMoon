@@ -133,8 +133,16 @@ typedef struct{
 	float acc_scalex;
 	float acc_scaley;
 	float acc_scalez;
-	unsigned int calibra_cnt;
-	bool success;
+	float gyro_offectx;
+	float gyro_offecty;
+	float gyro_offectz;
+	float gyro_scalex;
+	float gyro_scaley;
+	float gyro_scalez;
+	unsigned int acc_calibra_cnt;
+	unsigned int gyro_calibra_cnt;
+	bool acc_success;
+	bool gyro_success;
 }OffsetInfo;
 
 //飞控放置方向
@@ -268,11 +276,6 @@ typedef union{
 	unsigned char cv[4];
 }float_union;
 
-typedef struct{
-	float x;
-	float y;
-	float z;
-}Vector3f_t;
 
 
 #endif

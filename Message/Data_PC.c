@@ -169,5 +169,5 @@ void sendRTInfo(void)
 		dataToPC[47]+=dataToPC[i];
 	}
 	
-	Uart3_tx(dataToPC,48);
+	Usb_Send(dataToPC,48);
 }

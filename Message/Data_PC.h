@@ -6,6 +6,7 @@
 #include "Task.h"
 #include "Type_conversion.h"
 #include "Usart3toBluetooth.h"
+#include "UsbDriver.h"
 void sendParaInfo(void);
 void sendRTInfo(void);
 

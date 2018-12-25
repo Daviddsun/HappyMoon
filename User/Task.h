@@ -5,9 +5,6 @@
 #include "explore_systick.h"
 #include "stm32f4xx.h"
 #include "includes.h"
-#include "cpu.h"
-#include "os.h"
-#include "IMU_AHRS.h"
 #include "DronePara.h"
 #include "Data_PC.h"
 #include "Data_deal.h"
@@ -18,7 +15,9 @@
 #include "Attitude_control.h"
 #include "Position_control.h"
 #include "Data_Odroid.h"
-#include <stdbool.h>
+#include "Vector3.h"
+#include "MPU6000.h"
+#include "MessageQueue.h"
 
 /* 外部变量集合 */
 extern OS_SEM DataDeal_proc;

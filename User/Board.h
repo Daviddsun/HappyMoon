@@ -5,7 +5,6 @@
 #include "explore_system.h"
 #include "explore_systick.h"
 #include "SPI1.h"
-#include "IMU_AHRS.h"
 #include "Task.h"
 #include "mcpwm.h"
 #include "Flash.h"
@@ -15,6 +14,7 @@
 #include "Usart1toOdroid.h"
 #include "Sensor.h"
 #include "UsbDriver.h"
+#include "MessageQueue.h"
 
 void Board_Init(void);
 

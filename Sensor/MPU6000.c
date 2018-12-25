@@ -4,28 +4,12 @@ float MPU6000Gx_offset,MPU6000Gy_offset,MPU6000Gz_offset;
 enum ORIENTATION_STATUS orientationStatus;
 uint8_t placement;
 
-/**********************************************************************************************************
-*函 数 名: GetImuOrientation
-*功能说明: 获取传感器放置状态
-*形    参: 无
+/***********************************************************************************
+*函 数 名: MPU6000_writeReg
+*功能说明: spi读写MPU6000
+*形    参: 
 *返 回 值: 状态
-**********************************************************************************************************/
-enum ORIENTATION_STATUS GetImuOrientation(void)
-{
-    return orientationStatus;
-}
-
-/**********************************************************************************************************
-*函 数 名: GetPlaceStatus
-*功能说明: 获取飞行器放置状态
-*形    参: 无
-*返 回 值: 状态
-**********************************************************************************************************/
-uint8_t GetPlaceStatus(void)
-{
-    return placement;
-}
-
+************************************************************************************/
 void MPU6000_writeReg(u8 reg, u8 data)
 {
 	MPU6000_CSL();
@@ -33,7 +17,12 @@ void MPU6000_writeReg(u8 reg, u8 data)
 	SPI1_ReadWrite_Byte(data);
 	MPU6000_CSH();	
 }
-
+/***********************************************************************************
+*函 数 名: MPU6000_Initialize
+*功能说明: 初始化MPU6000
+*形    参: 
+*返 回 值: 状态
+************************************************************************************/
 void MPU6000_Initialize(void)
 { 
 	
@@ -73,89 +62,92 @@ void MPU6000_Initialize(void)
 	MPU6000_writeReg(MPU_RA_ACCEL_CONFIG, 2 << 3);
 
 	delay_ms(5);
-}
 
-void MPU6000_readGyro_Acc(int16_t *gyro,int16_t *acc)
+
+}
+/**********************************************************************************************************
+*函 数 名: MPU6000_ReadAcc
+*功能说明: MPU6000读取加速度传感器，并转化为标准单位
+*形    参: 读出数据指针
+*返 回 值: 无
+**********************************************************************************************************/
+void MPU6000_ReadAcc(Vector3f_t* acc)
 {
-	static u8 buf[14];
-	static int16_t gx,gy,gz;
-	static int16_t ax,ay,az;
-	MPU6000_CSL();
-	SPI1_readRegs(MPU_RA_ACCEL_XOUT_H,14,buf);
-	MPU6000_CSH();
-	//acc
-	ax = ((((int16_t)buf[0]) << 8) | buf[1]);
-	ay = ((((int16_t)buf[2]) << 8) | buf[3]);
-	az = ((((int16_t)buf[4]) << 8) | buf[5]);
-	//gyro
-	gx = ((((int16_t)buf[8]) << 8) | buf[9]);
-	gy = ((((int16_t)buf[10]) << 8) | buf[11]);
-	gz = ((((int16_t)buf[12]) << 8) | buf[13]);
-	
-	gyro[0] = gx - MPU6000Gx_offset;
-	gyro[1] = gy - MPU6000Gy_offset;
-	gyro[2] = gz - MPU6000Gz_offset;
-				
-	acc[0] = ax;
-	acc[1] = ay;
-	acc[2] = az;	
+    uint8_t buffer[6] = {0x00,0x01,0x02,0x03,0x04,0x05};
+    Vector3i_t accRaw;
+//		MPU6000_CSL();
+//		SPI1_readRegs(MPU_RA_ACCEL_XOUT_H,6,buffer);
+//		MPU6000_CSH();
+    accRaw.x = ((((int16_t)buffer[0]) << 8) | buffer[1]);
+    accRaw.y = ((((int16_t)buffer[2]) << 8) | buffer[3]);
+    accRaw.z = ((((int16_t)buffer[4]) << 8) | buffer[5]);
+
+    acc->x = (float)accRaw.x * MPU_A_8mg;
+    acc->y = (float)accRaw.y * MPU_A_8mg;
+    acc->z = (float)accRaw.z * MPU_A_8mg;
+
 }
 
-void MPU6000_InitOffset(void){
-	unsigned int i;
-	int16_t temp[3],temp2[3];
-	int32_t tempgx=0,tempgy=0,tempgz=0;
-	MPU6000Gx_offset=0;
-	MPU6000Gy_offset=0;
-	MPU6000Gz_offset=0;
+/**********************************************************************************************************
+*函 数 名: MPU6000_ReadGyro
+*功能说明: MPU6000读取陀螺仪传感器，并转化为标准单位
+*形    参: 读出数据指针
+*返 回 值: 无
+**********************************************************************************************************/
+void MPU6000_ReadGyro(Vector3f_t* gyro)
+{
+    uint8_t buffer[6] = {0x00,0x01,0x02,0x03,0x04,0x05};
+    Vector3i_t gyroRaw;
+//		MPU6000_CSL();
+//		SPI1_readRegs(MPU_RA_GYRO_XOUT_H,6,buffer);
+//		MPU6000_CSH();
+    gyroRaw.x = ((((int16_t)buffer[0]) << 8) | buffer[1]);
+    gyroRaw.y = ((((int16_t)buffer[2]) << 8) | buffer[3]);
+    gyroRaw.z = ((((int16_t)buffer[4]) << 8) | buffer[5]);
 
-	for(i=0;i<500;i++){
-		delay_us(200);
-		MPU6000_readGyro_Acc(temp,temp2);
-		tempgx += temp[0];
-		tempgy += temp[1];
-		tempgz += temp[2];
-	}
-	MPU6000Gx_offset=tempgx/500;
-	MPU6000Gy_offset=tempgy/500;
-	MPU6000Gz_offset=tempgz/500;
+    gyro->x = gyroRaw.x * MPU_G_s1000dps;
+    gyro->y = gyroRaw.y * MPU_G_s1000dps;
+    gyro->z = gyroRaw.z * MPU_G_s1000dps;
 }
 
-
-void IMU_getValues() 
-{ 
-	float values[6];
-	int16_t accgyroval[6];
-	int i;
-	//获取加计和陀螺仪的数据
-	MPU6000_readGyro_Acc(&accgyroval[3],&accgyroval[0]);
-	for(i = 0; i<6; i++) 
-	{
-    if(i < 3) 
-		{
-  			values[i] = ((float) accgyroval[i]) / 2048.0f;// 32/65536 = 1/2048 m/s^2
-    }
-		
-    else 
-		{
-        values[i] = ((float) accgyroval[i]) / 16.384f;// 4000/65536 = 1/16.384 °/s
-    }
-  }
-	//加速计原始数据
-	RT_Info.accXaxis = values[0];
-	RT_Info.accYaxis = values[1];
-	RT_Info.accZaxis = values[2];
-	//陀螺仪除去零偏置后的数据
-	RT_Info.wx=values[3] * PI/180; 
-	RT_Info.wy=values[4] * PI/180;
-	RT_Info.wz=values[5] * PI/180;
-	//加速计校准以后的数据
-	RT_Info.Calibra_accXaxis = (RT_Info.accXaxis - OffsetData.acc_offectx) * OffsetData.acc_scalex;
-	RT_Info.Calibra_accYaxis = (RT_Info.accYaxis - OffsetData.acc_offecty) * OffsetData.acc_scaley;	
-	RT_Info.Calibra_accZaxis = (RT_Info.accZaxis - OffsetData.acc_offectz) * OffsetData.acc_scalez;		
+/**********************************************************************************************************
+*函 数 名: MPU6000_ReadTemp
+*功能说明: MPU6000读取温度传感器
+*形    参: 读出数据指针
+*返 回 值: 无
+**********************************************************************************************************/
+void MPU6000_ReadTemp(float* temp)
+{
+    uint8_t buffer[2] = {0x07,0x08};
+    static int16_t temperature_temp;
+//		MPU6000_CSL();
+//		SPI1_readRegs(MPU_RA_TEMP_OUT_H,2,buffer);
+//		MPU6000_CSH();
+    temperature_temp = ((((int16_t)buffer[0]) << 8) | buffer[1]);
+    *temp = 36.53f + (float)temperature_temp / 340;
 }
 
+/**********************************************************************************************************
+*函 数 名: GetImuOrientation
+*功能说明: 获取传感器放置状态
+*形    参: 无
+*返 回 值: 状态
+**********************************************************************************************************/
+enum ORIENTATION_STATUS GetImuOrientation(void)
+{
+    return orientationStatus;
+}
 
+/**********************************************************************************************************
+*函 数 名: GetPlaceStatus
+*功能说明: 获取飞行器放置状态
+*形    参: 无
+*返 回 值: 状态
+**********************************************************************************************************/
+uint8_t GetPlaceStatus(void)
+{
+    return placement;
+}
 
 /**********************************************************************************************************
 *函 数 名: ImuOrientationDetect
@@ -217,7 +209,7 @@ void ImuOrientationDetect(float accx,float accy,float accz){
 *形    参: 角速度
 *返 回 值: 无
 *************************************************************************************/
-void PlaceStausCheck(float gyrox,float gyroy,float gyroz)
+void PlaceStausCheck(Vector3f_t gyro)
 {
     Vector3f_t gyroDiff;
     static Vector3f_t lastGyro;
@@ -225,12 +217,10 @@ void PlaceStausCheck(float gyrox,float gyroy,float gyroz)
     static uint16_t checkNum = 0;
     static int16_t count = 0;
 
-    gyroDiff.x = gyrox - lastGyro.x;
-    gyroDiff.y = gyroy - lastGyro.y;
-    gyroDiff.z = gyroz - lastGyro.z;
-    lastGyro.x = gyrox;
-		lastGyro.y = gyroy;
-		lastGyro.z = gyroz;
+    gyroDiff.x = gyro.x - lastGyro.x;
+    gyroDiff.y = gyro.y - lastGyro.y;
+    gyroDiff.z = gyro.z - lastGyro.z;
+    lastGyro = gyro;
 
     if(count < 30)
     {
@@ -254,15 +244,13 @@ void PlaceStausCheck(float gyrox,float gyroy,float gyroz)
     }
 }
 
-
-
 /****************************************************************************************
-*函 数 名: Calibration_ACC
+*函 数 名: AccCalibration
 *功能说明: 校准加速计数据
 *形    参: 无
 *返 回 值: 无
 *****************************************************************************************/
-void Calibration_ACC(float accx,float accy,float accz){
+void AccCalibration(Vector3f_t accRaw){
 	static uint16_t samples_count = 0;
 	static uint8_t orientationCaliFlag[6];
 	static Vector3f_t new_offset;
@@ -270,7 +258,10 @@ void Calibration_ACC(float accx,float accy,float accz){
 	static Vector3f_t samples[6];
 	static uint8_t caliFlag = 0;
 	static uint32_t caliCnt = 0;
-	
+
+//	if(!acc.cali.should_cali)
+//			return;
+
 	/*********************************检测IMU放置方向************************************/
 	if(GetImuOrientation() == ORIENTATION_UP && !orientationCaliFlag[ORIENTATION_UP])
 	{
@@ -285,7 +276,7 @@ void Calibration_ACC(float accx,float accy,float accz){
 					caliFlag = 1;
 					orientationCaliFlag[ORIENTATION_UP] = 1;
 					samples_count = 0;
-					OffsetData.calibra_cnt ++;
+					OffsetData.acc_calibra_cnt ++;
 			}
 	}	
 	if(GetImuOrientation() == ORIENTATION_DOWN && !orientationCaliFlag[ORIENTATION_DOWN])
@@ -301,7 +292,7 @@ void Calibration_ACC(float accx,float accy,float accz){
 					caliFlag = 1;
 					orientationCaliFlag[ORIENTATION_DOWN] = 1;
 					samples_count = 0;
-					OffsetData.calibra_cnt++;
+					OffsetData.acc_calibra_cnt++;
 			}
 	}
 
@@ -318,7 +309,7 @@ void Calibration_ACC(float accx,float accy,float accz){
 					caliFlag = 1;
 					orientationCaliFlag[ORIENTATION_FRONT] = 1;
 					samples_count = 0;
-					OffsetData.calibra_cnt++;
+					OffsetData.acc_calibra_cnt++;
 			}
 	}
 
@@ -335,7 +326,7 @@ void Calibration_ACC(float accx,float accy,float accz){
 					caliFlag = 1;
 					orientationCaliFlag[ORIENTATION_BACK] = 1;
 					samples_count = 0;
-					OffsetData.calibra_cnt++;
+					OffsetData.acc_calibra_cnt++;
 			}
 	}
 
@@ -352,7 +343,7 @@ void Calibration_ACC(float accx,float accy,float accz){
 					caliFlag = 1;
 					orientationCaliFlag[ORIENTATION_LEFT] = 1;
 					samples_count = 0;
-					OffsetData.calibra_cnt++;
+					OffsetData.acc_calibra_cnt++;
 			}
 	}
 
@@ -369,77 +360,133 @@ void Calibration_ACC(float accx,float accy,float accz){
 					caliFlag = 1;
 					orientationCaliFlag[ORIENTATION_RIGHT] = 1;
 					samples_count = 0;
-					OffsetData.calibra_cnt++;
+					OffsetData.acc_calibra_cnt++;
 			}
 	}
 	if(caliFlag)
 	{
-			if(samples_count < 500)
-			{
-					samples[OffsetData.calibra_cnt - 1].x += accx;
-					samples[OffsetData.calibra_cnt - 1].y += accy;
-					samples[OffsetData.calibra_cnt - 1].z += accz;
-					samples_count++;
-			}
-			else if(samples_count == 500)
-			{
-					samples[OffsetData.calibra_cnt - 1].x /= 500;
-					samples[OffsetData.calibra_cnt - 1].y /= 500;
-					samples[OffsetData.calibra_cnt - 1].z /= 500;
-					samples_count++;
+       if(samples_count < 500)
+        {
+            samples[OffsetData.acc_calibra_cnt - 1].x += accRaw.x;
+            samples[OffsetData.acc_calibra_cnt - 1].y += accRaw.y;
+            samples[OffsetData.acc_calibra_cnt - 1].z += accRaw.z;
+            samples_count++;
+        }
+        else if(samples_count == 500)
+        {
+            samples[OffsetData.acc_calibra_cnt - 1].x /= 500;
+            samples[OffsetData.acc_calibra_cnt - 1].y /= 500;
+            samples[OffsetData.acc_calibra_cnt - 1].z /= 500;
+            samples_count++;
 
-					caliFlag = 0;
-					caliCnt  = 0;
-			}
-			
-
+            caliFlag = 0;
+            caliCnt  = 0;
+        }		
 	}
 	
-	if(OffsetData.calibra_cnt == 6 && samples_count == 501)
+	if(OffsetData.acc_calibra_cnt == 6 && samples_count == 501)
   {
-        //计算方程解初值
-        float initBeta[6];
-        initBeta[0] = 0;
-        initBeta[1] = 0;
-        initBeta[2] = 0;
-        initBeta[3] = 1;
-        initBeta[4] = 1;
-        initBeta[5] = 1;
+		//计算方程解初值
+		float initBeta[6];
+		initBeta[0] = 0;
+		initBeta[1] = 0;
+		initBeta[2] = 0;
+		initBeta[3] = 1;
+		initBeta[4] = 1;
+		initBeta[5] = 1;
 
-        //LM法求解传感器误差方程最优解
-        LevenbergMarquardt(samples, &new_offset, &new_scale, initBeta, 1);
+		//LM法求解传感器误差方程最优解
+		LevenbergMarquardt(samples, &new_offset, &new_scale, initBeta, 1);
 
-        //判断校准参数是否正常  无论成功与否全部退出函数
-        if(fabsf(new_scale.x-1.0f) > 0.1f || fabsf(new_scale.y-1.0f) > 0.1f || fabsf(new_scale.z-1.0f) > 0.1f)
-        {
-						OffsetData.success = true;
-        }
-        else if(fabsf(new_offset.x) > (1 * 0.35f) || fabsf(new_offset.y) > (1 * 0.35f) || fabsf(new_offset.z) > (1 * 0.6f))
-        {
-            OffsetData.success = true;
-        }
-        else
-        {
-					for(u8 i=0; i<6; i++)
-					{
-							samples[i].x = 0;
-							samples[i].y = 0;
-							samples[i].z = 0;
-					}
-					OffsetData.acc_offectx = new_offset.x;
-					OffsetData.acc_offecty = new_offset.y;
-					OffsetData.acc_offectz = new_offset.z;
-					OffsetData.acc_scalex = new_scale.x;
-					OffsetData.acc_scaley = new_scale.y;
-					OffsetData.acc_scalez = new_scale.z;
-					Write_config();
-					
-					OffsetData.calibra_cnt = 0;
-					for(uint8_t i=0; i<6; i++)
-							orientationCaliFlag[i] = 0;
-          OffsetData.success = true;
-        }
+		//判断校准参数是否正常  无论成功与否全部退出函数
+		if(fabsf(new_scale.x-1.0f) > 0.1f || fabsf(new_scale.y-1.0f) > 0.1f || fabsf(new_scale.z-1.0f) > 0.1f)
+		{
+				OffsetData.acc_success = true;
+		}
+		else if(fabsf(new_offset.x) > (1 * 0.35f) || fabsf(new_offset.y) > (1 * 0.35f) || fabsf(new_offset.z) > (1 * 0.6f))
+		{
+				OffsetData.acc_success = true;
+		}
+		else
+		{
+			for(u8 i=0; i<6; i++)
+			{
+					samples[i].x = 0;
+					samples[i].y = 0;
+					samples[i].z = 0;
+			}
+			OffsetData.acc_offectx = new_offset.x;
+			OffsetData.acc_offecty = new_offset.y;
+			OffsetData.acc_offectz = new_offset.z;
+			OffsetData.acc_scalex = new_scale.x;
+			OffsetData.acc_scaley = new_scale.y;
+			OffsetData.acc_scalez = new_scale.z;
+			Write_config();
+			OffsetData.acc_calibra_cnt = 0;
+			for(uint8_t i=0; i<6; i++)
+					orientationCaliFlag[i] = 0;
+			OffsetData.acc_success = true;
+		}
 
-    }
-	
+   }
 }
+
+/**********************************************************************************************************
+*函 数 名: AccDataPreTreat
+*功能说明: 加速度数据预处理
+*形    参: 加速度原始数据 加速度预处理数据指针
+*返 回 值: 无
+**********************************************************************************************************/
+void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData)
+{
+	Vector3f_t accdata = accRaw;
+
+	//加速度数据校准
+	accdata.x = (accdata.x - OffsetData.acc_offectx) * OffsetData.acc_scalex;
+	accdata.y = (accdata.y - OffsetData.acc_offecty) * OffsetData.acc_scaley;
+	accdata.z = (accdata.z - OffsetData.acc_offectz) * OffsetData.acc_scalez;
+
+	*accData = accdata;
+} 
+
+/**********************************************************************************************************
+*函 数 名: GyroCalibration
+*功能说明: 陀螺仪校准
+*形    参: 陀螺仪原始数据
+*返 回 值: 无
+**********************************************************************************************************/
+void GyroCalibration(Vector3f_t gyroRaw)
+{
+    static float gyro_sum[3] = {0, 0, 0};
+    Vector3f_t gyro_raw_temp;
+    static int16_t count = 0;
+//    if(!gyro.cali.should_cali)
+//        return;
+    gyro_raw_temp = gyroRaw;
+
+    gyro_sum[0] += gyro_raw_temp.x;
+    gyro_sum[1] += gyro_raw_temp.y;
+    gyro_sum[2] += gyro_raw_temp.z;
+    count++;
+}
+
+
+/**********************************************************************************************************
+*函 数 名: GyroDataPreTreat
+*功能说明: 陀螺仪数据预处理
+*形    参: 陀螺仪原始数据 陀螺仪预处理数据指针
+*返 回 值: 无
+**********************************************************************************************************/
+void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData)
+{
+    Vector3f_t gyrodata = gyroRaw;
+
+    //零偏误差校准
+    gyrodata.x = (gyrodata.x - OffsetData.gyro_offectx) * OffsetData.gyro_scalex;
+    gyrodata.y = (gyrodata.y - OffsetData.gyro_offecty) * OffsetData.gyro_scaley;
+    gyrodata.z = (gyrodata.z - OffsetData.gyro_offectz) * OffsetData.gyro_scalez;
+
+
+    *gyroData = gyrodata;
+}
+

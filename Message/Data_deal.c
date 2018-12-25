@@ -125,7 +125,7 @@ void DataDeal(_Data_Rx rx)
 		/* 加速计校准 */
 		else if(rx.buf[2] == 4)
 		{
-			OffsetData.success = false;
+			OffsetData.acc_success = false;
 		}
 		/* Pitch PID */	
 		else if(rx.buf[2] == 5)

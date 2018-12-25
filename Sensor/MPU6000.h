@@ -188,12 +188,14 @@ enum accel_fsr_e {
 
 void MPU6000_Initialize(void);
 void MPU6000_InitOffset(void);
-void MPU6000_readGyro_Acc(int16_t *gyro,int16_t *acc);
-void IMU_getValues(void);
+void MPU6000_ReadGyro(Vector3f_t* gyro);
+void MPU6000_ReadAcc(Vector3f_t* acc);
+void MPU6000_ReadTemp(float* temp);
 void ImuOrientationDetect(float accx,float accy,float accz);
-void PlaceStausCheck(float gyrox,float gyroy,float gyroz);
-void Calibration_ACC(float accx,float accy,float accz);
-
-
+void PlaceStausCheck(Vector3f_t gyro);
+void AccCalibration(Vector3f_t accRaw);
+void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData);
+void GyroCalibration(Vector3f_t gyroRaw);
+void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData);
 
 #endif

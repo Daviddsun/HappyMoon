@@ -255,12 +255,12 @@ void Uart3_dma_tx_irq_handler(void)
 _Data_Rx Bluetooth_rx; 
 void Uart3_irq_handler(void)                                
 {     
-	OS_ERR err; 
+//	OS_ERR err; 
 	inf_Uart3_deal_irq_tx_end();  
 	Bluetooth_rx.len = inf_Uart3_deal_irq_rx_end(Bluetooth_rx.buf);  
 	if (Bluetooth_rx.len != 0)  
 	{ 
-		OSSemPost(&DataDeal_proc,OS_OPT_POST_1,&err);
+//		OSSemPost(&DataDeal_proc,OS_OPT_POST_1,&err);
 	}				
 } 
 
@@ -269,7 +269,6 @@ void Uart3_irq_handler(void)
 
 void DMA1_Stream3_IRQHandler(void)   
 {  
-		//进入中断调用ucos系统函数
 		OSIntEnter();
 		Uart3_dma_tx_irq_handler();
 		OSIntExit();
@@ -279,7 +278,6 @@ void DMA1_Stream3_IRQHandler(void)
   
 void USART3_IRQHandler(void)   
 {  
-		//进入中断调用ucos系统函数
 		OSIntEnter();
     Uart3_irq_handler();
 		OSIntExit();	

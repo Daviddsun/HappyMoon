@@ -1,10 +1,3 @@
-/******************** (C) COPYRIGHT 2015-2017 Xiluna Tech ************************
- * 作者    :Xiluna Tech
- * 文件名  :SPI.c
- * 描述    :SPI驱动
- * 官网    :http://xiluna.com/
- * 公总号  :XilunaTech
-**********************************************************************************/
 #include "SPI1.h"
 
 void SPI1_Configuration(void)

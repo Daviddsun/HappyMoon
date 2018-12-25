@@ -227,13 +227,13 @@ void Uart1_dma_tx_irq_handler(void)
 _Data_Rx Odroid_rx; 
 void Uart1_irq_handler(void)                                
 {  
-		OS_ERR err;	 
+//		OS_ERR err;	 
     inf_Uart1_deal_irq_tx_end();  
     Odroid_rx.len = inf_Uart1_deal_irq_rx_end(Odroid_rx.buf);  
     if (Odroid_rx.len != 0)  
     { 
-			/* 产生信号量 */
-			OSSemPost(&Vision_proc,OS_OPT_POST_1,&err);
+//			/* 产生信号量 */
+//			OSSemPost(&Vision_proc,OS_OPT_POST_1,&err);
 		}	
 } 
 
