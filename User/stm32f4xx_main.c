@@ -8,9 +8,9 @@
 #include "Board.h"
 
 #define START_TASK_PRIO 3						                     // 任务优先级
-#define START_STK_SIZE 512						                   	 // 任务堆栈大小
-OS_TCB StartTaskTCB;							                     // 任务控制块
-CPU_STK START_TASK_STK[START_STK_SIZE];					             // 任务堆栈
+#define START_STK_SIZE 512						                   // 任务堆栈大小
+OS_TCB StartTaskTCB;							                       // 任务控制块
+CPU_STK START_TASK_STK[START_STK_SIZE];					         // 任务堆栈
 void start_task(void *p_arg);						                 // 任务函数
 
 //IMU任务
@@ -76,7 +76,7 @@ int main(void)
 	/** 各个传感器初始化 **/
 	Sensor_Init();
 	OSInit(&err);												                     // 初始化UCOSIII
-	OS_CRITICAL_ENTER();										                 	 // 进入临界区
+	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务
 		(OS_TCB*)&StartTaskTCB,									               // 任务控制块
 		(CPU_CHAR*)"start task", 								               // 任务名字
