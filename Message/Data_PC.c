@@ -12,107 +12,105 @@ void sendParaInfo(void)
 	paraToPC[2]=0X02;
 
 	/* Pitch PidPara */
-	FloatToByte(PID_ParaInfo.Pitch.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,3,floatToHex,4);
-	FloatToByte(PID_ParaInfo.Pitch.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,7,floatToHex,4);
-	FloatToByte(PID_ParaInfo.Pitch.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,11,floatToHex,4);
 
 	/* Roll PidPara */
-	FloatToByte(PID_ParaInfo.Roll.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,15,floatToHex,4);
-	FloatToByte(PID_ParaInfo.Roll.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,19,floatToHex,4);
-	FloatToByte(PID_ParaInfo.Roll.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,23,floatToHex,4);
 
 	/* Yaw PidPara */
-	FloatToByte(PID_ParaInfo.Yaw.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,27,floatToHex,4);
-	FloatToByte(PID_ParaInfo.Yaw.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,31,floatToHex,4);
-	FloatToByte(PID_ParaInfo.Yaw.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,35,floatToHex,4);
 	
 	/* Height PidPara */
-	FloatToByte(PID_ParaInfo.PosZ.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,39,floatToHex,4);
-	FloatToByte(PID_ParaInfo.PosZ.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,43,floatToHex,4);
-	FloatToByte(PID_ParaInfo.PosZ.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,47,floatToHex,4);
 			
 	/* ratePitch PidPara */
-	FloatToByte(PID_ParaInfo.WyRate.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,51,floatToHex,4);
-	FloatToByte(PID_ParaInfo.WyRate.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,55,floatToHex,4);
-	FloatToByte(PID_ParaInfo.WyRate.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,59,floatToHex,4);
 
 	/* rateRoll PidPara */
-	FloatToByte(PID_ParaInfo.WxRate.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,63,floatToHex,4);
-	FloatToByte(PID_ParaInfo.WxRate.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,67,floatToHex,4);
-	FloatToByte(PID_ParaInfo.WxRate.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,71,floatToHex,4);
 
 	/* rateYaw PidPara */
-	FloatToByte(PID_ParaInfo.WzRate.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,75,floatToHex,4);
-	FloatToByte(PID_ParaInfo.WzRate.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,79,floatToHex,4);
-	FloatToByte(PID_ParaInfo.WzRate.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,83,floatToHex,4);
 
 	/* VelHeight PidPara */
-	FloatToByte(PID_ParaInfo.VelZ.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,87,floatToHex,4);
-	FloatToByte(PID_ParaInfo.VelZ.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,91,floatToHex,4);
-	FloatToByte(PID_ParaInfo.VelZ.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,95,floatToHex,4);
 	
 	/* PositionX PidPara */
-	FloatToByte(PID_ParaInfo.PosX.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,99,floatToHex,4);
-	FloatToByte(PID_ParaInfo.PosX.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,103,floatToHex,4);
-	FloatToByte(PID_ParaInfo.PosX.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,107,floatToHex,4);
 	
 	/* PositionY PidPara */
-	FloatToByte(PID_ParaInfo.PosY.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,111,floatToHex,4);
-	FloatToByte(PID_ParaInfo.PosY.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,115,floatToHex,4);
-	FloatToByte(PID_ParaInfo.PosY.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,119,floatToHex,4);
 	
 	/* SpeedX PidPara */
-	FloatToByte(PID_ParaInfo.VelX.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,123,floatToHex,4);
-	FloatToByte(PID_ParaInfo.VelX.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,127,floatToHex,4);
-	FloatToByte(PID_ParaInfo.VelX.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,131,floatToHex,4);
 	
 	/* SpeedY PidPara */
-	FloatToByte(PID_ParaInfo.VelY.Kp,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,135,floatToHex,4);
-	FloatToByte(PID_ParaInfo.VelY.Ki,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,139,floatToHex,4);
-	FloatToByte(PID_ParaInfo.VelY.Kd,floatToHex);
+	FloatToByte(0.0,floatToHex);
 	arrycat(paraToPC,143,floatToHex,4);
-	
 
 	for(i=147;i<157;i++)
 	{
 		paraToPC[i]=0;
 	}	
-	
 	IntToByte(0.0,intToHex);
 	arrycat(paraToPC,157,intToHex,2);
 	
@@ -120,9 +118,7 @@ void sendParaInfo(void)
 	{
 		paraToPC[159]+=paraToPC[i];
 	}
-	
 	Uart3_tx(paraToPC,160);
-
 }
 
 void sendRTInfo(void)

@@ -1,10 +1,3 @@
-/******************** (C) COPYRIGHT 2015-2017 Xiluna Tech *********************
- * ×÷Õß 	:Xiluna Tech
- * ÎÄ¼şÃû :MahonyAHRS.c
- * ÃèÊö   :MahonyAHRSÈÚºÏËã·¨
- * ¹ÙÍø   :http://xiluna.com/
- * ¹«ÖÚºÅ :XilunaTech
-******************************************************************************/
 #include "MahonyAHRS.h"
 //---------------------------------------------------------------------------------------------------
 // Definitions
@@ -14,12 +7,11 @@
 
 //---------------------------------------------------------------------------------------------------
 // Variable definitions
-
 volatile float twoKp = twoKpDef;																		// 2 * proportional gain (Kp)
 volatile float twoKi = twoKiDef;																		// 2 * integral gain (Ki)
 volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;					// quaternion of sensor frame relative to auxiliary frame
 volatile float integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;	// integral error terms scaled by Ki
-
+AHRS ahrs;
 //---------------------------------------------------------------------------------------------------
 // Function declarations
 
@@ -130,6 +122,11 @@ void MahonyAHRSupdate(float gx, float gy, float gz, float ax, float ay, float az
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
+	
+	// Get angle
+	ahrs.angle.x = (atan2(2.0f*(q0q1 + q2q3), 1 - 2.0f*(q1q1 + q2q2)));
+	ahrs.angle.y = safe_asin(2.0f*(q0q2 - q1q3));
+	ahrs.angle.z = atan2(2.0f*q1q2 + 2.0f*q0q3, -2.0f*q2q2 - 2.0f*q3q3 + 1);
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -213,6 +210,17 @@ float invSqrt(float x) {
 	y = *(float*)&i;
 	y = y * (1.5f - (halfx * y * y));
 	return y;
+}
+
+/**********************************************************************************************************
+*å‡½ æ•° å: GetCopterAngle
+*åŠŸèƒ½è¯´æ˜: è·å–è¡¨ç¤ºé£è¡Œå™¨å§¿æ€çš„æ¬§æ‹‰è§’
+*å½¢    å‚: æ— 
+*è¿” å› å€¼: è§’åº¦å€¼
+**********************************************************************************************************/
+Vector3f_t GetCopterAngle(void)
+{
+    return ahrs.angle;
 }
 
 //====================================================================================================

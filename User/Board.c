@@ -19,12 +19,12 @@ void Board_Init(void){
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
 //	// 系统延时10s等待用户放平无人机
 //	delay_ms(10000);
-//	// 电池电压ADC初始化
-//	AdcBattery_Init();
+	// 电池电压ADC初始化
+	AdcBattery_Init();
 	// SPI1初始化 用于陀螺仪和加速计读取
 	SPI1_Configuration();
-//	// pwm定时器初始化用于电调信号 500hz频率
-//	PWM_Init(); 
+	// pwm定时器初始化用于电调信号 500hz频率
+	PWM_Init(); 
 	// 用于与高性能板载ARM或板载PC通信 波特率230400
 	Usart1toOdroid_Init(230400); 
 	// 蓝牙串口打开，用于与地面站通信

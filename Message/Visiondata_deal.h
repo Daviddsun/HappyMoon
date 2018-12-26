@@ -4,7 +4,6 @@
 #include "stm32f4xx.h"
 #include "DronePara.h"
 #include "Task.h"
-#include "arm_math.h"
 
 void Vision_datadeal(_Data_Rx rx);
 

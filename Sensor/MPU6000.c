@@ -259,8 +259,8 @@ void AccCalibration(Vector3f_t accRaw){
 	static uint8_t caliFlag = 0;
 	static uint32_t caliCnt = 0;
 
-//	if(!acc.cali.should_cali)
-//			return;
+	if(!OffsetData.acc_success)
+			return;
 
 	/*********************************检测IMU放置方向************************************/
 	if(GetImuOrientation() == ORIENTATION_UP && !orientationCaliFlag[ORIENTATION_UP])
@@ -460,8 +460,10 @@ void GyroCalibration(Vector3f_t gyroRaw)
     static float gyro_sum[3] = {0, 0, 0};
     Vector3f_t gyro_raw_temp;
     static int16_t count = 0;
-//    if(!gyro.cali.should_cali)
-//        return;
+		
+    if(!OffsetData.gyro_success)
+        return;
+		
     gyro_raw_temp = gyroRaw;
 
     gyro_sum[0] += gyro_raw_temp.x;
@@ -477,8 +479,8 @@ void GyroCalibration(Vector3f_t gyroRaw)
 *形    参: 陀螺仪原始数据 陀螺仪预处理数据指针
 *返 回 值: 无
 **********************************************************************************************************/
-void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData)
-{
+void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData){
+	
     Vector3f_t gyrodata = gyroRaw;
 
     //零偏误差校准
@@ -486,7 +488,7 @@ void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData)
     gyrodata.y = (gyrodata.y - OffsetData.gyro_offecty) * OffsetData.gyro_scaley;
     gyrodata.z = (gyrodata.z - OffsetData.gyro_offectz) * OffsetData.gyro_scalez;
 
-
     *gyroData = gyrodata;
+		*gyroLpfData = gyrodata;
 }
 

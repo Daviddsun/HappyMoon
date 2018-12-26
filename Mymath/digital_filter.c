@@ -6,9 +6,6 @@
  * ¹«ÖÚºÅ :XilunaTech
 ******************************************************************************/
 #include  "digital_filter.h"
-#include  <math.h>
-#include  "arm_math.h"
-#include  <stdint.h>
 
 // Found at http://paulbourke.net/miscellaneous//dft/
 void filter_fft(int dir, int m, float *real, float *imag) {

@@ -6,7 +6,7 @@
  * @日期     2018 ~
 *********************************************************************************/
 #include "Board.h"
-
+//Start任务
 #define START_TASK_PRIO 3						                     // 任务优先级
 #define START_STK_SIZE 256						                   // 任务堆栈大小
 OS_TCB StartTaskTCB;							                       // 任务控制块
@@ -20,13 +20,26 @@ OS_TCB SensorReadTaskTCB;
 CPU_STK SensorRead_TASK_STK[SensorRead_STK_SIZE];					
 void SensorRead_task(void *p_arg);
 
+//SensorPreDeal任务
+#define SensorPreDeal_TASK_PRIO 5					
+#define SensorPreDeal_STK_SIZE 512						
+OS_TCB SensorPreDealTaskTCB;				
+CPU_STK SensorPreDeal_TASK_STK[SensorPreDeal_STK_SIZE];					
+void SensorPreDeal_task(void *p_arg);
+
 //Navigation任务
-#define Navigation_TASK_PRIO 5						
+#define Navigation_TASK_PRIO 6						
 #define Navigation_STK_SIZE 512						
 OS_TCB NavigationTaskTCB;				
 CPU_STK Navigation_TASK_STK[Navigation_STK_SIZE];					
 void Navigation_task(void *p_arg);
 
+//FlightControl任务
+#define FlightControl_TASK_PRIO 7						
+#define FlightControl_STK_SIZE 512						
+OS_TCB FlightControlTaskTCB;				
+CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
+void FlightControl_task(void *p_arg);
 /**
  * @Description 主函数启动操作系统
  */	
@@ -103,6 +116,21 @@ void start_task(void *p_arg)
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
 		);
+	OSTaskCreate(																				// 传感器数据预处理
+		(OS_TCB*)&SensorPreDealTaskTCB,
+		(CPU_CHAR*)"SensorPreDeal task",
+		(OS_TASK_PTR )SensorPreDeal_task,
+		(void*)0,
+		(OS_PRIO)SensorPreDeal_TASK_PRIO,
+		(CPU_STK*)&SensorPreDeal_TASK_STK[0],
+		(CPU_STK_SIZE)SensorPreDeal_STK_SIZE/10,
+		(CPU_STK_SIZE)SensorPreDeal_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);
 	OSTaskCreate(																				// 导航任务读取任务
 		(OS_TCB*)&NavigationTaskTCB,
 		(CPU_CHAR*)"Navigation task",
@@ -118,6 +146,21 @@ void start_task(void *p_arg)
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
 		);
+	OSTaskCreate(																				// 飞行控制任务
+		(OS_TCB*)&FlightControlTaskTCB,
+		(CPU_CHAR*)"FlightControl task",
+		(OS_TASK_PTR )FlightControl_task,
+		(void*)0,
+		(OS_PRIO)FlightControl_TASK_PRIO,
+		(CPU_STK*)&FlightControl_TASK_STK[0],
+		(CPU_STK_SIZE)FlightControl_STK_SIZE/10,
+		(CPU_STK_SIZE)FlightControl_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);		
 	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);				// 挂起开始任务
 	OS_CRITICAL_EXIT();																	// 离开临界区 
 }

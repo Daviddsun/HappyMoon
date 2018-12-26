@@ -6,6 +6,8 @@
 #ifndef DIGITAL_FILTER_H_
 #define DIGITAL_FILTER_H_
 #include <stdint.h>
+#include <math.h>
+#include "MathTool.h"
 
 // Functions
 void filter_fft(int dir, int m, float *real, float *imag);

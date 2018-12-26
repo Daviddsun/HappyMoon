@@ -196,6 +196,6 @@ void PlaceStausCheck(Vector3f_t gyro);
 void AccCalibration(Vector3f_t accRaw);
 void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData);
 void GyroCalibration(Vector3f_t gyroRaw);
-void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData);
+void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData);
 
 #endif

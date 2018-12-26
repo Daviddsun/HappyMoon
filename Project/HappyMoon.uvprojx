@@ -10,6 +10,7 @@
       <TargetName>HappyMoon</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F405RGTx</Device>
@@ -124,47 +125,6 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>1</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
-            <Driver>BIN\UL2CM3.DLL</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -229,6 +189,7 @@
             <useUlib>0</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
+            <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
@@ -365,11 +326,13 @@
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
+            <vShortEn>1</vShortEn>
+            <vShortWch>1</vShortWch>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1, __FPU_USED =1, __CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Libraries\CMSIS\Include;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Sensor;..\Hardware;..\Control\Attitude_control;..\Control\Position_control;..\Control\PID_control;..\Message;..\Parameter;..\Mymath</IncludePath>
+              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Libraries\CMSIS\Include;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Sensor;..\Hardware;..\Message;..\Parameter;..\Mymath;..\Control</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -800,17 +763,22 @@
             <File>
               <FileName>Attitude_control.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Control\Attitude_control\Attitude_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>Position_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\Position_control\Position_control.c</FilePath>
+              <FilePath>..\Control\Attitude_control.c</FilePath>
             </File>
             <File>
               <FileName>PID_control.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Control\PID_control\PID_control.c</FilePath>
+              <FilePath>..\Control\PID_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>Position_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Control\Position_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>ThrustMixer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Control\ThrustMixer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -861,11 +829,6 @@
               <FileName>LevenbergMarquardt.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mymath\LevenbergMarquardt.c</FilePath>
-            </File>
-            <File>
-              <FileName>Limits.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\Limits.c</FilePath>
             </File>
             <File>
               <FileName>MahonyAHRS.c</FileName>

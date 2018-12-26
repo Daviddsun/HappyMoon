@@ -18,24 +18,23 @@
 #include "Vector3.h"
 #include "MPU6000.h"
 #include "MessageQueue.h"
+#include "MahonyAHRS.h"
+#include "ThrustMixer.h"
 
 /* 外部变量集合 */
 extern OS_SEM DataDeal_proc;
 extern OS_SEM Vision_proc;
-
 
 extern DroneFlightControl FlightControl;     							 
 extern DroneRTInfo RT_Info;
 extern DroneTargetInfo Target_Info;
 extern RemoteControl RockerControl; ;
 extern OffsetInfo OffsetData;  
-extern Data_Combine DataCombineflag; 
 extern Thrust UAVThrust;											 
 extern Throttle Throttle_Info;	
 
-extern PIDOut OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
+extern PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
-extern PIDPara PID_ParaInfo;
 
 extern State_estimate state_estimate;
 extern Reference_state reference_state;

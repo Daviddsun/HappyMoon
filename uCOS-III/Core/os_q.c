@@ -389,7 +389,7 @@ void  *OSQPend (OS_Q         *p_q,
                 OS_ERR       *p_err)
 {
     OS_PEND_DATA  pend_data;
-    void         *p_void;
+    void  *p_void;
     CPU_SR_ALLOC();
 
 

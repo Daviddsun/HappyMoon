@@ -54,8 +54,8 @@ void DataStitching(_Data_Rx rx)
 }
 void DataDeal(_Data_Rx rx)
 {
-	u8 HexToFloat[4];
 	float pidParaTemp[3];
+	u8 HexToFloat[4];
 	u8 i,j;
 	if( rx.len==20 && rx.buf[0]==0x55 && rx.buf[1]==0xAA )
 	{
@@ -138,9 +138,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.Pitch.Kp=pidParaTemp[0];
-			PID_ParaInfo.Pitch.Ki=pidParaTemp[1];
-			PID_ParaInfo.Pitch.Kd=pidParaTemp[2];
+//			PID_ParaInfo.Pitch.Kp=pidParaTemp[0];
+//			PID_ParaInfo.Pitch.Ki=pidParaTemp[1];
+//			PID_ParaInfo.Pitch.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}		
@@ -155,9 +155,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}     
-			PID_ParaInfo.Roll.Kp=pidParaTemp[0];
-			PID_ParaInfo.Roll.Ki=pidParaTemp[1];
-			PID_ParaInfo.Roll.Kd=pidParaTemp[2];
+//			PID_ParaInfo.Roll.Kp=pidParaTemp[0];
+//			PID_ParaInfo.Roll.Ki=pidParaTemp[1];
+//			PID_ParaInfo.Roll.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -172,9 +172,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.Yaw.Kp=pidParaTemp[0];
-			PID_ParaInfo.Yaw.Ki=pidParaTemp[1];
-			PID_ParaInfo.Yaw.Kd=pidParaTemp[2];
+//			PID_ParaInfo.Yaw.Kp=pidParaTemp[0];
+//			PID_ParaInfo.Yaw.Ki=pidParaTemp[1];
+//			PID_ParaInfo.Yaw.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -189,9 +189,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.PosZ.Kp=pidParaTemp[0];
-			PID_ParaInfo.PosZ.Ki=pidParaTemp[1];
-			PID_ParaInfo.PosZ.Kd=pidParaTemp[2];
+//			PID_ParaInfo.PosZ.Kp=pidParaTemp[0];
+//			PID_ParaInfo.PosZ.Ki=pidParaTemp[1];
+//			PID_ParaInfo.PosZ.Kd=pidParaTemp[2];
 			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}	 
@@ -206,9 +206,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.WyRate.Kp=pidParaTemp[0];
-			PID_ParaInfo.WyRate.Ki=pidParaTemp[1];
-			PID_ParaInfo.WyRate.Kd=pidParaTemp[2];
+//			PID_ParaInfo.WyRate.Kp=pidParaTemp[0];
+//			PID_ParaInfo.WyRate.Ki=pidParaTemp[1];
+//			PID_ParaInfo.WyRate.Kd=pidParaTemp[2];
 			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -223,9 +223,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.WxRate.Kp=pidParaTemp[0];
-			PID_ParaInfo.WxRate.Ki=pidParaTemp[1];
-			PID_ParaInfo.WxRate.Kd=pidParaTemp[2];
+//			PID_ParaInfo.WxRate.Kp=pidParaTemp[0];
+//			PID_ParaInfo.WxRate.Ki=pidParaTemp[1];
+//			PID_ParaInfo.WxRate.Kd=pidParaTemp[2];
 			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -240,9 +240,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.WzRate.Kp=pidParaTemp[0];
-			PID_ParaInfo.WzRate.Ki=pidParaTemp[1];
-			PID_ParaInfo.WzRate.Kd=pidParaTemp[2];
+//			PID_ParaInfo.WzRate.Kp=pidParaTemp[0];
+//			PID_ParaInfo.WzRate.Ki=pidParaTemp[1];
+//			PID_ParaInfo.WzRate.Kd=pidParaTemp[2];
 			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -257,9 +257,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}
-			PID_ParaInfo.VelZ.Kp=pidParaTemp[0];
-			PID_ParaInfo.VelZ.Ki=pidParaTemp[1];
-			PID_ParaInfo.VelZ.Kd=pidParaTemp[2];
+//			PID_ParaInfo.VelZ.Kp=pidParaTemp[0];
+//			PID_ParaInfo.VelZ.Ki=pidParaTemp[1];
+//			PID_ParaInfo.VelZ.Kd=pidParaTemp[2];
 			Write_config();
 			FlightControl.ReportSW=Report_SET;
 		}	
@@ -336,9 +336,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.PosX.Kp=pidParaTemp[0];
-			PID_ParaInfo.PosX.Ki=pidParaTemp[1];
-			PID_ParaInfo.PosX.Kd=pidParaTemp[2];
+//			PID_ParaInfo.PosX.Kp=pidParaTemp[0];
+//			PID_ParaInfo.PosX.Ki=pidParaTemp[1];
+//			PID_ParaInfo.PosX.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -353,9 +353,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.PosY.Kp=pidParaTemp[0];
-			PID_ParaInfo.PosY.Ki=pidParaTemp[1];
-			PID_ParaInfo.PosY.Kd=pidParaTemp[2];
+//			PID_ParaInfo.PosY.Kp=pidParaTemp[0];
+//			PID_ParaInfo.PosY.Ki=pidParaTemp[1];
+//			PID_ParaInfo.PosY.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -371,9 +371,9 @@ void DataDeal(_Data_Rx rx)
 				
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.VelX.Kp=pidParaTemp[0];
-			PID_ParaInfo.VelX.Ki=pidParaTemp[1];
-			PID_ParaInfo.VelX.Kd=pidParaTemp[2];
+//			PID_ParaInfo.VelX.Kp=pidParaTemp[0];
+//			PID_ParaInfo.VelX.Ki=pidParaTemp[1];
+//			PID_ParaInfo.VelX.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -388,9 +388,9 @@ void DataDeal(_Data_Rx rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			PID_ParaInfo.VelY.Kp=pidParaTemp[0];
-			PID_ParaInfo.VelY.Ki=pidParaTemp[1];
-			PID_ParaInfo.VelY.Kd=pidParaTemp[2];
+//			PID_ParaInfo.VelY.Kp=pidParaTemp[0];
+//			PID_ParaInfo.VelY.Ki=pidParaTemp[1];
+//			PID_ParaInfo.VelY.Kd=pidParaTemp[2];
 			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}		

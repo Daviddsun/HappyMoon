@@ -2,6 +2,7 @@
 #define __DRONWPARA_H
 
 #include "stm32f4xx.h"
+#include "Vector3.h"
 #include <stdbool.h>
 #define TX_LEN  160
 #define RX_LEN  64
@@ -13,22 +14,7 @@
 #define Inertia_Wy    0.001f
 #define Inertia_Wz    0.002f
 
-#define Vxy_error_max  0.75f 
-#define Vz_error_max  0.75f
 
-#define  kAlmostZeroValueThreshold  0.001f
-#define  kAlmostZeroThrustThreshold  0.01f
-
-// f_cut = 1/(2*PI*cutoff_freq)
-// f_cut = 2 Hz -> _filter = 79.5774e-3
-// f_cut = 10 Hz -> _filter = 15.9155e-3
-// f_cut = 15 Hz -> _filter = 10.6103e-3
-// f_cut = 20 Hz -> _filter =  7.9577e-3
-// f_cut = 25 Hz -> _filter =  6.3662e-3
-// f_cut = 30 Hz -> _filter =  5.3052e-3
-
-#define Filter20Hz  7.9577e-3f
-#define Filter2Hz  	79.5774e-3f
 
 typedef enum
 { 
@@ -60,16 +46,6 @@ typedef struct
 	int landFlag;
 }DroneFlightControl;
 
-typedef enum
-{
-	Data_Headmode = 0,
-	Data_Headfree = 1,
-	Data_Point = 2,
-	Data_Flow = 3,
-	Data_VIO = 4,
-}Data_Combine;
-
-
 typedef struct
 {
 	float Pitch;
@@ -85,46 +61,16 @@ typedef struct
 
 typedef struct
 {
-	float error;
-	float lasterror;
-	float differential;
-	float differentialFliter;
-	float pOut;
-  float iOut;
-	float dOut;
-	float value;
-	
-}PIDOut;
+    float kP;
+    float kI;
+    float kD;
 
-typedef struct
-{
-	float Kp;
-	float Ki;
-	float	Kd;
-}PID;
-
-typedef struct
-{
-	
-	PID Pitch;
-	PID Roll;
-	PID Yaw;
-	
-	PID WxRate;
-	PID WyRate;
-	PID WzRate;
-	
-  PID PosX;
-	PID PosY;
-	PID PosZ;
-	
-	PID VelX;
-	PID VelY;
-	PID VelZ;
-	
-}PIDPara;
-
-
+    float imax;
+    float integrator;
+    float lastError;
+    float lastDerivative;
+    float dFilter;
+} PID_t;
 
 typedef struct{
 	float acc_offectx;
@@ -261,7 +207,6 @@ typedef struct
 
 typedef struct {
 	u32 isGood;
-	PIDPara pidPara;
 	OffsetInfo Offset_Data;
 }FlashData;
 
