@@ -54,7 +54,7 @@ void DataStitching(_Data_Rx rx)
 }
 void DataDeal(_Data_Rx rx)
 {
-	float pidParaTemp[3];
+//	float pidParaTemp[3];
 	u8 HexToFloat[4];
 	u8 i,j;
 	if( rx.len==20 && rx.buf[0]==0x55 && rx.buf[1]==0xAA )
@@ -84,13 +84,13 @@ void DataDeal(_Data_Rx rx)
 			{
 				HexToFloat[i]=rx.buf[7+i];
 			}
-			Target_Info.Roll = Hex_To_Decimal(HexToFloat,4) * PI/180;								
+//			Target_Info.Roll = Hex_To_Decimal(HexToFloat,4) * PI/180;								
 			/*  Target_Yaw */					
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[11+i];
 			}
-			Target_Info.Yaw = Hex_To_Decimal(HexToFloat,4) * PI/180; 
+//			Target_Info.Yaw = Hex_To_Decimal(HexToFloat,4) * PI/180; 
 		}	
 		else if(rx.buf[2]==2)
 		{
@@ -125,7 +125,7 @@ void DataDeal(_Data_Rx rx)
 		/* 加速计校准 */
 		else if(rx.buf[2] == 4)
 		{
-			OffsetData.acc_success = false;
+			OffsetData.acc_success = true;
 		}
 		/* Pitch PID */	
 		else if(rx.buf[2] == 5)
@@ -136,7 +136,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.Pitch.Kp=pidParaTemp[0];
 //			PID_ParaInfo.Pitch.Ki=pidParaTemp[1];
@@ -153,7 +153,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}     
 //			PID_ParaInfo.Roll.Kp=pidParaTemp[0];
 //			PID_ParaInfo.Roll.Ki=pidParaTemp[1];
@@ -170,7 +170,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.Yaw.Kp=pidParaTemp[0];
 //			PID_ParaInfo.Yaw.Ki=pidParaTemp[1];
@@ -187,7 +187,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.PosZ.Kp=pidParaTemp[0];
 //			PID_ParaInfo.PosZ.Ki=pidParaTemp[1];
@@ -204,7 +204,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.WyRate.Kp=pidParaTemp[0];
 //			PID_ParaInfo.WyRate.Ki=pidParaTemp[1];
@@ -221,7 +221,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.WxRate.Kp=pidParaTemp[0];
 //			PID_ParaInfo.WxRate.Ki=pidParaTemp[1];
@@ -238,7 +238,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.WzRate.Kp=pidParaTemp[0];
 //			PID_ParaInfo.WzRate.Ki=pidParaTemp[1];
@@ -255,7 +255,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}
 //			PID_ParaInfo.VelZ.Kp=pidParaTemp[0];
 //			PID_ParaInfo.VelZ.Ki=pidParaTemp[1];
@@ -271,13 +271,13 @@ void DataDeal(_Data_Rx rx)
 			{
 				HexToFloat[i]=rx.buf[3+i];
 			}
-			Target_Info.RatePitch = Hex_To_Decimal(HexToFloat,4); 
+//			Target_Info.RatePitch = Hex_To_Decimal(HexToFloat,4); 
 			/* Target_RateRoll */
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[7+i];
 			}
-			Target_Info.RateRoll = Hex_To_Decimal(HexToFloat,4);										
+//			Target_Info.RateRoll = Hex_To_Decimal(HexToFloat,4);										
 		}
 		/* 阶跃信号 */
 		else if(rx.buf[2]==16){
@@ -285,17 +285,17 @@ void DataDeal(_Data_Rx rx)
 			{
 				HexToFloat[i]=rx.buf[3+i];
 			}
-			reference_state.postionX = Hex_To_Decimal(HexToFloat,4);
+//			reference_state.postionX = Hex_To_Decimal(HexToFloat,4);
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[7+i];
 			}
-			reference_state.postionY = Hex_To_Decimal(HexToFloat,4); 
+//			reference_state.postionY = Hex_To_Decimal(HexToFloat,4); 
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[11+i];
 			}
-			reference_state.postionZ = Hex_To_Decimal(HexToFloat,4);			
+//			reference_state.postionZ = Hex_To_Decimal(HexToFloat,4);			
 		}
 		/* 遥控器数据 */
 		else if(rx.buf[2]==17)
@@ -305,25 +305,25 @@ void DataDeal(_Data_Rx rx)
 			{
 				HexToFloat[i]=rx.buf[3+i];
 			}
-			RockerControl.XaxisPos = Hex_To_Decimal(HexToFloat,4); 
+//			RockerControl.XaxisPos = Hex_To_Decimal(HexToFloat,4); 
 			/* YaxisPos */
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[7+i];
 			}
-			RockerControl.YaxisPos = Hex_To_Decimal(HexToFloat,4); 					
+//			RockerControl.YaxisPos = Hex_To_Decimal(HexToFloat,4); 					
 			/* Navigation */
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[11+i];
 			}
-			RockerControl.Navigation = Hex_To_Decimal(HexToFloat,4);
+//			RockerControl.Navigation = Hex_To_Decimal(HexToFloat,4);
 			/* ZaxisPos */
 			for(i=0;i<4;i++)
 			{
 				HexToFloat[i]=rx.buf[15+i];
 			}
-			RockerControl.ZaxisPos = Hex_To_Decimal(HexToFloat,4);
+//			RockerControl.ZaxisPos = Hex_To_Decimal(HexToFloat,4);
 		}
 		/* PositionX PID */					
 		else if(rx.buf[2] == 18)
@@ -334,7 +334,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.PosX.Kp=pidParaTemp[0];
 //			PID_ParaInfo.PosX.Ki=pidParaTemp[1];
@@ -351,7 +351,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.PosY.Kp=pidParaTemp[0];
 //			PID_ParaInfo.PosY.Ki=pidParaTemp[1];
@@ -369,7 +369,7 @@ void DataDeal(_Data_Rx rx)
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
 				
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.VelX.Kp=pidParaTemp[0];
 //			PID_ParaInfo.VelX.Ki=pidParaTemp[1];
@@ -386,7 +386,7 @@ void DataDeal(_Data_Rx rx)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
-				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
+//				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
 //			PID_ParaInfo.VelY.Kp=pidParaTemp[0];
 //			PID_ParaInfo.VelY.Ki=pidParaTemp[1];

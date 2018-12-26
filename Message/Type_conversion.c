@@ -1,10 +1,3 @@
-/******************** (C) COPYRIGHT 2015-2017 Xiluna Tech ************************
- * 作者 	:Xiluna Tech
- * 文件名 :Type_conversion.c
- * 描述   :数据类型转换
- * 官网   :http://xiluna.com/
- * 公众号 :XilunaTech
-**********************************************************************************/
 #include "Type_conversion.h"
 
 

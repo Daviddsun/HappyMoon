@@ -42,6 +42,9 @@ void SensorPreDeal_task(void *p_arg){
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
 	Vector3f_t accRawData,gyroRawData,accCalibData,gyroCalibData,gyroLpfData;
+	//默认不进行传感器校准
+	OffsetData.acc_success = false;
+	OffsetData.gyro_success = false;
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[ACC_SENSOR_READ],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -131,5 +134,29 @@ void FlightControl_task(void *p_arg){
 		count++;
 	}
 }
-
+/**
+ * @Description 飞行状态任务
+ */
+void FlightStatus_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	while(1){
+//		//飞行器放置状态检测
+//    PlaceStausCheck(GyroLpfGetData());
+//		//传感器方向检测（用于校准时的判断）
+//    ImuOrientationDetect();
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
+	}
+}
+/**
+ * @Description Message任务
+ */
+void Message_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	while(1){
+		SendRTInfo();
+		OSTimeDlyHMSM(0,0,0,20,OS_OPT_TIME_HMSM_STRICT,&err);
+	}
+}
 

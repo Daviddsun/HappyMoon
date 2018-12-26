@@ -14,7 +14,6 @@
 #include "General_Gpio.h"
 #include "Attitude_control.h"
 #include "Position_control.h"
-#include "Data_Odroid.h"
 #include "Vector3.h"
 #include "MPU6000.h"
 #include "MessageQueue.h"

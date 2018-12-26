@@ -191,7 +191,7 @@ void MPU6000_InitOffset(void);
 void MPU6000_ReadGyro(Vector3f_t* gyro);
 void MPU6000_ReadAcc(Vector3f_t* acc);
 void MPU6000_ReadTemp(float* temp);
-void ImuOrientationDetect(float accx,float accy,float accz);
+void ImuOrientationDetect(Vector3f_t acc);
 void PlaceStausCheck(Vector3f_t gyro);
 void AccCalibration(Vector3f_t accRaw);
 void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData);

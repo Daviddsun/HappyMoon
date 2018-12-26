@@ -4,11 +4,12 @@
 #include "DronePara.h"
 #include "stm32f4xx.h"
 #include "Task.h"
-#include "Type_conversion.h"
 #include "Usart3toBluetooth.h"
 #include "UsbDriver.h"
-void sendParaInfo(void);
-void sendRTInfo(void);
+#include "Type_conversion.h"
+#include "MahonyAHRS.h"
+void SendParaInfo(void);
+void SendRTInfo(void);
 
 
 #endif 

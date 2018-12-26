@@ -155,49 +155,49 @@ uint8_t GetPlaceStatus(void)
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void ImuOrientationDetect(float accx,float accy,float accz){
+void ImuOrientationDetect(Vector3f_t acc){
     const float CONSTANTS_ONE_G = 1.0;
     const float accel_err_thr = 0.5;
 
     // [ g, 0, 0 ]
-    if (fabsf(accx - CONSTANTS_ONE_G) < accel_err_thr &&
-            fabsf(accy) < accel_err_thr &&
-            fabsf(accz) < accel_err_thr)
+    if (fabsf(acc.x - CONSTANTS_ONE_G) < accel_err_thr &&
+            fabsf(acc.y) < accel_err_thr &&
+            fabsf(acc.z) < accel_err_thr)
     {
         orientationStatus = ORIENTATION_FRONT;
     }
     // [ -g, 0, 0 ]
-    if (fabsf(accx + CONSTANTS_ONE_G) < accel_err_thr &&
-            fabsf(accy) < accel_err_thr &&
-            fabsf(accz) < accel_err_thr)
+    if (fabsf(acc.x + CONSTANTS_ONE_G) < accel_err_thr &&
+            fabsf(acc.y) < accel_err_thr &&
+            fabsf(acc.z) < accel_err_thr)
     {
         orientationStatus = ORIENTATION_BACK;
     }
     // [ 0, g, 0 ]
-    if (fabsf(accx) < accel_err_thr &&
-            fabsf(accy - CONSTANTS_ONE_G) < accel_err_thr &&
-            fabsf(accz) < accel_err_thr)
+    if (fabsf(acc.x) < accel_err_thr &&
+            fabsf(acc.y - CONSTANTS_ONE_G) < accel_err_thr &&
+            fabsf(acc.z) < accel_err_thr)
     {
         orientationStatus = ORIENTATION_LEFT;
     }
     // [ 0, -g, 0 ]
-    if (fabsf(accx) < accel_err_thr &&
-            fabsf(accy + CONSTANTS_ONE_G) < accel_err_thr &&
-            fabsf(accz) < accel_err_thr)
+    if (fabsf(acc.x) < accel_err_thr &&
+            fabsf(acc.y + CONSTANTS_ONE_G) < accel_err_thr &&
+            fabsf(acc.z) < accel_err_thr)
     {
         orientationStatus = ORIENTATION_RIGHT;
     }
     // [ 0, 0, g ]
-    if (fabsf(accx) < accel_err_thr &&
-            fabsf(accy) < accel_err_thr &&
-            fabsf(accz - CONSTANTS_ONE_G) < accel_err_thr)
+    if (fabsf(acc.x) < accel_err_thr &&
+            fabsf(acc.y) < accel_err_thr &&
+            fabsf(acc.z - CONSTANTS_ONE_G) < accel_err_thr)
     {
         orientationStatus = ORIENTATION_UP;
     }
     // [ 0, 0, -g ]
-    if (fabsf(accx) < accel_err_thr &&
-            fabsf(accy) < accel_err_thr &&
-            fabsf(accz + CONSTANTS_ONE_G) < accel_err_thr)
+    if (fabsf(acc.x) < accel_err_thr &&
+            fabsf(acc.y) < accel_err_thr &&
+            fabsf(acc.z + CONSTANTS_ONE_G) < accel_err_thr)
     {
         orientationStatus = ORIENTATION_DOWN;
     }
@@ -401,11 +401,11 @@ void AccCalibration(Vector3f_t accRaw){
 		//判断校准参数是否正常  无论成功与否全部退出函数
 		if(fabsf(new_scale.x-1.0f) > 0.1f || fabsf(new_scale.y-1.0f) > 0.1f || fabsf(new_scale.z-1.0f) > 0.1f)
 		{
-				OffsetData.acc_success = true;
+				OffsetData.acc_success = false;
 		}
 		else if(fabsf(new_offset.x) > (1 * 0.35f) || fabsf(new_offset.y) > (1 * 0.35f) || fabsf(new_offset.z) > (1 * 0.6f))
 		{
-				OffsetData.acc_success = true;
+				OffsetData.acc_success = false;
 		}
 		else
 		{
@@ -425,7 +425,7 @@ void AccCalibration(Vector3f_t accRaw){
 			OffsetData.acc_calibra_cnt = 0;
 			for(uint8_t i=0; i<6; i++)
 					orientationCaliFlag[i] = 0;
-			OffsetData.acc_success = true;
+			OffsetData.acc_success = false;
 		}
 
    }

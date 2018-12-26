@@ -40,8 +40,23 @@ void Navigation_task(void *p_arg);
 OS_TCB FlightControlTaskTCB;				
 CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
 void FlightControl_task(void *p_arg);
+
+//FlightStatus任务
+#define FlightStatus_TASK_PRIO 8						
+#define FlightStatus_STK_SIZE 512						
+OS_TCB FlightStatusTaskTCB;				
+CPU_STK FlightStatus_TASK_STK[FlightStatus_STK_SIZE];					
+void FlightStatus_task(void *p_arg);
+
+//Message任务
+#define Message_TASK_PRIO 9						
+#define Message_STK_SIZE 512						
+OS_TCB MessageTaskTCB;				
+CPU_STK Message_TASK_STK[FlightControl_STK_SIZE];					
+void Message_task(void *p_arg);
+
 /**
- * @Description 主函数启动操作系统
+ * @Description 主函数启动操作系统 
  */	
 int main(void)
 {
@@ -100,7 +115,7 @@ void start_task(void *p_arg)
 	OS_CRITICAL_ENTER();																// 进入临界区
 	/** 创建一个消息队列 **/
 	MessageQueueCreate(err);
-	
+	/** 创建用户任务 **/
 	OSTaskCreate(																				// 传感器数据读取任务
 		(OS_TCB*)&SensorReadTaskTCB,
 		(CPU_CHAR*)"SensorRead task",
@@ -161,6 +176,36 @@ void start_task(void *p_arg)
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
 		);		
+	OSTaskCreate(																				// 飞行状态任务
+		(OS_TCB*)&FlightStatusTaskTCB,
+		(CPU_CHAR*)"FlightStatus task",
+		(OS_TASK_PTR )FlightStatus_task,
+		(void*)0,
+		(OS_PRIO)FlightStatus_TASK_PRIO,
+		(CPU_STK*)&FlightStatus_TASK_STK[0],
+		(CPU_STK_SIZE)FlightStatus_STK_SIZE/10,
+		(CPU_STK_SIZE)FlightStatus_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);		
+	OSTaskCreate(																				// Message信息任务
+		(OS_TCB*)&MessageTaskTCB,
+		(CPU_CHAR*)"Message task",
+		(OS_TASK_PTR )Message_task,
+		(void*)0,
+		(OS_PRIO)Message_TASK_PRIO,
+		(CPU_STK*)&Message_TASK_STK[0],
+		(CPU_STK_SIZE)Message_STK_SIZE/10,
+		(CPU_STK_SIZE)Message_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);
 	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);				// 挂起开始任务
 	OS_CRITICAL_EXIT();																	// 离开临界区 
 }

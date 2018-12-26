@@ -791,19 +791,9 @@
               <FilePath>..\Message\Data_deal.c</FilePath>
             </File>
             <File>
-              <FileName>Data_Odroid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Message\Data_Odroid.c</FilePath>
-            </File>
-            <File>
               <FileName>Data_PC.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Message\Data_PC.c</FilePath>
-            </File>
-            <File>
-              <FileName>Type_conversion.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Message\Type_conversion.c</FilePath>
             </File>
             <File>
               <FileName>Visiondata_deal.c</FileName>
@@ -814,6 +804,11 @@
               <FileName>MessageQueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Message\MessageQueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>Type_conversion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Message\Type_conversion.c</FilePath>
             </File>
           </Files>
         </Group>
