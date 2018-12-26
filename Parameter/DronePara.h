@@ -91,16 +91,7 @@ typedef struct{
 	bool gyro_success;
 }OffsetInfo;
 
-//飞控放置方向
-enum ORIENTATION_STATUS
-{
-    ORIENTATION_UP,
-    ORIENTATION_DOWN,
-    ORIENTATION_LEFT,
-    ORIENTATION_RIGHT,
-    ORIENTATION_FRONT,
-    ORIENTATION_BACK,
-};
+
 //放置状态
 enum
 {

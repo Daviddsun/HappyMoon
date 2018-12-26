@@ -1,13 +1,16 @@
 #ifndef __MPU6000_H
 #define __MPU6000_H
 
-
+#include "stm32f4xx.h"
 #include "SPI1.h"
 #include "explore_systick.h"
 #include "DronePara.h"
-#include "stm32f4xx.h"
 #include "Task.h"
 #include "LevenbergMarquardt.h"
+#include "lowPassFilter.h"
+
+#define MPU6000_CSH()  GPIO_SetBits(GPIOB, GPIO_Pin_11)
+#define MPU6000_CSL()  GPIO_ResetBits(GPIOB, GPIO_Pin_11)
 
 #define MPU_LPF_256HZ       0
 #define MPU_LPF_188HZ       1
@@ -26,6 +29,7 @@
 #define MPU_G_s500dps            ((float)0.0152592f)  //dps/LSB
 #define MPU_G_s1000dps           ((float)0.0305185f)  //dps/LSB
 #define MPU_G_s2000dps           ((float)0.0610370f)  //dps/LSB
+	
 
 enum gyro_fsr_e {
     INV_FSR_250DPS = 0,
@@ -43,8 +47,6 @@ enum accel_fsr_e {
     NUM_ACCEL_FSR
 };
 
-#define MPU6000_CSH()  GPIO_SetBits(GPIOB, GPIO_Pin_11)
-#define MPU6000_CSL()  GPIO_ResetBits(GPIOB, GPIO_Pin_11)
 
 
 // Bits
@@ -191,11 +193,4 @@ void MPU6000_InitOffset(void);
 void MPU6000_ReadGyro(Vector3f_t* gyro);
 void MPU6000_ReadAcc(Vector3f_t* acc);
 void MPU6000_ReadTemp(float* temp);
-void ImuOrientationDetect(Vector3f_t acc);
-void PlaceStausCheck(Vector3f_t gyro);
-void AccCalibration(Vector3f_t accRaw);
-void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData);
-void GyroCalibration(Vector3f_t gyroRaw);
-void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData);
-
 #endif

@@ -19,6 +19,8 @@
 #include "MessageQueue.h"
 #include "MahonyAHRS.h"
 #include "ThrustMixer.h"
+#include "Gyroscope.h"
+#include "Accelerometer.h"
 
 /* 外部变量集合 */
 extern OS_SEM DataDeal_proc;

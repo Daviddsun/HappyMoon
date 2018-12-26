@@ -45,6 +45,10 @@ void SensorPreDeal_task(void *p_arg){
 	//默认不进行传感器校准
 	OffsetData.acc_success = false;
 	OffsetData.gyro_success = false;
+	//陀螺仪预处理初始化
+	GyroPreTreatInit();
+	//加速度预处理初始化
+	AccPreTreatInit();
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[ACC_SENSOR_READ],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -55,14 +59,17 @@ void SensorPreDeal_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			gyroRawData = *((Vector3f_t *)p_msg);
 		}
+		
 		//加速计校准
 		AccCalibration(accRawData);
 		//陀螺仪校准
 		GyroCalibration(gyroRawData);
+		
 		//加速计数值处理
 		AccDataPreTreat(accRawData, &accCalibData);
 		//陀螺仪数据处理
 		GyroDataPreTreat(gyroRawData, &gyroCalibData, &gyroLpfData);
+		
 		//更新消息队列
 		OSQPost(&messageQueue[ACC_DATA_PRETREAT],&accCalibData,sizeof(accCalibData),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],&gyroCalibData,sizeof(gyroCalibData),OS_OPT_POST_FIFO,&err);

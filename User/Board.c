@@ -17,8 +17,8 @@ void Board_Init(void){
 	Systick_Init(168);								                       
 	// 中断分组配置
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
-//	// 系统延时10s等待用户放平无人机
-//	delay_ms(10000);
+	// 系统延时8s等待用户放平无人机
+	delay_ms(8000);
 	// 电池电压ADC初始化
 	AdcBattery_Init();
 	// SPI1初始化 用于陀螺仪和加速计读取
