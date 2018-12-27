@@ -216,10 +216,10 @@ void Uart3_irq_handler(void)
 {     
 	OS_ERR err; 
 	Data_Rx Bluetooth_rx;
-	unsigned char GroundStationData[25];
+	Receive_GroundStation GroundStationData;
 	inf_Uart3_deal_irq_tx_end();  
 	Bluetooth_rx.len = inf_Uart3_deal_irq_rx_end(Bluetooth_rx.buf);
-	memcpy(GroundStationData,Bluetooth_rx.buf,Bluetooth_rx.len);
+	memcpy(&GroundStationData,&Bluetooth_rx.buf,Bluetooth_rx.len);
 	if (Bluetooth_rx.len != 0){ 
 		//更新消息队列
 		OSQPost(&messageQueue[GROUND_STATION],&GroundStationData,Bluetooth_rx.len,OS_OPT_POST_FIFO,&err);

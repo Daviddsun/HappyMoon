@@ -25,7 +25,7 @@ void MessageQueueCreate(OS_ERR p_err)
 												(CPU_CHAR *)"GYRO_DATA_PRETREAT",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
 	OSQCreate((OS_Q *)&messageQueue[GYRO_FOR_CONTROL],
 												(CPU_CHAR *)"GYRO_FOR_CONTROL",(OS_MSG_QTY)24,(OS_ERR *)&p_err);
-	//视觉例程数据
+	//视觉里程计数据
 	OSQCreate((OS_Q *)&messageQueue[VISUAL_ODOMETRY],
 												(CPU_CHAR *)"VISUAL_ODOMETRY",(OS_MSG_QTY)100,(OS_ERR *)&p_err);
 	//地面站数据

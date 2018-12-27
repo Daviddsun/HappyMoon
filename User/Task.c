@@ -159,16 +159,14 @@ void GroundStation_task(void *p_arg){
 	void   *p_msg;
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	unsigned char GroundStation[25];
+	Receive_GroundStation GroundStation;
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[GROUND_STATION],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
-//		if(err == OS_ERR_NONE){
-//			for(int i =0; i < msg_size; i++){
-//				GroundStation[i] = *((unsigned char *)p_msg);
-//				p_msg ++;
-//			}
-//		}
+		if(err == OS_ERR_NONE){
+			GroundStation = *((Receive_GroundStation *)p_msg);
+		}
+		GroundStationDataDeal(GroundStation);
 	}
 }
 

@@ -189,6 +189,14 @@ typedef struct{
 	unsigned char buf[64];
 }Data_Rx;
 
+typedef struct{
+	unsigned char buf[32];
+}Receive_GroundStation;
+
+typedef struct{
+	unsigned char buf[64];
+}Receive_VisualOdometry;
+
 typedef union{
 	float fvalue;
 	unsigned char cv[4];

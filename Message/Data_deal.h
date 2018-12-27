@@ -8,7 +8,7 @@
 #include "MPU6000.h"
 #include "Type_conversion.h"
 
-void DataDeal(Data_Rx rx);
+void GroundStationDataDeal(Receive_GroundStation rx);
 void DataStitching(Data_Rx rx);
  
  
