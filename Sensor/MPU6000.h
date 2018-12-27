@@ -189,8 +189,6 @@ enum accel_fsr_e {
 #define MPU_RA_WHO_AM_I         0x75
 
 void MPU6000_Initialize(void);
-void MPU6000_InitOffset(void);
-void MPU6000_ReadGyro(Vector3f_t* gyro);
-void MPU6000_ReadAcc(Vector3f_t* acc);
-void MPU6000_ReadTemp(float* temp);
+void MPU6000_ReadAccGyro(Vector3f_t *acc ,Vector3f_t *gyro);
+
 #endif

@@ -41,15 +41,29 @@ OS_TCB FlightControlTaskTCB;
 CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
 void FlightControl_task(void *p_arg);
 
+//视觉里程计数据处理
+#define VisualOdometry_TASK_PRIO 8						
+#define VisualOdometry_STK_SIZE 512						
+OS_TCB VisualOdometryTaskTCB;				
+CPU_STK VisualOdometry_TASK_STK[VisualOdometry_STK_SIZE];					
+void VisualOdometry_task(void *p_arg);
+
+//地面站数据处理
+#define GroundStation_TASK_PRIO 9						
+#define GroundStation_STK_SIZE 512						
+OS_TCB GroundStationTaskTCB;				
+CPU_STK GroundStation_TASK_STK[GroundStation_STK_SIZE];					
+void GroundStation_task(void *p_arg);
+
 //FlightStatus任务
-#define FlightStatus_TASK_PRIO 8						
+#define FlightStatus_TASK_PRIO 10						
 #define FlightStatus_STK_SIZE 512						
 OS_TCB FlightStatusTaskTCB;				
 CPU_STK FlightStatus_TASK_STK[FlightStatus_STK_SIZE];					
 void FlightStatus_task(void *p_arg);
 
 //Message任务
-#define Message_TASK_PRIO 9						
+#define Message_TASK_PRIO 11						
 #define Message_STK_SIZE 512						
 OS_TCB MessageTaskTCB;				
 CPU_STK Message_TASK_STK[FlightControl_STK_SIZE];					
@@ -64,7 +78,7 @@ int main(void)
 	CPU_SR_ALLOC();
 	/** 飞控板各个硬件初始化 **/
 	Board_Init();
-	/** 飞控参数初始化 **/
+	/** 飞控参数读取 **/
 	Load_Config();
 	/** 各个传感器初始化 **/
 	Sensor_Init();
@@ -103,9 +117,11 @@ void start_task(void *p_arg)
 #if OS_CFG_STAT_TASK_EN > 0u
 	OSStatTaskCPUUsageInit(&err);										  	// 统计任务
 #endif
+	
 #ifdef CPU_CFG_INT_DIS_MEAS_EN												// 如果使能了测量中断关闭时间
 	CPU_IntDisMeasMaxCurReset();	
 #endif
+	
 	//默认打开
 #if OS_CFG_SCHED_ROUND_ROBIN_EN												// 当使用时间片轮转的时候
 	//使能时间片轮转调度功能,时间片长度为1个系统时钟节拍
@@ -176,6 +192,36 @@ void start_task(void *p_arg)
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
 		);		
+	OSTaskCreate(																				// 视觉里程计任务
+		(OS_TCB*)&VisualOdometryTaskTCB,
+		(CPU_CHAR*)"VisualOdometry task",
+		(OS_TASK_PTR )VisualOdometry_task,
+		(void*)0,
+		(OS_PRIO)VisualOdometry_TASK_PRIO,
+		(CPU_STK*)&VisualOdometry_TASK_STK[0],
+		(CPU_STK_SIZE)VisualOdometry_STK_SIZE/10,
+		(CPU_STK_SIZE)VisualOdometry_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);	
+	OSTaskCreate(																				// 地面站数据处理任务
+		(OS_TCB*)&GroundStationTaskTCB,
+		(CPU_CHAR*)"GroundStation task",
+		(OS_TASK_PTR )GroundStation_task,
+		(void*)0,
+		(OS_PRIO)GroundStation_TASK_PRIO,
+		(CPU_STK*)&GroundStation_TASK_STK[0],
+		(CPU_STK_SIZE)GroundStation_STK_SIZE/10,
+		(CPU_STK_SIZE)GroundStation_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);	
 	OSTaskCreate(																				// 飞行状态任务
 		(OS_TCB*)&FlightStatusTaskTCB,
 		(CPU_CHAR*)"FlightStatus task",

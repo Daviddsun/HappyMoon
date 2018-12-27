@@ -192,46 +192,37 @@ uint8_t _Uart3_deal_irq_rx_end(uint8_t *buf)
 	return 0;  
 }  
 
-
- 
-  
 void inf_Uart3_deal_irq_dma_tx(void)  
 {  
     _Uart3_deal_irq_dma_tx();  
 }  
-  
-
   
 uint8_t inf_Uart3_deal_irq_tx_end(void)  
 {  
     return _Uart3_deal_irq_tx_end();  
 }  
   
-
-  
 uint8_t inf_Uart3_deal_irq_rx_end(uint8_t *buf)  
 {  
     return _Uart3_deal_irq_rx_end(buf);  
 }
 
-
-
-  
-void Uart3_dma_tx_irq_handler(void)  
+void Uart3_dma_tx_irq_handler(void) 
 {  
     inf_Uart3_deal_irq_dma_tx();  
 }  
-     
-
-_Data_Rx Bluetooth_rx; 
+      
 void Uart3_irq_handler(void)                                
 {     
-//	OS_ERR err; 
+	OS_ERR err; 
+	Data_Rx Bluetooth_rx;
+	unsigned char GroundStationData[25];
 	inf_Uart3_deal_irq_tx_end();  
-	Bluetooth_rx.len = inf_Uart3_deal_irq_rx_end(Bluetooth_rx.buf);  
-	if (Bluetooth_rx.len != 0)  
-	{ 
-//		OSSemPost(&DataDeal_proc,OS_OPT_POST_1,&err);
+	Bluetooth_rx.len = inf_Uart3_deal_irq_rx_end(Bluetooth_rx.buf);
+	memcpy(GroundStationData,Bluetooth_rx.buf,Bluetooth_rx.len);
+	if (Bluetooth_rx.len != 0){ 
+		//更新消息队列
+		OSQPost(&messageQueue[GROUND_STATION],&GroundStationData,Bluetooth_rx.len,OS_OPT_POST_FIFO,&err);
 	}				
 } 
 

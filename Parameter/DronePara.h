@@ -5,7 +5,7 @@
 #include "Vector3.h"
 #include <stdbool.h>
 #define TX_LEN  160
-#define RX_LEN  64
+#define RX_LEN  128
 #define ARM_Length 0.190f
 #define Drone_Mass 1.700f
 #define Gravity_acceleration  9.805f
@@ -13,8 +13,6 @@
 #define Inertia_Wx    0.001f
 #define Inertia_Wy    0.001f
 #define Inertia_Wz    0.002f
-
-
 
 typedef enum
 { 
@@ -73,6 +71,30 @@ typedef struct
 } PID_t;
 
 typedef struct{
+    float Kp;
+    float Ki;
+    float Kd;
+} PID;
+
+typedef struct{
+	PID Pitch;
+	PID Roll;
+	PID Yaw;
+	
+	PID WxRate;
+	PID WyRate;
+	PID WzRate;
+	
+  PID PosX;
+	PID PosY;
+	PID PosZ;
+	
+	PID VelX;
+	PID VelY;
+	PID VelZ;
+}PIDPara;
+
+typedef struct{
 	float acc_offectx;
 	float acc_offecty;
 	float acc_offectz;
@@ -91,13 +113,6 @@ typedef struct{
 	bool gyro_success;
 }OffsetInfo;
 
-
-//放置状态
-enum
-{
-    STATIC,		            //静止
-    MOTIONAL			    		//运动
-};
 
 typedef struct{
     float XaxisPos;
@@ -170,42 +185,9 @@ typedef struct{
 }Quaternion;
 
 typedef struct{
-	float wxThrust;
-	float wyThrust;
-	float wzThrust;
-	float HeightThrust;
-	float BasicThrust;
-	
-	float body_torquesX;
-	float body_torquesY;
-	float body_torquesZ;	
-	float collective_thrust;
-	
-	float f1;
-	float f2;
-	float f3;
-	float f4;
-}Thrust;
-
-typedef struct
-{
-	int M1;
-	int M2;
-	int M3;
-	int M4;
-}Throttle;
-
-
-typedef struct {
-	u32 isGood;
-	OffsetInfo Offset_Data;
-}FlashData;
-
-typedef struct
-{
 	unsigned int len;
 	unsigned char buf[64];
-}_Data_Rx;
+}Data_Rx;
 
 typedef union{
 	float fvalue;

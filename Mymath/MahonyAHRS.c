@@ -1,17 +1,19 @@
 #include "MahonyAHRS.h"
 //---------------------------------------------------------------------------------------------------
 // Definitions
+// Definitions
 #define sampleFreq	1000.0f			// sample frequency in Hz
-#define twoKpDef	(2.0f * 0.5f)	// 2 * proportional gain
+#define twoKpDef	(2.0f * 1.0f)	// 2 * proportional gain
 #define twoKiDef	(2.0f * 0.0f)	// 2 * integral gain
 
 //---------------------------------------------------------------------------------------------------
 // Variable definitions
+
 volatile float twoKp = twoKpDef;																		// 2 * proportional gain (Kp)
 volatile float twoKi = twoKiDef;																		// 2 * integral gain (Ki)
 volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;					// quaternion of sensor frame relative to auxiliary frame
 volatile float integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;	// integral error terms scaled by Ki
-AHRS ahrs;
+
 //---------------------------------------------------------------------------------------------------
 // Function declarations
 
@@ -122,11 +124,6 @@ void MahonyAHRSupdate(float gx, float gy, float gz, float ax, float ay, float az
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
-	
-	// Get angle
-	ahrs.angle.x = (atan2(2.0f*(q0q1 + q2q3), 1 - 2.0f*(q1q1 + q2q2)));
-	ahrs.angle.y = safe_asin(2.0f*(q0q2 - q1q3));
-	ahrs.angle.z = atan2(2.0f*q1q2 + 2.0f*q0q3, -2.0f*q2q2 - 2.0f*q3q3 + 1);
 }
 
 //---------------------------------------------------------------------------------------------------
@@ -218,9 +215,12 @@ float invSqrt(float x) {
 *形    参: 无
 *返 回 值: 角度值
 **********************************************************************************************************/
-Vector3f_t GetCopterAngle(void)
-{
-    return ahrs.angle;
+Vector3f_t GetCopterAngle(void){
+	Vector3f_t Angle;
+	Angle.x = atan2(2.0f*(q0*q1 + q2*q3), 1 - 2.0f*(q1*q1 + q2*q2));
+	Angle.y = safe_asin(2.0f*(q0*q2 - q1*q3));
+	Angle.z = atan2(2.0f*q1*q2 + 2.0f*q0*q3, -2.0f*q2*q2 - 2.0f*q3*q3 + 1);
+  return Angle;
 }
 
 //====================================================================================================

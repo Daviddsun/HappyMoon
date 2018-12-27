@@ -1,7 +1,5 @@
 #include "MPU6000.h"
 
-float MPU6000Gx_offset,MPU6000Gy_offset,MPU6000Gz_offset;
-
 /***********************************************************************************
 *函 数 名: MPU6000_writeReg
 *功能说明: spi读写MPU6000
@@ -21,9 +19,7 @@ void MPU6000_writeReg(u8 reg, u8 data)
 *形    参: 
 *返 回 值: 状态
 ************************************************************************************/
-void MPU6000_Initialize(void)
-{ 
-	
+void MPU6000_Initialize(void){ 
 	MPU6000_writeReg(MPU_RA_PWR_MGMT_1, 0x80);
 	delay_ms(150);
 
@@ -59,70 +55,54 @@ void MPU6000_Initialize(void)
 	//加速度自检、测量范围(不自检，+-8G)
 	MPU6000_writeReg(MPU_RA_ACCEL_CONFIG, 2 << 3);
 
-	delay_ms(5);
-
-
+	delay_ms(15);
 }
 /**********************************************************************************************************
 *函 数 名: MPU6000_ReadAcc
-*功能说明: MPU6000读取加速度传感器，并转化为标准单位
+*功能说明: MPU6000读取加速度陀螺仪传感器，并转化为标准单位
 *形    参: 读出数据指针
 *返 回 值: 无
 **********************************************************************************************************/
-void MPU6000_ReadAcc(Vector3f_t* acc)
-{
-    uint8_t buffer[6];
-    Vector3i_t accRaw;
-		MPU6000_CSL();
-		SPI1_readRegs(MPU_RA_ACCEL_XOUT_H,6,buffer);
-		MPU6000_CSH();
-    accRaw.x = ((((int16_t)buffer[0]) << 8) | buffer[1]);
-    accRaw.y = ((((int16_t)buffer[2]) << 8) | buffer[3]);
-    accRaw.z = ((((int16_t)buffer[4]) << 8) | buffer[5]);
+void MPU6000_ReadAccGyro(Vector3f_t *acc ,Vector3f_t *gyro){
+	static uint8_t buffer[14];
+	static Vector3i_t accRaw,gyroRaw;
+	MPU6000_CSL();
+	SPI1_readRegs(MPU_RA_ACCEL_XOUT_H,14,buffer);
+	MPU6000_CSH();
+	//acc
+	accRaw.x = ((((int16_t)buffer[0]) << 8) | buffer[1]);
+	accRaw.y = ((((int16_t)buffer[2]) << 8) | buffer[3]);
+	accRaw.z = ((((int16_t)buffer[4]) << 8) | buffer[5]);
+	//gyro
+	gyroRaw.x = ((((int16_t)buffer[8]) << 8) | buffer[9]);
+  gyroRaw.y = ((((int16_t)buffer[10]) << 8) | buffer[11]);
+  gyroRaw.z = ((((int16_t)buffer[12]) << 8) | buffer[13]);
 
-    acc->x = (float)accRaw.x * MPU_A_8mg;
-    acc->y = (float)accRaw.y * MPU_A_8mg;
-    acc->z = (float)accRaw.z * MPU_A_8mg;
+	acc->x = ((float)accRaw.x) * MPU_A_8mg;
+	acc->y = ((float)accRaw.y) * MPU_A_8mg;
+	acc->z = ((float)accRaw.z) * MPU_A_8mg;
+	
+	gyro->x = ((float)gyroRaw.x) * MPU_G_s1000dps * PI/180;
+	gyro->y = ((float)gyroRaw.y) * MPU_G_s1000dps * PI/180;
+	gyro->z = ((float)gyroRaw.z) * MPU_G_s1000dps * PI/180;
+	
 }
-
-/**********************************************************************************************************
-*函 数 名: MPU6000_ReadGyro
-*功能说明: MPU6000读取陀螺仪传感器，并转化为标准单位
-*形    参: 读出数据指针
-*返 回 值: 无
-**********************************************************************************************************/
-void MPU6000_ReadGyro(Vector3f_t* gyro)
-{
-    uint8_t buffer[6];
-    Vector3i_t gyroRaw;
-		MPU6000_CSL();
-		SPI1_readRegs(MPU_RA_GYRO_XOUT_H,6,buffer);
-		MPU6000_CSH();
-    gyroRaw.x = ((((int16_t)buffer[0]) << 8) | buffer[1]);
-    gyroRaw.y = ((((int16_t)buffer[2]) << 8) | buffer[3]);
-    gyroRaw.z = ((((int16_t)buffer[4]) << 8) | buffer[5]);
-
-    gyro->x = gyroRaw.x * MPU_G_s1000dps;
-    gyro->y = gyroRaw.y * MPU_G_s1000dps;
-    gyro->z = gyroRaw.z * MPU_G_s1000dps;
-}
-
-/**********************************************************************************************************
-*函 数 名: MPU6000_ReadTemp
-*功能说明: MPU6000读取温度传感器
-*形    参: 读出数据指针
-*返 回 值: 无
-**********************************************************************************************************/
-void MPU6000_ReadTemp(float* temp)
-{
-    uint8_t buffer[2];
-    static int16_t temperature_temp;
-		MPU6000_CSL();
-		SPI1_readRegs(MPU_RA_TEMP_OUT_H,2,buffer);
-		MPU6000_CSH();
-    temperature_temp = ((((int16_t)buffer[0]) << 8) | buffer[1]);
-    *temp = 36.53f + (float)temperature_temp / 340;
-}
+///**********************************************************************************************************
+//*函 数 名: MPU6000_ReadTemp
+//*功能说明: MPU6000读取温度传感器
+//*形    参: 读出数据指针
+//*返 回 值: 无
+//**********************************************************************************************************/
+//void MPU6000_ReadTemp(float* temp)
+//{
+//    uint8_t buffer[2];
+//    static int16_t temperature_temp;
+//		MPU6000_CSL();
+//		SPI1_readRegs(MPU_RA_TEMP_OUT_H,2,buffer);
+//		MPU6000_CSH();
+//    temperature_temp = ((((int16_t)buffer[0]) << 8) | buffer[1]);
+//    *temp = 36.53f + (float)temperature_temp / 340;
+//}
 
 
 

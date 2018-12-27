@@ -36,7 +36,7 @@ Vector3f_t Attitude_InnerControl(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro)
 Vector3f_t Attitude_OuterControl(Vector3f_t ExpectAngle){
   Vector3f_t angle,angleLpf,ExpectAnguleRate,ErrorAngle;
 	//获取当前飞机的姿态角
-  angle = GetCopterAngle();
+//  angle = GetCopterAngle();
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
 	angleLpf.x = angleLpf.x * 0.92f + angle.x * 0.08f;
 	angleLpf.y = angleLpf.y * 0.92f + angle.y * 0.08f;

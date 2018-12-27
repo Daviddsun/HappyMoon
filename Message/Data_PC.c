@@ -127,20 +127,21 @@ void SendRTInfo(void)
 	u8 floatToHex[4];		
 	u8 dataToPC[64];	
 	u8 i=0;
+	Vector3f_t AHRSAngle = GetCopterAngle();
 
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0X01;
 		
-	temp = ahrs.angle.y * 180/PI;
+	temp = AHRSAngle.y * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-	temp = ahrs.angle.x * 180/PI;
+	temp = AHRSAngle.x * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = ahrs.angle.z * 180/PI;
+	temp = 0;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
@@ -152,7 +153,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = UAVThrust.collective_thrust;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	

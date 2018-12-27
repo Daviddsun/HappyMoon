@@ -5,6 +5,7 @@
 #include "Sensor.h"
 #include "lowPassFilter.h"
 #include "Gyroscope.h"
+#include "Parameter.h"
 typedef struct {
     Vector3f_t data;
     Vector3f_t dataLpf;
@@ -15,4 +16,5 @@ typedef struct {
 void AccPreTreatInit(void);
 void AccCalibration(Vector3f_t accRaw);
 void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData);
+Vector3f_t AccGetData(void);
 #endif

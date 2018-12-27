@@ -4,9 +4,7 @@ DroneFlightControl FlightControl;
 DroneRTInfo RT_Info;                   
 DroneTargetInfo Target_Info;           
 RemoteControl RockerControl;           
-OffsetInfo OffsetData;                      		 
-Thrust UAVThrust;											 
-Throttle Throttle_Info;								 
+OffsetInfo OffsetData; 
 PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
 State_estimate state_estimate;
@@ -21,10 +19,8 @@ void SensorRead_task(void *p_arg){
 	p_arg = p_arg;
 	Vector3f_t accRawData,gyroRawData;
 	while(1){
-		//读取加速计传感器
-		MPU6000_ReadAcc(&accRawData);
-		//读取陀螺仪传感器
-		MPU6000_ReadGyro(&gyroRawData);
+		//读取加速计 陀螺仪 传感器
+		MPU6000_ReadAccGyro(&accRawData ,&gyroRawData);
 		//更新消息队列
 		OSQPost(&messageQueue[ACC_SENSOR_READ],&accRawData,sizeof(accRawData),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_SENSOR_READ],&gyroRawData,sizeof(gyroRawData),OS_OPT_POST_FIFO,&err);
@@ -97,8 +93,9 @@ void Navigation_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			gyroCalibData = *((Vector3f_t *)p_msg);
 		}
-		MahonyAHRSupdate(gyroCalibData.x,gyroCalibData.y,gyroCalibData.z,
-														accCalibData.x,accCalibData.y,accCalibData.z,0,0,0);
+		//姿态融合
+		MahonyAHRSupdateIMU(gyroCalibData.x,gyroCalibData.y,gyroCalibData.z,
+															accCalibData.x,accCalibData.y,accCalibData.z);
 	}
 }
 
@@ -114,6 +111,7 @@ void FlightControl_task(void *p_arg){
 	Vector3f_t estimategyro,expectgyro,expectangle;
 	Vector3f_t rotatethrust;
 	static uint32_t count = 0;
+	
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[GYRO_FOR_CONTROL],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -142,16 +140,49 @@ void FlightControl_task(void *p_arg){
 	}
 }
 /**
+	* @Description 视觉惯性里程计任务
+ */
+void VisualOdometry_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	while(1){
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
+	}
+}
+
+/**
+ * @Description 地面站处理任务
+ */
+void GroundStation_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	void   *p_msg;
+	OS_MSG_SIZE  msg_size;
+	CPU_TS       ts;
+	unsigned char GroundStation[25];
+	while(1){
+		//消息队列信息提取
+		p_msg = OSQPend(&messageQueue[GROUND_STATION],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
+//		if(err == OS_ERR_NONE){
+//			for(int i =0; i < msg_size; i++){
+//				GroundStation[i] = *((unsigned char *)p_msg);
+//				p_msg ++;
+//			}
+//		}
+	}
+}
+
+/**
  * @Description 飞行状态任务
  */
 void FlightStatus_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1){
-//		//飞行器放置状态检测
-//    PlaceStausCheck(GyroLpfGetData());
-//		//传感器方向检测（用于校准时的判断）
-//    ImuOrientationDetect();
+		//飞行器放置状态检测
+    PlaceStausCheck(GyroLpfGetData());
+		//传感器方向检测（用于校准时的判断）
+    ImuOrientationDetect(AccGetData());
 		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }

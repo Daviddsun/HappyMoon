@@ -190,7 +190,7 @@ void AccCalibration(Vector3f_t accRaw){
 			OffsetData.acc_scalex = new_scale.x;
 			OffsetData.acc_scaley = new_scale.y;
 			OffsetData.acc_scalez = new_scale.z;
-			Write_config();
+			Write_Config();
 			OffsetData.acc_calibra_cnt = 0;
 			for(uint8_t i=0; i<6; i++)
 					orientationCaliFlag[i] = 0;
@@ -215,7 +215,19 @@ void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData)
 	accdata.x = (accdata.x - OffsetData.acc_offectx) * OffsetData.acc_scalex;
 	accdata.y = (accdata.y - OffsetData.acc_offecty) * OffsetData.acc_scaley;
 	accdata.z = (accdata.z - OffsetData.acc_offectz) * OffsetData.acc_scalez;
-
+	accValue.data = accdata;
 	*accData = accdata;
 } 
+
+/**********************************************************************************************************
+*函 数 名: AccGetData
+*功能说明: 获取经过处理后的加速度数据
+*形    参: 无
+*返 回 值: 加速度
+**********************************************************************************************************/
+Vector3f_t AccGetData(void)
+{
+    return accValue.data;
+}
+
 

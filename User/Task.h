@@ -21,6 +21,7 @@
 #include "ThrustMixer.h"
 #include "Gyroscope.h"
 #include "Accelerometer.h"
+#include "Parameter.h"
 
 /* 外部变量集合 */
 extern OS_SEM DataDeal_proc;
@@ -30,10 +31,7 @@ extern DroneFlightControl FlightControl;
 extern DroneRTInfo RT_Info;
 extern DroneTargetInfo Target_Info;
 extern RemoteControl RockerControl; ;
-extern OffsetInfo OffsetData;  
-extern Thrust UAVThrust;											 
-extern Throttle Throttle_Info;	
-
+extern OffsetInfo OffsetData;  										 
 extern PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
 

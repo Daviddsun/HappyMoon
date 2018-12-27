@@ -1,5 +1,5 @@
 #include "Data_deal.h"
-int sumCheck(_Data_Rx rx)
+int sumCheck(Data_Rx rx)
 {
 	int i=0;
 	unsigned char sum;
@@ -15,9 +15,9 @@ int sumCheck(_Data_Rx rx)
 
 static u8 firstdata[20];
 static u8 secdata[20];
-_Data_Rx Stitchingdata;
+Data_Rx Stitchingdata;
 
-void DataStitching(_Data_Rx rx)
+void DataStitching(Data_Rx rx)
 {
 	static u8 i,firstlen;
 	static u8 BluetoothStitch[20];
@@ -52,7 +52,7 @@ void DataStitching(_Data_Rx rx)
 		DataDeal(rx);
 	}
 }
-void DataDeal(_Data_Rx rx)
+void DataDeal(Data_Rx rx)
 {
 //	float pidParaTemp[3];
 	u8 HexToFloat[4];
@@ -141,7 +141,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.Pitch.Kp=pidParaTemp[0];
 //			PID_ParaInfo.Pitch.Ki=pidParaTemp[1];
 //			PID_ParaInfo.Pitch.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}		
 		/* Roll PID */					
@@ -158,7 +158,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.Roll.Kp=pidParaTemp[0];
 //			PID_ParaInfo.Roll.Ki=pidParaTemp[1];
 //			PID_ParaInfo.Roll.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* Yaw PID*/					
@@ -175,7 +175,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.Yaw.Kp=pidParaTemp[0];
 //			PID_ParaInfo.Yaw.Ki=pidParaTemp[1];
 //			PID_ParaInfo.Yaw.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* PosZ PID*/					
@@ -192,7 +192,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.PosZ.Kp=pidParaTemp[0];
 //			PID_ParaInfo.PosZ.Ki=pidParaTemp[1];
 //			PID_ParaInfo.PosZ.Kd=pidParaTemp[2];
-			Write_config();		
+//			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}	 
 	 /* ratePitch PID*/					
@@ -209,7 +209,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.WyRate.Kp=pidParaTemp[0];
 //			PID_ParaInfo.WyRate.Ki=pidParaTemp[1];
 //			PID_ParaInfo.WyRate.Kd=pidParaTemp[2];
-			Write_config();		
+//			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}
 	 /* rateRoll PID*/					
@@ -226,7 +226,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.WxRate.Kp=pidParaTemp[0];
 //			PID_ParaInfo.WxRate.Ki=pidParaTemp[1];
 //			PID_ParaInfo.WxRate.Kd=pidParaTemp[2];
-			Write_config();		
+//			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* rateYaw PID*/					
@@ -243,7 +243,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.WzRate.Kp=pidParaTemp[0];
 //			PID_ParaInfo.WzRate.Ki=pidParaTemp[1];
 //			PID_ParaInfo.WzRate.Kd=pidParaTemp[2];
-			Write_config();		
+//			Write_config();		
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* VelZ PID*/					
@@ -260,7 +260,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.VelZ.Kp=pidParaTemp[0];
 //			PID_ParaInfo.VelZ.Ki=pidParaTemp[1];
 //			PID_ParaInfo.VelZ.Kd=pidParaTemp[2];
-			Write_config();
+//			Write_config();
 			FlightControl.ReportSW=Report_SET;
 		}	
 		/* Rate */
@@ -339,7 +339,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.PosX.Kp=pidParaTemp[0];
 //			PID_ParaInfo.PosX.Ki=pidParaTemp[1];
 //			PID_ParaInfo.PosX.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* PositionY PID*/					
@@ -356,7 +356,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.PosY.Kp=pidParaTemp[0];
 //			PID_ParaInfo.PosY.Ki=pidParaTemp[1];
 //			PID_ParaInfo.PosY.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* SpeedX PID*/					
@@ -374,7 +374,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.VelX.Kp=pidParaTemp[0];
 //			PID_ParaInfo.VelX.Ki=pidParaTemp[1];
 //			PID_ParaInfo.VelX.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* SpeedY PID*/					
@@ -391,7 +391,7 @@ void DataDeal(_Data_Rx rx)
 //			PID_ParaInfo.VelY.Kp=pidParaTemp[0];
 //			PID_ParaInfo.VelY.Ki=pidParaTemp[1];
 //			PID_ParaInfo.VelY.Kd=pidParaTemp[2];
-			Write_config();	
+//			Write_config();	
 			FlightControl.ReportSW=Report_SET;
 		}		
 	}

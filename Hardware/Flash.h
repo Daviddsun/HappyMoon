@@ -5,7 +5,6 @@
 #include <string.h>
 #include "Task.h"
 
-
 #define STM32_FLASH_BASE  0X080E0004 
 
 #define ADDR_FLASH_SECTOR_0     ((u32)0x08000000) 
@@ -21,8 +20,11 @@
 #define ADDR_FLASH_SECTOR_10    ((u32)0x080C0000) 
 #define ADDR_FLASH_SECTOR_11    ((u32)0x080E0000) 
 
-void Write_config(void);
-void Load_Config(void);
+
+u32 STMFLASH_ReadWord(u32 faddr);
+uint16_t STMFLASH_GetFlashSector(u32 addr);
+void STMFLASH_Write(u32 WriteAddr,u32 *pBuffer,u32 NumToWrite);
+void STMFLASH_Read(u32 ReadAddr,u32 *pBuffer,u32 NumToRead);
 
 #endif
 

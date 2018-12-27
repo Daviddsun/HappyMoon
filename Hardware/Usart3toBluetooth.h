@@ -7,7 +7,6 @@
 #include <os.h>
 #include "Task.h"
 
-extern _Data_Rx Bluetooth_rx; 
 
 void Usart3toBluetooth_Init(u32 Bound);
 

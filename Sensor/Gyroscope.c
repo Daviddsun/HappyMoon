@@ -2,7 +2,6 @@
 
 GYROSCOPE_t gyroValue;
 uint8_t placement;
-
 /**********************************************************************************************************
 *函 数 名: GyroPreTreatInit
 *功能说明: 陀螺仪预处理初始化
@@ -45,6 +44,15 @@ void GyroCalibration(Vector3f_t gyroRaw)
 		gyro_sum[0] = 0;
 		gyro_sum[1] = 0;
 		gyro_sum[2] = 0;
+		
+		OffsetData.gyro_offectx = gyro_cali_temp.x;
+		OffsetData.gyro_offecty = gyro_cali_temp.y;
+		OffsetData.gyro_offectz = gyro_cali_temp.z;
+		OffsetData.gyro_scalex = 1.0;
+		OffsetData.gyro_scaley = 1.0;
+		OffsetData.gyro_scalez = 1.0;
+		Write_Config();
+		OffsetData.gyro_success = false;
 	}
 }
 
@@ -63,22 +71,10 @@ void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyro
     gyrodata.y = (gyrodata.y - OffsetData.gyro_offecty) * OffsetData.gyro_scaley;
     gyrodata.z = (gyrodata.z - OffsetData.gyro_offectz) * OffsetData.gyro_scalez;
 		//低通滤波
-		Vector3f_t gyroLpf = LowPassFilter2nd(&gyroValue.lpf_2nd, gyrodata);
+		gyroValue.dataLpf = LowPassFilter2nd(&gyroValue.lpf_2nd, gyrodata);
     *gyroData = gyrodata;
-		*gyroLpfData = gyroLpf;
+		*gyroLpfData = gyroValue.dataLpf;
 }
-
-/**********************************************************************************************************
-*函 数 名: GetPlaceStatus
-*功能说明: 获取飞行器放置状态
-*形    参: 无
-*返 回 值: 状态
-**********************************************************************************************************/
-uint8_t GetPlaceStatus(void)
-{
-    return placement;
-}
-
 /***********************************************************************************
 *函 数 名: PlaceStausCheck
 *功能说明: 飞行器放置状态检测：静止或运动
@@ -119,3 +115,28 @@ void PlaceStausCheck(Vector3f_t gyro)
         count = 0;
     }
 }
+
+
+/**********************************************************************************************************
+*函 数 名: GyroLpfGetData
+*功能说明: 获取低通滤波后的陀螺仪数据
+*形    参: 无
+*返 回 值: 角速度
+**********************************************************************************************************/
+Vector3f_t GyroLpfGetData(void)
+{
+    return gyroValue.dataLpf;
+}
+
+/**********************************************************************************************************
+*函 数 名: GetPlaceStatus
+*功能说明: 获取飞行器放置状态
+*形    参: 无
+*返 回 值: 状态
+**********************************************************************************************************/
+uint8_t GetPlaceStatus(void)
+{
+    return placement;
+}
+
+

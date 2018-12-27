@@ -36,6 +36,7 @@ enum ORIENTATION_STATUS
 
 void Sensor_Init(void);
 
+void ImuOrientationDetect(Vector3f_t acc);
 
 enum ORIENTATION_STATUS GetImuOrientation(void);
 

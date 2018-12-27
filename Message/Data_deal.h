@@ -8,8 +8,8 @@
 #include "MPU6000.h"
 #include "Type_conversion.h"
 
-void DataDeal(_Data_Rx rx);
-void DataStitching(_Data_Rx rx);
+void DataDeal(Data_Rx rx);
+void DataStitching(Data_Rx rx);
  
  
 #endif 

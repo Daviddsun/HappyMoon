@@ -224,7 +224,7 @@ void Uart1_dma_tx_irq_handler(void)
 }  
 
 
-_Data_Rx Odroid_rx; 
+Data_Rx Odroid_rx; 
 void Uart1_irq_handler(void)                                
 {  
 //		OS_ERR err;	 
