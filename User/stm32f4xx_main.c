@@ -6,6 +6,7 @@
  * @日期     2018 ~
 *********************************************************************************/
 #include "Board.h"
+
 //Start任务
 #define START_TASK_PRIO 3						                     // 任务优先级
 #define START_STK_SIZE 256						                   // 任务堆栈大小
@@ -85,8 +86,6 @@ int main(void)
 	CPU_SR_ALLOC();
 	/** 飞控板各个硬件初始化 **/
 	Board_Init();
-	/** 飞控参数读取 **/
-	Load_Config();
 	/** 各个传感器初始化 **/
 	Sensor_Init();
 	/** 启动操作系统 **/

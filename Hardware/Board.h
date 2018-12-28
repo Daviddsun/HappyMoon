@@ -5,6 +5,7 @@
 #include "explore_system.h"
 #include "explore_systick.h"
 #include "SPI1.h"
+#include "SPI3.h"
 #include "Task.h"
 #include "mcpwm.h"
 #include "Flash.h"
@@ -17,6 +18,8 @@
 #include "MessageQueue.h"
 
 void Board_Init(void);
+
+#define MPU6000 //定义IMU型号
 
 #endif
 

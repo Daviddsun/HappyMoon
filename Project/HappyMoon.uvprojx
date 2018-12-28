@@ -760,6 +760,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\Board.c</FilePath>
             </File>
+            <File>
+              <FileName>SPI3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\SPI3.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -879,6 +884,11 @@
               <FileName>Gyroscope.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Sensor\Gyroscope.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Sensor\MPU6500.c</FilePath>
             </File>
           </Files>
         </Group>

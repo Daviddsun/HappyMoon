@@ -21,8 +21,13 @@ void Board_Init(void){
 	delay_ms(5000);
 	// ADC初始化
 	Adc_Init();
-	// SPI1初始化 用于陀螺仪和加速计读取
+#ifdef MPU6000
+	// SPI1初始化 用于陀螺仪和加速计读取 MPU6000
 	SPI1_Configuration();
+#else
+	// SPI3初始化 用于陀螺仪和加速计读取 MPU6500
+	SPI3_Configuration();
+#endif
 	// pwm定时器初始化用于电调信号 500hz频率
 	PWM_Init(); 
 	// 用于与高性能板载ARM或板载PC通信 波特率230400

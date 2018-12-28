@@ -11,9 +11,16 @@ void IMUSensorRead_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	Vector3f_t accRawData,gyroRawData;
+	/** 飞控参数读取 **/
+	Load_Config();
 	while(1){
+#ifdef MPU6000
 		//读取加速计 陀螺仪 传感器
 		MPU6000_ReadAccGyro(&accRawData ,&gyroRawData);
+#else
+		//读取加速计 陀螺仪 传感器
+		MPU6500_ReadAccGyro(&accRawData ,&gyroRawData);
+#endif
 		//更新消息队列
 		OSQPost(&messageQueue[ACC_SENSOR_READ],&accRawData,sizeof(accRawData),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_SENSOR_READ],&gyroRawData,sizeof(gyroRawData),OS_OPT_POST_FIFO,&err);

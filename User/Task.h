@@ -16,6 +16,7 @@
 #include "Position_control.h"
 #include "Vector3.h"
 #include "MPU6000.h"
+#include "MPU6500.h"
 #include "MessageQueue.h"
 #include "MahonyAHRS.h"
 #include "ThrustMixer.h"

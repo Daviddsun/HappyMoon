@@ -9,8 +9,13 @@ enum ORIENTATION_STATUS orientationStatus;
 **********************************************************************************************************/
 void Sensor_Init(void){
 	//陀螺仪加速计初始化
+#ifdef MPU6000
 	MPU6000_Initialize();
 	delay_ms(100);
+#else
+	MPU6500_Initialize();
+	delay_ms(100);
+#endif
 }
 
 
