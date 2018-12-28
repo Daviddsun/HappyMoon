@@ -8,6 +8,6 @@
 #include "MahonyAHRS.h"
 #include <math.h>
 Vector3f_t Attitude_InnerControl(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro);
-Vector3f_t Attitude_OuterControl(Vector3f_t ExpectAngle);					
+Vector3angle_t Attitude_OuterControl(Vector3angle_t ExpectAngle);					
 #endif
 

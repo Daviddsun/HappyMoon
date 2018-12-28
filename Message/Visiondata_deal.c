@@ -1,11 +1,19 @@
 #include "Visiondata_deal.h"
+//估计状态定义
 
-float_union position_x,position_y,position_z,velocity_x,velocity_y,velocity_z,
-								Quaternion0,Quaternion1,Quaternion2,Quaternion3,reference_posx,reference_posy,reference_posz;
+float_union position_x,position_y,position_z,                       //估计位置
+							velocity_x,velocity_y,velocity_z,										  //估计速度
+								Quaternion0,Quaternion1,Quaternion2,Quaternion3,	  //估计姿态
+									reference_posx,reference_posy,reference_posz;			//参考航点
 
-void Vision_datadeal(Data_Rx rx){	
-	if(rx.len==56 && rx.buf[0]==0x55 && rx.buf[1]==0xAA && rx.buf[55]==0xAA){
-		
+/**********************************************************************************************************
+*函 数 名: Vision_datadeal
+*功能说明: 接收视觉里程计数据
+*形    参: 无
+*返 回 值: Position
+**********************************************************************************************************/
+void Vision_DataDeal(Receive_VisualOdometry rx){	
+	if(rx.buf[0]==0x55 && rx.buf[1]==0xAA && rx.buf[55]==0xAA){
 		if(rx.buf[2] == 0x30){
 			//X轴位置数据
 			position_x.cv[0] = rx.buf[3];
@@ -72,21 +80,62 @@ void Vision_datadeal(Data_Rx rx){
 			reference_posz.cv[1] = rx.buf[52];
 			reference_posz.cv[2] = rx.buf[53];
 			reference_posz.cv[3] = rx.buf[54];
-			//实际反馈数据
-			state_estimate.postionX = position_x.fvalue;
-			state_estimate.postionY = position_y.fvalue;
-			state_estimate.postionZ = position_z.fvalue;
-			state_estimate.velocityX = velocity_x.fvalue;
-			state_estimate.velocityY = velocity_y.fvalue;
-			state_estimate.velocityZ = velocity_z.fvalue;
-
-			//视觉里程计 与 实际四旋翼航向角对应关系
-			state_estimate.AttitudeYaw = atan2(2.0f * Quaternion1.fvalue * Quaternion2.fvalue + 2.0f * Quaternion0.fvalue * Quaternion3.fvalue,
-																						-2.0f * Quaternion2.fvalue * Quaternion2.fvalue - 2.0f * Quaternion3.fvalue * Quaternion3.fvalue + 1);
 		}
-			
-
 	}
 }
 
 
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryPos
+*功能说明: 获取视觉里程计的Pos
+*形    参: 无
+*返 回 值: Position
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryPos(void){
+	Vector3f_t Position;
+	Position.x = position_x.fvalue;
+	Position.y = position_y.fvalue;
+	Position.z = position_z.fvalue;
+  return Position;
+}
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryVel
+*功能说明: 获取视觉里程计的Vel
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryVel(void){
+	Vector3f_t Velocity;
+	Velocity.x = velocity_x.fvalue;
+	Velocity.y = velocity_y.fvalue;
+	Velocity.z = velocity_z.fvalue;
+  return Velocity;
+}
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryAtt
+*功能说明: 获取视觉里程计的Att
+*形    参: 无
+*返 回 值: Attitude
+**********************************************************************************************************/
+Vector3angle_t GetVisualOdometryAtt(void){
+	Vector3angle_t Attitude;
+	Attitude.roll = atan2(2.0f*(Quaternion0.fvalue*Quaternion1.fvalue + Quaternion2.fvalue*Quaternion3.fvalue), 
+											1 - 2.0f*(Quaternion1.fvalue*Quaternion1.fvalue + Quaternion2.fvalue*Quaternion2.fvalue));
+	Attitude.pitch = safe_asin(2.0f*(Quaternion0.fvalue*Quaternion2.fvalue - Quaternion1.fvalue*Quaternion3.fvalue));
+	Attitude.yaw = atan2(2.0f*Quaternion1.fvalue*Quaternion2.fvalue + 2.0f*Quaternion0.fvalue*Quaternion3.fvalue, 
+											-2.0f*Quaternion2.fvalue*Quaternion2.fvalue - 2.0f*Quaternion3.fvalue*Quaternion3.fvalue + 1);
+  return Attitude;
+}
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryRefPos
+*功能说明: 获取视觉里程计的Vel
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryRefPos(void){
+	Vector3f_t RefPosition;
+	RefPosition.x = reference_posx.fvalue;
+	RefPosition.y = reference_posy.fvalue;
+	RefPosition.z = reference_posz.fvalue;
+  return RefPosition;
+}

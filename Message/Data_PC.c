@@ -127,29 +127,29 @@ void SendRTInfo(void)
 	u8 floatToHex[4];		
 	u8 dataToPC[64];	
 	u8 i=0;
-	Vector3f_t AHRSAngle = GetCopterAngle();
+	Vector3angle_t AHRSAngle = GetCopterAngle();
 
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0X01;
 		
-	temp = AHRSAngle.y * 180/PI;
+	temp = AHRSAngle.pitch * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-	temp = AHRSAngle.x * 180/PI;
+	temp = AHRSAngle.roll * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = AHRSAngle.z * 180/PI;
+	temp = AHRSAngle.yaw * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
-	temp = state_estimate.postionZ;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
-	temp = RT_Info.batteryVoltage;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	

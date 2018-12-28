@@ -701,9 +701,9 @@
               <FilePath>..\User\Task.c</FilePath>
             </File>
             <File>
-              <FileName>Board.c</FileName>
+              <FileName>FlightStatus.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\Board.c</FilePath>
+              <FilePath>..\User\FlightStatus.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -755,6 +755,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\Usart3toBluetooth.c</FilePath>
             </File>
+            <File>
+              <FileName>Board.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Board.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -779,6 +784,11 @@
               <FileName>ThrustMixer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Control\ThrustMixer.c</FilePath>
+            </File>
+            <File>
+              <FileName>SafeControl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Control\SafeControl.c</FilePath>
             </File>
           </Files>
         </Group>

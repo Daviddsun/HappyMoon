@@ -14,8 +14,7 @@
 #define Inertia_Wy    0.001f
 #define Inertia_Wz    0.002f
 
-typedef enum
-{ 
+typedef enum{ 
 	Drone_Mode_None= 0,
   Drone_Mode_Pitch= 1,		 	
   Drone_Mode_Roll= 2, 
@@ -24,37 +23,28 @@ typedef enum
   Drone_Mode_RateRoll= 5, 	
 }DroneFlightMode_TypeDef;
 
-typedef enum
-{  
+typedef enum{  
 	Drone_Off  = 0x00,
   Drone_On   = 0x01,
+	Drone_Land = 0x02,
 }DroneFlightOnOff_TypeDef;
 
-typedef enum
-{  
+typedef enum{  
 	Report_SET      = 0x01,
   Report_RESET    = 0x00, 		 	
 }DroneReportSW_TypeDef;
 
-typedef struct
-{
-	DroneFlightOnOff_TypeDef OnOff;
-	DroneFlightMode_TypeDef droneMode;
+typedef struct{
+	DroneFlightOnOff_TypeDef OnOffLand;
+	DroneFlightMode_TypeDef DroneMode;
 	DroneReportSW_TypeDef ReportSW;
-	int landFlag;
 }DroneFlightControl;
 
 typedef struct
 {
-	float Pitch;
-	float Roll;
-	float Yaw;
-	float RateRoll;
-	float RatePitch;
-	float RateYaw;
-	float Height;
-	float VelHeight;
-	float AccHeight;
+	Vector3angle_t TargetAngle;
+	Vector3f_t TargetW;
+	Vector3pos_t TargetPos;
 }DroneTargetInfo;
 
 typedef struct
@@ -121,68 +111,11 @@ typedef struct{
     float Navigation;
 }RemoteControl;
 
-typedef struct
-{
-	float Pitch; 					
-	float Roll;						
-  float Yaw;						
-  float	wx;							
-	float wy;							
-	float wz;							
-	float accXaxis;       
-	float accYaxis;				
-	float accZaxis;	
-	float Calibra_accXaxis;
-	float Calibra_accYaxis;
-	float Calibra_accZaxis;
-	float WorldAccXaxis;  
-	float WorldAccYaxis;  
-	float WorldAccZaxis;  
-	float batteryVoltage; 
-	float frequency; 
-	int lowPowerFlag;		   
-}DroneRTInfo;
-
-typedef struct{
-	float AttitudePitch; 					
-	float AttitudeRoll;						
-  float AttitudeYaw;
-	float postionX;
-	float postionY;
-	float postionZ;
-	float velocityX;
-	float velocityY;
-	float velocityZ;
-}State_estimate;
-
-typedef struct{
-	float AttitudePitch; 					
-	float AttitudeRoll;						
-  float AttitudeYaw;
-	float postionX;
-	float postionY;
-	float postionZ;
-	float velocityX;
-	float velocityY;
-	float velocityZ;
-	float AccelerationX;
-	float AccelerationY;
-	float AccelerationZ;
-	float Heading;
-}Reference_state;
-
 typedef struct{
 	float worldX;
 	float worldY;
 	float worldZ;
 }Desired_acceleration;
-
-typedef struct{
-	float qw;
-	float qx;
-	float qy;
-	float qz;
-}Quaternion;
 
 typedef struct{
 	unsigned int len;

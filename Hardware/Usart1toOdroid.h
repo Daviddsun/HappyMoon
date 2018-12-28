@@ -9,6 +9,4 @@
 void Uart1_tx(uint8_t *data,uint16_t size);
 void Usart1toOdroid_Init(u32 Bound);
 
-extern Data_Rx Odroid_rx;
-
 #endif 

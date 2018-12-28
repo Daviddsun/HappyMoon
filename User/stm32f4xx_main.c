@@ -13,19 +13,19 @@ OS_TCB StartTaskTCB;							                       // 任务控制块
 CPU_STK START_TASK_STK[START_STK_SIZE];					         // 任务堆栈
 void start_task(void *p_arg);						                 // 任务函数
 
-//SensorRead任务
-#define SensorRead_TASK_PRIO 4						
-#define SensorRead_STK_SIZE 512						
-OS_TCB SensorReadTaskTCB;				
-CPU_STK SensorRead_TASK_STK[SensorRead_STK_SIZE];					
-void SensorRead_task(void *p_arg);
+//IMUSensorRead任务
+#define IMUSensorRead_TASK_PRIO 4						
+#define IMUSensorRead_STK_SIZE 512						
+OS_TCB IMUSensorReadTaskTCB;				
+CPU_STK IMUSensorRead_TASK_STK[IMUSensorRead_STK_SIZE];					
+void IMUSensorRead_task(void *p_arg);
 
-//SensorPreDeal任务
-#define SensorPreDeal_TASK_PRIO 5					
-#define SensorPreDeal_STK_SIZE 512						
-OS_TCB SensorPreDealTaskTCB;				
-CPU_STK SensorPreDeal_TASK_STK[SensorPreDeal_STK_SIZE];					
-void SensorPreDeal_task(void *p_arg);
+//IMUSensorPreDeal任务
+#define IMUSensorPreDeal_TASK_PRIO 5					
+#define IMUSensorPreDeal_STK_SIZE 512						
+OS_TCB IMUSensorPreDealTaskTCB;				
+CPU_STK IMUSensorPreDeal_TASK_STK[IMUSensorPreDeal_STK_SIZE];					
+void IMUSensorPreDeal_task(void *p_arg);
 
 //Navigation任务
 #define Navigation_TASK_PRIO 6						
@@ -43,28 +43,35 @@ void FlightControl_task(void *p_arg);
 
 //视觉里程计数据处理
 #define VisualOdometry_TASK_PRIO 8						
-#define VisualOdometry_STK_SIZE 512						
+#define VisualOdometry_STK_SIZE 1024						
 OS_TCB VisualOdometryTaskTCB;				
 CPU_STK VisualOdometry_TASK_STK[VisualOdometry_STK_SIZE];					
 void VisualOdometry_task(void *p_arg);
 
 //地面站数据处理
 #define GroundStation_TASK_PRIO 9						
-#define GroundStation_STK_SIZE 512						
+#define GroundStation_STK_SIZE 1024				
 OS_TCB GroundStationTaskTCB;				
 CPU_STK GroundStation_TASK_STK[GroundStation_STK_SIZE];					
 void GroundStation_task(void *p_arg);
 
+//其他传感器数据更新任务
+#define OtherSensorUpdate_TASK_PRIO 10						
+#define OtherSensorUpdate_STK_SIZE 512						
+OS_TCB OtherSensorUpdateTaskTCB;				
+CPU_STK OtherSensorUpdate_TASK_STK[OtherSensorUpdate_STK_SIZE];					
+void OtherSensorUpdate_task(void *p_arg);
+
 //FlightStatus任务
-#define FlightStatus_TASK_PRIO 10						
+#define FlightStatus_TASK_PRIO 11						
 #define FlightStatus_STK_SIZE 512						
 OS_TCB FlightStatusTaskTCB;				
 CPU_STK FlightStatus_TASK_STK[FlightStatus_STK_SIZE];					
 void FlightStatus_task(void *p_arg);
 
 //Message任务
-#define Message_TASK_PRIO 11						
-#define Message_STK_SIZE 512						
+#define Message_TASK_PRIO 12						
+#define Message_STK_SIZE 1024						
 OS_TCB MessageTaskTCB;				
 CPU_STK Message_TASK_STK[FlightControl_STK_SIZE];					
 void Message_task(void *p_arg);
@@ -108,8 +115,7 @@ int main(void)
 /**
  * @Description 开始任务函数
  */
-void start_task(void *p_arg)
-{
+void start_task(void *p_arg){
 	OS_ERR err;
 	CPU_SR_ALLOC();
 	p_arg = p_arg;
@@ -133,14 +139,14 @@ void start_task(void *p_arg)
 	MessageQueueCreate(err);
 	/** 创建用户任务 **/
 	OSTaskCreate(																				// 传感器数据读取任务
-		(OS_TCB*)&SensorReadTaskTCB,
-		(CPU_CHAR*)"SensorRead task",
-		(OS_TASK_PTR )SensorRead_task,
+		(OS_TCB*)&IMUSensorReadTaskTCB,
+		(CPU_CHAR*)"IMUSensorRead task",
+		(OS_TASK_PTR )IMUSensorRead_task,
 		(void*)0,
-		(OS_PRIO)SensorRead_TASK_PRIO,
-		(CPU_STK*)&SensorRead_TASK_STK[0],
-		(CPU_STK_SIZE)SensorRead_STK_SIZE/10,
-		(CPU_STK_SIZE)SensorRead_STK_SIZE,
+		(OS_PRIO)IMUSensorRead_TASK_PRIO,
+		(CPU_STK*)&IMUSensorRead_TASK_STK[0],
+		(CPU_STK_SIZE)IMUSensorRead_STK_SIZE/10,
+		(CPU_STK_SIZE)IMUSensorRead_STK_SIZE,
 		(OS_MSG_QTY)0,
 		(OS_TICK)0,
 		(void*)0,
@@ -148,14 +154,14 @@ void start_task(void *p_arg)
 		(OS_ERR*)&err
 		);
 	OSTaskCreate(																				// 传感器数据预处理
-		(OS_TCB*)&SensorPreDealTaskTCB,
-		(CPU_CHAR*)"SensorPreDeal task",
-		(OS_TASK_PTR )SensorPreDeal_task,
+		(OS_TCB*)&IMUSensorPreDealTaskTCB,
+		(CPU_CHAR*)"IMUSensorPreDeal task",
+		(OS_TASK_PTR )IMUSensorPreDeal_task,
 		(void*)0,
-		(OS_PRIO)SensorPreDeal_TASK_PRIO,
-		(CPU_STK*)&SensorPreDeal_TASK_STK[0],
-		(CPU_STK_SIZE)SensorPreDeal_STK_SIZE/10,
-		(CPU_STK_SIZE)SensorPreDeal_STK_SIZE,
+		(OS_PRIO)IMUSensorPreDeal_TASK_PRIO,
+		(CPU_STK*)&IMUSensorPreDeal_TASK_STK[0],
+		(CPU_STK_SIZE)IMUSensorPreDeal_STK_SIZE/10,
+		(CPU_STK_SIZE)IMUSensorPreDeal_STK_SIZE,
 		(OS_MSG_QTY)0,
 		(OS_TICK)0,
 		(void*)0,
@@ -216,6 +222,21 @@ void start_task(void *p_arg)
 		(CPU_STK*)&GroundStation_TASK_STK[0],
 		(CPU_STK_SIZE)GroundStation_STK_SIZE/10,
 		(CPU_STK_SIZE)GroundStation_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);	
+	OSTaskCreate(																				// 地面站数据处理任务
+		(OS_TCB*)&OtherSensorUpdateTaskTCB,
+		(CPU_CHAR*)"OtherSensorUpdate task",
+		(OS_TASK_PTR )OtherSensorUpdate_task,
+		(void*)0,
+		(OS_PRIO)OtherSensorUpdate_TASK_PRIO,
+		(CPU_STK*)&OtherSensorUpdate_TASK_STK[0],
+		(CPU_STK_SIZE)OtherSensorUpdate_STK_SIZE/10,
+		(CPU_STK_SIZE)OtherSensorUpdate_STK_SIZE,
 		(OS_MSG_QTY)0,
 		(OS_TICK)0,
 		(void*)0,

@@ -215,12 +215,12 @@ float invSqrt(float x) {
 *形    参: 无
 *返 回 值: 角度值
 **********************************************************************************************************/
-Vector3f_t GetCopterAngle(void){
-	Vector3f_t Angle;
-	Angle.x = atan2(2.0f*(q0*q1 + q2*q3), 1 - 2.0f*(q1*q1 + q2*q2));
-	Angle.y = safe_asin(2.0f*(q0*q2 - q1*q3));
-	Angle.z = atan2(2.0f*q1*q2 + 2.0f*q0*q3, -2.0f*q2*q2 - 2.0f*q3*q3 + 1);
-  return Angle;
+Vector3angle_t GetCopterAngle(void){
+	Vector3angle_t CopterAngle;
+	CopterAngle.roll = atan2(2.0f*(q0*q1 + q2*q3), 1 - 2.0f*(q1*q1 + q2*q2));
+	CopterAngle.pitch = safe_asin(2.0f*(q0*q2 - q1*q3));
+	CopterAngle.yaw = atan2(2.0f*q1*q2 + 2.0f*q0*q3, -2.0f*q2*q2 - 2.0f*q3*q3 + 1);
+  return CopterAngle;
 }
 
 //====================================================================================================

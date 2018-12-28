@@ -1,45 +1,44 @@
-
 #include "Adc_Battery.h"
 
 volatile u16 Adc_Battery[10];
+static float batVoltage;
 
-void AdcBattery_Init()
-{	
+void Adc_Init(){	
 	DMA_InitTypeDef DMA_InitStructure;
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
 	ADC_InitTypeDef       ADC_InitStructure;
 	
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_DMA2, ENABLE);//Ê¹ÄÜGPIOCÊ±ÖÓ
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //Ê¹ÄÜADC1Ê±ÖÓ
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_DMA2, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); 
 
-  //ÏÈ³õÊ¼»¯ADC1Í¨µÀ12 IO¿Ú
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;//PC0 
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;//Ä£ÄâÊäÈë
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;//²»´øÉÏÏÂÀ­
-  GPIO_Init(GPIOC, &GPIO_InitStructure);//³õÊ¼»¯  
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+  GPIO_Init(GPIOC, &GPIO_InitStructure);  
  
-	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,ENABLE);	  //ADC1¸´Î»
-	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,DISABLE);	//¸´Î»½áÊø	 
+	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,ENABLE);	  
+	RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC1,DISABLE);	
  
 	
-  ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;//¶ÀÁ¢Ä£Ê½
-  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles;//Á½¸ö²ÉÑù½×¶ÎÖ®¼äµÄÑÓ³Ù5¸öÊ±ÖÓ
-  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled; //DMAÊ§ÄÜ
-  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4;//Ô¤·ÖÆµ4·ÖÆµ¡£ADCCLK=PCLK2/4=84/4=21Mhz,ADCÊ±ÖÓ×îºÃ²»Òª³¬¹ı36Mhz 
-  ADC_CommonInit(&ADC_CommonInitStructure);//³õÊ¼»¯
+  ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles;
+  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled; 
+  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div4;
+  ADC_CommonInit(&ADC_CommonInitStructure);
 	
-  ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;//12Î»Ä£Ê½
-  ADC_InitStructure.ADC_ScanConvMode = DISABLE;//·ÇÉ¨ÃèÄ£Ê½	
-  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;//Á¬Ğø×ª»»
-  ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;//½ûÖ¹´¥·¢¼ì²â£¬Ê¹ÓÃÈí¼ş´¥·¢
-  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;//ÓÒ¶ÔÆë	
-  ADC_InitStructure.ADC_NbrOfConversion = 1;//1¸ö×ª»»ÔÚ¹æÔòĞòÁĞÖĞ Ò²¾ÍÊÇÖ»×ª»»¹æÔòĞòÁĞ1 
-  ADC_Init(ADC1, &ADC_InitStructure);//ADC³õÊ¼»¯
+  ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+  ADC_InitStructure.ADC_ScanConvMode = DISABLE;	
+  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+  ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
+  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	
+  ADC_InitStructure.ADC_NbrOfConversion = 1;
+  ADC_Init(ADC1, &ADC_InitStructure);
 	
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 1, ADC_SampleTime_480Cycles );	
-	ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE); //Ô´Êı¾İ±ä»¯Ê±¿ªÆôDMA´«Êä
-	ADC_DMACmd(ADC1, ENABLE);           //¿ÉÒÔ³¢ÊÔÕâ¸ö·ÅÔÚADC_CmdºóÃæ
+	ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE); 
+	ADC_DMACmd(ADC1, ENABLE);           
 	ADC_Cmd(ADC1, ENABLE);
 
 	DMA_DeInit(DMA2_Stream0); 
@@ -47,12 +46,12 @@ void AdcBattery_Init()
 	DMA_InitStructure.DMA_Channel = DMA_Channel_0;
 	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
 	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
-	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)Adc_Battery;   //Ä¿±êÊı¾İÎ»
+	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)Adc_Battery;   
 	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
 	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
 	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(ADC1->DR);  //ADC->DRµØÖ·
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(ADC1->DR);  
 	DMA_InitStructure.DMA_PeripheralBurst =DMA_PeripheralBurst_Single;
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -62,12 +61,50 @@ void AdcBattery_Init()
 	
 	ADC_SoftwareStartConv(ADC1); 
 }
-
-/*»ñÈ¡ÊµÊ±µÄµçÑ¹ĞÅºÅ*/
-float Get_battery()
-{
+/**********************************************************************************************************
+*å‡½ æ•° å: Get_Battery
+*åŠŸèƒ½è¯´æ˜: è·å–ç”µå‹
+*å½¢    å‚: æ— 
+*è¿” å› å€¼: ADCé‡‡æ ·å€¼
+**********************************************************************************************************/
+float Get_Battery(void){
 	float RTbattery = 11.0f*3.3f*((float)Adc_Battery[0]/4096);
 	return RTbattery;
 }
 
+/**********************************************************************************************************
+*å‡½ æ•° å: BatteryVoltageUpdate
+*åŠŸèƒ½è¯´æ˜: ç”µæ± ç”µå‹é‡‡æ ·æ›´æ–°
+*å½¢    å‚: æ— 
+*è¿” å› å€¼: æ— 
+**********************************************************************************************************/
+void BatteryVoltageUpdate(void){
+   batVoltage = batVoltage * 0.995f + Get_Battery() * 0.005f;
+}
 
+/**********************************************************************************************************
+*å‡½ æ•° å: GetBatteryVoltage
+*åŠŸèƒ½è¯´æ˜: è·å–ç”µæ± ç”µå‹
+*å½¢    å‚: æ— 
+*è¿” å› å€¼: ç”µå‹å€¼
+**********************************************************************************************************/
+int16_t GetBatteryVoltage(void)
+{
+    return batVoltage;
+}
+
+/**********************************************************************************************************
+*å‡½ æ•° å: GetBatteryStatus
+*åŠŸèƒ½è¯´æ˜: è·å–ç”µæ± çŠ¶æ€
+*å½¢    å‚: æ— 
+*è¿” å› å€¼: çŠ¶æ€
+**********************************************************************************************************/
+uint8_t GetBatteryStatus(void)
+{
+    if(batVoltage < VOLTAGE_LOW)	{
+        return BATTERY_LOW;
+    }
+    else{
+        return BATTERY_NORMAL;
+    }
+}

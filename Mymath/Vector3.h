@@ -30,6 +30,25 @@ typedef struct {
     int32_t z;
 } Vector3l_t;
 
+typedef struct {
+    float pitch;
+    float roll;
+    float yaw;
+} Vector3angle_t;
+
+typedef struct {
+    float Wx;
+    float Wy;
+    float Wz;
+} Vector3w_t;
+
+typedef struct {
+    float pos;
+    float vel;
+    float acc;
+} Vector3pos_t;
+
+
 void Vector3f_Normalize(Vector3f_t* vector);
 
 Vector3f_t Vector3iTo3f(Vector3i_t vector);

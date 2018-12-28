@@ -4,24 +4,22 @@ ThrustUav UavThrust;
 /***********************************************************************************************
 *函 数 名: ThrustMixer
 *功能说明: 推力融合
-*形    参: 四旋翼臂长
+*形    参: 四旋翼臂长arm_length . 转轴扭矩RotateThrust
 *返 回 值: 无
 ************************************************************************************************/
 void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
 	
-	if(FlightControl.droneMode==Drone_Mode_Pitch || FlightControl.droneMode==Drone_Mode_RatePitch){
+	if(GetCopterTest()==Drone_Mode_Pitch || GetCopterTest()==Drone_Mode_RatePitch){
 		UavThrust.f1 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;	
 		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;
 		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;
 		UavThrust.f4 = -1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;
-	}
-	else if(FlightControl.droneMode==Drone_Mode_Roll || FlightControl.droneMode==Drone_Mode_RateRoll){
+	}else if(GetCopterTest()==Drone_Mode_Roll || GetCopterTest()==Drone_Mode_RateRoll){
 		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
 		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
 		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
 		UavThrust.f4 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
-	}
-	else if(FlightControl.droneMode==Drone_Mode_4Axis){
+	}else if(GetCopterTest()==Drone_Mode_4Axis){
 		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
 										+1.414f / (arm_length * 4.0f) * RotateThrust.y                                  	//pitch
 											+ 14.2f * RotateThrust.z                                                        //yaw	
@@ -43,21 +41,7 @@ void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
 											  + Gravity_acceleration * Drone_Mass / 4.0f;
 		
 	}
-	
 	MotorThrust(UavThrust.f1,UavThrust.f2,UavThrust.f3,UavThrust.f4);
-}
-/***********************************************************************************************
-*函 数 名: Safety_Protection
-*功能说明: 侧倾保护
-*形    参: 无
-*返 回 值: 无
-************************************************************************************************/
-void Safety_Protection(void){
-	if(RT_Info.Pitch * 180/PI > 30.0f || RT_Info.Pitch * 180/PI < -30.0f 
-				|| RT_Info.Roll * 180/PI > 30.0f || RT_Info.Roll * 180/PI < -30.0f){
-		PWM_OUTPUT(0,0,0,0);
-		FlightControl.OnOff = Drone_Off;
-	}
 }
 /***********************************************************************************************
 *函 数 名: MotorThrust
@@ -106,7 +90,7 @@ void MotorThrust(float f1,float f2,float f3,float f4){
 	M4 = -0.0022714f * f4 * f4 + 0.096917f * f4 + 0.11769f;
 	
 	ThrottleInfo.M1 = (int)(M1 * 1000.0f);//+ ((int)UavThrust.collective_thrust)
-	ThrottleInfo.M2 = (int)(M2 * 1000.0f);//+ ((int)UavThrust.collective_thrust)
+	ThrottleInfo.M2 = (int)(M2 * 1000.0f);
 	ThrottleInfo.M3 = (int)(M3 * 1000.0f);
 	ThrottleInfo.M4 = (int)(M4 * 1000.0f);
 	
@@ -135,19 +119,9 @@ void PWM_OUTPUT(unsigned int Motor1,unsigned int Motor2,
 	Motor2+=1000;
 	Motor3+=1000;
 	Motor4+=1000;
-
-	if(RT_Info.lowPowerFlag==1)
-	{
-		TIM8->CCR1=1000;
-		TIM8->CCR2=1000;
-		TIM8->CCR3=1000;
-		TIM8->CCR4=1000;
-	}
-	else
-	{
-		TIM8->CCR1=Motor1;
-		TIM8->CCR2=Motor2;
-		TIM8->CCR3=Motor3;
-		TIM8->CCR4=Motor4;
-	}
+	//实际输出到电机
+	TIM8->CCR1=Motor1;
+	TIM8->CCR2=Motor2;
+	TIM8->CCR3=Motor3;
+	TIM8->CCR4=Motor4;
 }

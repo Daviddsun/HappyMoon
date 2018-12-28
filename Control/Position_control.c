@@ -1,14 +1,13 @@
 #include "Position_control.h"
-bool PositionDivision = true;
 void Position_control(void){
 	/************************ 降落设置 ************************/
-	if(FlightControl.landFlag==1){
-		reference_state.postionZ = reference_state.postionZ - 0.005f;
-		if(state_estimate.postionZ < 0.05f){
-			FlightControl.OnOff = Drone_Off;
-      FlightControl.landFlag = 0;
-		}
-	}
+//	if(FlightControl.DroneMode==1){
+//		reference_state.postionZ = reference_state.postionZ - 0.005f;
+//		if(state_estimate.postionZ < 0.05f){
+//			FlightControl.OnOff = Drone_Off;
+//      FlightControl.landFlag = 0;
+//		}
+//	}
 //	if(PositionDivision){
 //		/************************ X轴 ************************/
 //		OriginalPosX.value = PID_ParaInfo.PosX.Kp * (reference_state.postionX - state_estimate.postionX);

@@ -1,21 +1,13 @@
 #include "Task.h"
-/* 全局变量初始化 */
-DroneFlightControl FlightControl;        
-DroneRTInfo RT_Info;                   
-DroneTargetInfo Target_Info;           
-RemoteControl RockerControl;           
-OffsetInfo OffsetData; 
+/* 全局变量初始化 */ 
 PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
 PIDPara PID_ParaInfo;
-State_estimate state_estimate;
-Reference_state reference_state;
-Quaternion quaternion;
-
+OffsetInfo OffsetData;
 /**
  * @Description 传感器数据读取 1khz读取
  */
-void SensorRead_task(void *p_arg){
+void IMUSensorRead_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	Vector3f_t accRawData,gyroRawData;
@@ -29,10 +21,11 @@ void SensorRead_task(void *p_arg){
 		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
+
 /**
  * @Description 传感器数据预处理
  */
-void SensorPreDeal_task(void *p_arg){
+void IMUSensorPreDeal_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	void   *p_msg;
@@ -61,7 +54,7 @@ void SensorPreDeal_task(void *p_arg){
 		AccCalibration(accRawData);
 		//陀螺仪校准
 		GyroCalibration(gyroRawData);
-		
+	
 		//加速计数值处理
 		AccDataPreTreat(accRawData, &accCalibData);
 		//陀螺仪数据处理
@@ -71,6 +64,19 @@ void SensorPreDeal_task(void *p_arg){
 		OSQPost(&messageQueue[ACC_DATA_PRETREAT],&accCalibData,sizeof(accCalibData),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],&gyroCalibData,sizeof(gyroCalibData),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_FOR_CONTROL],&gyroLpfData,sizeof(gyroLpfData),OS_OPT_POST_FIFO,&err);	
+	}
+}
+
+/**
+ * @Description 其他传感器数据更新
+ */
+void OtherSensorUpdate_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	while(1){
+		//电池电压电流采样更新 100Hz
+    BatteryVoltageUpdate();
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 
@@ -109,45 +115,74 @@ void FlightControl_task(void *p_arg){
 	void   *p_msg;
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t estimategyro,expectgyro,expectangle;
-	Vector3f_t rotatethrust;
+	Vector3f_t Estimate_Gyro,Expect_Gyro;
+	Vector3angle_t Expect_Angle;
+	Vector3f_t Rotate_Thrust;
 	static uint32_t count = 0;
 	
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[GYRO_FOR_CONTROL],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
 		if(err == OS_ERR_NONE){
-			estimategyro = *((Vector3f_t *)p_msg);
+			Estimate_Gyro = *((Vector3f_t *)p_msg);
+		}
+		//关机不进入控制
+		if(GetCopterStatus() == Drone_Off){
+			PWM_OUTPUT(0,0,0,0);
+			return;
 		}
 		//100hz
 		if(count % 10 == 0){
-			//飞行位置控制
+			//安全保护
+			SafeControl();
 		}
 		//200hz
 		if(count % 5 == 0){
-			//飞行角度控制
-			expectgyro = Attitude_OuterControl(expectangle);
-			//飞行速度控制
+			//飞行位置控制
 			
+			//期望角度选择
+			if(GetCopterTest() == Drone_Mode_Pitch || 
+									GetCopterTest() == Drone_Mode_Roll){
+				Expect_Angle = GetRemoteControlAngle();
+			}
+			//飞行角度控制
+			Expect_Gyro.x = (Attitude_OuterControl(Expect_Angle)).roll;
+			Expect_Gyro.y = (Attitude_OuterControl(Expect_Angle)).pitch;
+			Expect_Gyro.z = (Attitude_OuterControl(Expect_Angle)).yaw;
 		}
 		//500hz
 		if(count % 2 == 0){
+			//期望角速率选择
+			if(GetCopterTest() == Drone_Mode_RatePitch || 
+									GetCopterTest() == Drone_Mode_RateRoll){
+				Expect_Gyro = GetRemoteControlAngleVel();
+			}
 			//飞行角速率环控制
-			rotatethrust = Attitude_InnerControl(expectgyro,estimategyro);
+			Rotate_Thrust = Attitude_InnerControl(Expect_Gyro,Estimate_Gyro);
 			//推力融合
-			ThrustMixer(ARM_Length,rotatethrust);
+			ThrustMixer(ARM_Length,Rotate_Thrust);
 		}
 		count++;
 	}
 }
+
 /**
 	* @Description 视觉惯性里程计任务
  */
 void VisualOdometry_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
+	void   *p_msg;
+	OS_MSG_SIZE  msg_size;
+	CPU_TS       ts;
+	Receive_VisualOdometry  VisualOdometry;
 	while(1){
-		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
+		//消息队列信息提取
+		p_msg = OSQPend(&messageQueue[VISUAL_ODOMETRY],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
+		if(err == OS_ERR_NONE){
+			VisualOdometry = *((Receive_VisualOdometry *)p_msg);
+		}
+		Vision_DataDeal(VisualOdometry);
 	}
 }
 
@@ -180,11 +215,12 @@ void FlightStatus_task(void *p_arg){
 	while(1){
 		//飞行器放置状态检测
     PlaceStausCheck(GyroLpfGetData());
-		//传感器方向检测（用于校准时的判断）
+		//传感器方向检测
     ImuOrientationDetect(AccGetData());
 		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
+
 /**
  * @Description Message任务
  */
@@ -193,13 +229,13 @@ void Message_task(void *p_arg){
 	p_arg = p_arg;
 	while(1){
 		//发送参数信息
-		if(FlightControl.ReportSW==Report_SET){
+		if(SendPID() == Report_SET){
 			SendParaInfo();
-			FlightControl.ReportSW=Report_RESET;
+			ResetSendPID();
 		}
 		//发送传感器数据
 		SendRTInfo();
-		OSTimeDlyHMSM(0,0,0,20,OS_OPT_TIME_HMSM_STRICT,&err);
+		OSTimeDlyHMSM(0,0,0,25,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 

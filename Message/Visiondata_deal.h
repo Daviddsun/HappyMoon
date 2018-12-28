@@ -5,10 +5,7 @@
 #include "DronePara.h"
 #include "Task.h"
 
-void Vision_datadeal(Data_Rx rx);
-
-extern float_union position_x,position_y,position_z,velocity_x,velocity_y,
-								velocity_z,Quaternion0,Quaternion1,Quaternion2,Quaternion3;
+void Vision_DataDeal(Receive_VisualOdometry rx);
 
 #endif
 

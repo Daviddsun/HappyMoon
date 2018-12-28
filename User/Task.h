@@ -22,18 +22,12 @@
 #include "Gyroscope.h"
 #include "Accelerometer.h"
 #include "Parameter.h"
+#include "SafeControl.h"
 
-extern DroneFlightControl FlightControl;     							 
-extern DroneRTInfo RT_Info;
-extern DroneTargetInfo Target_Info;
-extern RemoteControl RockerControl; ;
 extern OffsetInfo OffsetData;  										 
 extern PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
 extern PIDPara PID_ParaInfo;
-extern State_estimate state_estimate;
-extern Reference_state reference_state;
-extern Quaternion quaternion;
 
 
 #endif 
