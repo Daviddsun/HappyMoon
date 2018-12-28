@@ -7,6 +7,7 @@ RemoteControl RockerControl;
 OffsetInfo OffsetData; 
 PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
+PIDPara PID_ParaInfo;
 State_estimate state_estimate;
 Reference_state reference_state;
 Quaternion quaternion;
@@ -191,6 +192,12 @@ void Message_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1){
+		//发送参数信息
+		if(FlightControl.ReportSW==Report_SET){
+			SendParaInfo();
+			FlightControl.ReportSW=Report_RESET;
+		}
+		//发送传感器数据
 		SendRTInfo();
 		OSTimeDlyHMSM(0,0,0,20,OS_OPT_TIME_HMSM_STRICT,&err);
 	}

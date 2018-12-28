@@ -13,61 +13,21 @@ int sumCheck(Data_Rx rx)
 		return 0;
 }
 
-//static u8 firstdata[20];
-//static u8 secdata[20];
-//Data_Rx Stitchingdata;
-
-//void DataStitching(Data_Rx rx)
-//{
-//	static u8 i,firstlen;
-//	static u8 BluetoothStitch[20];
-//	static u8 stitchingflag = 0;
-
-//	if(rx.len!=20 && stitchingflag == 1 && rx.buf[0]!=0x55 && rx.buf[1]!=0xAA)
-//	{
-//		memcpy(secdata,rx.buf,sizeof(rx.buf));
-//		for(i = firstlen;i<(rx.len + firstlen);i++)
-//		{
-//			BluetoothStitch[i] = secdata[i-firstlen];
-//		}
-//		Stitchingdata.len = sizeof(BluetoothStitch);
-//		stitchingflag = 0;
-//		memcpy(Stitchingdata.buf,BluetoothStitch,sizeof(BluetoothStitch));
-//		DataDeal(Stitchingdata);
-//	}
-
-//	else if(rx.len<=20 && rx.buf[0]==0x55)
-//	{
-//		memcpy(firstdata,rx.buf,sizeof(rx.buf));
-//		for(i = 0;i<rx.len;i++)
-//		{
-//			BluetoothStitch[i] = firstdata[i];
-//		}
-//		firstlen = 	rx.len;	
-//		stitchingflag = 1;
-//	}
-//	
-//	else if(rx.len==20 && rx.buf[0]==0x55 && rx.buf[1]==0xAA)
-//	{
-//		DataDeal(rx);
-//	}
-//}
 void GroundStationDataDeal(Receive_GroundStation rx)
 {
 	float pidParaTemp[3];
 	u8 HexToFloat[4];
 	u8 i,j;
-	if( rx.buf[0]==0x55 && rx.buf[1]==0xAA )
-	{
+	if(rx.buf[0]==0x55 && rx.buf[1]==0xAA){
 		//飞行状态
-		if(rx.buf[2]==0xff && RT_Info.lowPowerFlag==0){ 
+		if(rx.buf[2] == 0xff && RT_Info.lowPowerFlag == 0){ 
 			if(rx.buf[3]==0){
 				FlightControl.OnOff = Drone_Off;
 			}
-			else if(rx.buf[3]==1){					
+			else if(rx.buf[3] == 1){					
 				FlightControl.OnOff = Drone_On;
 			}
-			else if(rx.buf[3]==2){
+			else if(rx.buf[3] == 2){
 				FlightControl.landFlag=1;
 			}						
 		}
@@ -92,7 +52,7 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 			Target_Info.Yaw = Hex_To_Decimal(HexToFloat,4) * PI/180; 
 		}	
 		//调试模式选择
-		else if(rx.buf[2]==2){
+		else if(rx.buf[2] == 2){
 			switch(rx.buf[3]){
 				case 0:
 						FlightControl.droneMode=Drone_Mode_None;
@@ -133,25 +93,24 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalPitch.kP=pidParaTemp[0];
-			OriginalPitch.kI=pidParaTemp[1];
-			OriginalPitch.kD=pidParaTemp[2];
+			OriginalPitch.kP=PID_ParaInfo.Pitch.Kp=pidParaTemp[0];
+			OriginalPitch.kI=PID_ParaInfo.Pitch.Ki=pidParaTemp[1];
+			OriginalPitch.kD=PID_ParaInfo.Pitch.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}		
 		/* Roll PID */					
 		else if(rx.buf[2] == 6){
-			for(i=0;i<3;i++)
-			{
+			for(i=0;i<3;i++){
 				for(j=0;j<4;j++)
 				{
 					HexToFloat[j]=rx.buf[3+j+i*4];
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}     
-			OriginalRoll.kP=pidParaTemp[0];
-			OriginalRoll.kI=pidParaTemp[1];
-			OriginalRoll.kD=pidParaTemp[2];
+			OriginalRoll.kP=PID_ParaInfo.Roll.Kp=pidParaTemp[0];
+			OriginalRoll.kI=PID_ParaInfo.Roll.Ki=pidParaTemp[1];
+			OriginalRoll.kD=PID_ParaInfo.Roll.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -165,9 +124,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalYaw.kP=pidParaTemp[0];
-			OriginalYaw.kI=pidParaTemp[1];
-			OriginalYaw.kD=pidParaTemp[2];
+			OriginalYaw.kP=PID_ParaInfo.Yaw.Kp=pidParaTemp[0];
+			OriginalYaw.kI=PID_ParaInfo.Yaw.Ki=pidParaTemp[1];
+			OriginalYaw.kD=PID_ParaInfo.Yaw.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -181,9 +140,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalPosZ.kP=pidParaTemp[0];
-			OriginalPosZ.kI=pidParaTemp[1];
-			OriginalPosZ.kD=pidParaTemp[2];
+			OriginalPosZ.kP=PID_ParaInfo.PosZ.Kp=pidParaTemp[0];
+			OriginalPosZ.kI=PID_ParaInfo.PosZ.Ki=pidParaTemp[1];
+			OriginalPosZ.kD=PID_ParaInfo.PosZ.Kd=pidParaTemp[2];
 			Write_Config();		
 			FlightControl.ReportSW=Report_SET;
 		}	 
@@ -197,9 +156,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalWyRate.kP=pidParaTemp[0];
-			OriginalWyRate.kI=pidParaTemp[1];
-			OriginalWyRate.kD=pidParaTemp[2];
+			OriginalWyRate.kP=PID_ParaInfo.WyRate.Kp=pidParaTemp[0];
+			OriginalWyRate.kI=PID_ParaInfo.WyRate.Ki=pidParaTemp[1];
+			OriginalWyRate.kD=PID_ParaInfo.WyRate.Kd=pidParaTemp[2];
 			Write_Config();		
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -214,9 +173,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalWxRate.kP=pidParaTemp[0];
-			OriginalWxRate.kI=pidParaTemp[1];
-			OriginalWxRate.kD=pidParaTemp[2];
+			OriginalWxRate.kP=PID_ParaInfo.WxRate.Kp=pidParaTemp[0];
+			OriginalWxRate.kI=PID_ParaInfo.WxRate.Ki=pidParaTemp[1];
+			OriginalWxRate.kD=PID_ParaInfo.WxRate.Kd=pidParaTemp[2];
 			Write_Config();		
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -231,9 +190,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalWzRate.kP=pidParaTemp[0];
-			OriginalWzRate.kI=pidParaTemp[1];
-			OriginalWzRate.kD=pidParaTemp[2];
+			OriginalWzRate.kP=PID_ParaInfo.WzRate.Kp=pidParaTemp[0];
+			OriginalWzRate.kI=PID_ParaInfo.WzRate.Ki=pidParaTemp[1];
+			OriginalWzRate.kD=PID_ParaInfo.WzRate.Kd=pidParaTemp[2];
 			Write_Config();		
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -248,9 +207,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}
-			OriginalVelZ.kP=pidParaTemp[0];
-			OriginalVelZ.kI=pidParaTemp[1];
-			OriginalVelZ.kD=pidParaTemp[2];
+			OriginalVelZ.kP=PID_ParaInfo.VelZ.Kp=pidParaTemp[0];
+			OriginalVelZ.kI=PID_ParaInfo.VelZ.Ki=pidParaTemp[1];
+			OriginalVelZ.kD=PID_ParaInfo.VelZ.Kd=pidParaTemp[2];
 			Write_Config();
 			FlightControl.ReportSW=Report_SET;
 		}	
@@ -327,9 +286,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalPosX.kP=pidParaTemp[0];
-			OriginalPosX.kI=pidParaTemp[1];
-			OriginalPosX.kD=pidParaTemp[2];
+			OriginalPosX.kP=PID_ParaInfo.PosX.Kp=pidParaTemp[0];
+			OriginalPosX.kI=PID_ParaInfo.PosX.Ki=pidParaTemp[1];
+			OriginalPosX.kD=PID_ParaInfo.PosX.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}
@@ -344,15 +303,14 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalPosY.kP=pidParaTemp[0];
-			OriginalPosY.kI=pidParaTemp[1];
-			OriginalPosY.kD=pidParaTemp[2];
+			OriginalPosY.kP=PID_ParaInfo.PosY.Kp=pidParaTemp[0];
+			OriginalPosY.kI=PID_ParaInfo.PosY.Ki=pidParaTemp[1];
+			OriginalPosY.kD=PID_ParaInfo.PosY.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* SpeedX PID*/					
-		else if(rx.buf[2] == 20)
-		{
+		else if(rx.buf[2] == 20){
 			for(i=0;i<3;i++)
 			{
 				for(j=0;j<4;j++)
@@ -361,15 +319,14 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalVelX.kP=pidParaTemp[0];
-			OriginalVelX.kI=pidParaTemp[1];
-			OriginalVelX.kD=pidParaTemp[2];
+			OriginalVelX.kP=PID_ParaInfo.VelX.Kp=pidParaTemp[0];
+			OriginalVelX.kI=PID_ParaInfo.VelX.Ki=pidParaTemp[1];
+			OriginalVelX.kD=PID_ParaInfo.VelX.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}
 		/* SpeedY PID*/					
-		else if(rx.buf[2] == 21)
-		{
+		else if(rx.buf[2] == 21){
 			for(i=0;i<3;i++)
 			{
 				for(j=0;j<4;j++)
@@ -378,9 +335,9 @@ void GroundStationDataDeal(Receive_GroundStation rx)
 				}
 				pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 			}  
-			OriginalVelY.kP=pidParaTemp[0];
-			OriginalVelY.kI=pidParaTemp[1];
-			OriginalVelY.kD=pidParaTemp[2];
+			OriginalVelY.kP=PID_ParaInfo.VelY.Kp=pidParaTemp[0];
+			OriginalVelY.kI=PID_ParaInfo.VelY.Ki=pidParaTemp[1];
+			OriginalVelY.kD=PID_ParaInfo.VelY.Kd=pidParaTemp[2];
 			Write_Config();	
 			FlightControl.ReportSW=Report_SET;
 		}		
