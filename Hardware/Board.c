@@ -19,6 +19,8 @@ void Board_Init(void){
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
 	// 系统延时5s等待用户放平无人机
 	delay_ms(5000);
+	// ADC初始化
+	Adc_Init();
 	// SPI1初始化 用于陀螺仪和加速计读取
 	SPI1_Configuration();
 	// pwm定时器初始化用于电调信号 500hz频率
@@ -29,8 +31,7 @@ void Board_Init(void){
 	Bluetooth_Init();
 	// GPIO初始化 一些通用GPIO口可以在这里配置
 	GeneralGpio_Init(); 	
-	// ADC初始化
-	Adc_Init();
+
 //	// USB转串口初始化
 //  Usb_Init();
 }

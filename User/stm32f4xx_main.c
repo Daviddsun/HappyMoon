@@ -13,28 +13,28 @@ OS_TCB StartTaskTCB;							                       // 任务控制块
 CPU_STK START_TASK_STK[START_STK_SIZE];					         // 任务堆栈
 void start_task(void *p_arg);						                 // 任务函数
 
-//IMUSensorRead任务
+//IMU数据读取任务
 #define IMUSensorRead_TASK_PRIO 4						
 #define IMUSensorRead_STK_SIZE 512						
 OS_TCB IMUSensorReadTaskTCB;				
 CPU_STK IMUSensorRead_TASK_STK[IMUSensorRead_STK_SIZE];					
 void IMUSensorRead_task(void *p_arg);
 
-//IMUSensorPreDeal任务
+//IMU预处理任务
 #define IMUSensorPreDeal_TASK_PRIO 5					
 #define IMUSensorPreDeal_STK_SIZE 512						
 OS_TCB IMUSensorPreDealTaskTCB;				
 CPU_STK IMUSensorPreDeal_TASK_STK[IMUSensorPreDeal_STK_SIZE];					
 void IMUSensorPreDeal_task(void *p_arg);
 
-//Navigation任务
+//导航任务
 #define Navigation_TASK_PRIO 6						
 #define Navigation_STK_SIZE 512						
 OS_TCB NavigationTaskTCB;				
 CPU_STK Navigation_TASK_STK[Navigation_STK_SIZE];					
 void Navigation_task(void *p_arg);
 
-//FlightControl任务
+//飞行控制任务
 #define FlightControl_TASK_PRIO 7						
 #define FlightControl_STK_SIZE 512						
 OS_TCB FlightControlTaskTCB;				
@@ -62,7 +62,7 @@ OS_TCB OtherSensorUpdateTaskTCB;
 CPU_STK OtherSensorUpdate_TASK_STK[OtherSensorUpdate_STK_SIZE];					
 void OtherSensorUpdate_task(void *p_arg);
 
-//FlightStatus任务
+//飞行状态任务
 #define FlightStatus_TASK_PRIO 11						
 #define FlightStatus_STK_SIZE 512						
 OS_TCB FlightStatusTaskTCB;				

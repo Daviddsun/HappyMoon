@@ -128,20 +128,23 @@ void SendRTInfo(void)
 	u8 dataToPC[64];	
 	u8 i=0;
 	Vector3angle_t AHRSAngle = GetCopterAngle();
-
+	Vector3f_t acc = AccGetData();
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0X01;
 		
-	temp = AHRSAngle.pitch * 180/PI;
+	//temp = AHRSAngle.pitch * 180/PI;
+	temp = acc.x * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-	temp = AHRSAngle.roll * 180/PI;
+	//temp = AHRSAngle.roll * 180/PI;
+	temp = acc.y * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = AHRSAngle.yaw * 180/PI;
+	//temp = AHRSAngle.yaw * 180/PI;
+	temp = acc.z * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	

@@ -88,8 +88,7 @@ void BatteryVoltageUpdate(void){
 *形    参: 无
 *返 回 值: 电压值
 **********************************************************************************************************/
-int16_t GetBatteryVoltage(void)
-{
+int16_t GetBatteryVoltage(void){
     return batVoltage;
 }
 
@@ -99,8 +98,7 @@ int16_t GetBatteryVoltage(void)
 *形    参: 无
 *返 回 值: 状态
 **********************************************************************************************************/
-uint8_t GetBatteryStatus(void)
-{
+uint8_t GetBatteryStatus(void){
     if(batVoltage < VOLTAGE_LOW)	{
         return BATTERY_LOW;
     }

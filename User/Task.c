@@ -119,7 +119,6 @@ void FlightControl_task(void *p_arg){
 	Vector3angle_t Expect_Angle;
 	Vector3f_t Rotate_Thrust;
 	static uint32_t count = 0;
-	
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[GYRO_FOR_CONTROL],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
