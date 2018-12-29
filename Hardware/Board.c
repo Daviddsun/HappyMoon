@@ -17,25 +17,29 @@ void Board_Init(void){
 	Systick_Init(168);								                       
 	// 中断分组配置
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
-	// 系统延时5s等待用户放平无人机
-	delay_ms(5000);
 	// ADC初始化
 	Adc_Init();
-#ifdef MPU6000
+	delay_ms(100);
+	// pwm定时器初始化用于电调信号 500hz频率
+	PWM_Init(); 
+	delay_ms(100);
+	// 用于与高性能板载ARM或板载PC通信 波特率230400
+	Usart1toOdroid_Init(230400); 
+	delay_ms(100);
+	// 蓝牙串口打开，用于与地面站通信
+	Usart3toBluetooth_Init(115200);
+	delay_ms(100);
+	// GPIO初始化 一些通用GPIO口可以在这里配置
+	GeneralGpio_Init(); 	
+	delay_ms(100);
+#ifdef SpeedyBeeF4
 	// SPI1初始化 用于陀螺仪和加速计读取 MPU6000
 	SPI1_Configuration();
 #else
 	// SPI3初始化 用于陀螺仪和加速计读取 MPU6500
 	SPI3_Configuration();
 #endif
-	// pwm定时器初始化用于电调信号 500hz频率
-	PWM_Init(); 
-	// 用于与高性能板载ARM或板载PC通信 波特率230400
-	Usart1toOdroid_Init(230400); 
-	// 蓝牙串口打开，用于与地面站通信
-	Bluetooth_Init();
-	// GPIO初始化 一些通用GPIO口可以在这里配置
-	GeneralGpio_Init(); 	
+	delay_ms(100);
 
 //	// USB转串口初始化
 //  Usb_Init();

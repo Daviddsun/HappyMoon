@@ -9,7 +9,7 @@
 
 //Start任务
 #define START_TASK_PRIO 3						                     // 任务优先级
-#define START_STK_SIZE 256						                   // 任务堆栈大小
+#define START_STK_SIZE 512						                   // 任务堆栈大小
 OS_TCB StartTaskTCB;							                       // 任务控制块
 CPU_STK START_TASK_STK[START_STK_SIZE];					         // 任务堆栈
 void start_task(void *p_arg);						                 // 任务函数
@@ -30,7 +30,7 @@ void IMUSensorPreDeal_task(void *p_arg);
 
 //导航任务
 #define Navigation_TASK_PRIO 6						
-#define Navigation_STK_SIZE 512						
+#define Navigation_STK_SIZE 1024						
 OS_TCB NavigationTaskTCB;				
 CPU_STK Navigation_TASK_STK[Navigation_STK_SIZE];					
 void Navigation_task(void *p_arg);
@@ -72,9 +72,9 @@ void FlightStatus_task(void *p_arg);
 
 //Message任务
 #define Message_TASK_PRIO 12						
-#define Message_STK_SIZE 1024						
+#define Message_STK_SIZE 512						
 OS_TCB MessageTaskTCB;				
-CPU_STK Message_TASK_STK[FlightControl_STK_SIZE];					
+CPU_STK Message_TASK_STK[Message_STK_SIZE];					
 void Message_task(void *p_arg);
 
 /**
@@ -90,6 +90,8 @@ int main(void)
 	Sensor_Init();
 	/** 启动操作系统 **/
 	OSInit(&err);	
+	/** 创建一个消息队列 **/
+	MessageQueueCreate(err);
 	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务
 		(OS_TCB*)&StartTaskTCB,									               // 任务控制块
@@ -134,8 +136,6 @@ void start_task(void *p_arg){
 #endif
 
 	OS_CRITICAL_ENTER();																// 进入临界区
-	/** 创建一个消息队列 **/
-	MessageQueueCreate(err);
 	/** 创建用户任务 **/
 	OSTaskCreate(																				// 传感器数据读取任务
 		(OS_TCB*)&IMUSensorReadTaskTCB,

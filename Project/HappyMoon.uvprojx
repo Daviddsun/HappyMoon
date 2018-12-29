@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1, __FPU_USED =1, __CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Libraries\CMSIS\Include;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Sensor;..\Hardware;..\Message;..\Parameter;..\Mymath;..\Control</IncludePath>
+              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Libraries\CMSIS\Include;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Sensor;..\Hardware;..\Message;..\Parameter;..\Mymath;..\Control;..\Navigation</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -721,11 +721,6 @@
               <FilePath>..\Hardware\Adc_Battery.c</FilePath>
             </File>
             <File>
-              <FileName>Bluetooth.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\Bluetooth.c</FilePath>
-            </File>
-            <File>
               <FileName>Flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\Flash.c</FilePath>
@@ -841,11 +836,6 @@
               <FilePath>..\Mymath\LevenbergMarquardt.c</FilePath>
             </File>
             <File>
-              <FileName>MahonyAHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\MahonyAHRS.c</FilePath>
-            </File>
-            <File>
               <FileName>Vector3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mymath\Vector3.c</FilePath>
@@ -859,6 +849,26 @@
               <FileName>lowPassFilter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mymath\lowPassFilter.c</FilePath>
+            </File>
+            <File>
+              <FileName>KalmanVel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\KalmanVel.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\matrix3.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix6.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\matrix6.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalman3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\kalman3.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -964,6 +974,21 @@
               <FileName>Mission.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mission\Mission.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Navigation</GroupName>
+          <Files>
+            <File>
+              <FileName>MahonyAHRS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Navigation\MahonyAHRS.c</FilePath>
+            </File>
+            <File>
+              <FileName>Navigation.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Navigation\Navigation.c</FilePath>
             </File>
           </Files>
         </Group>

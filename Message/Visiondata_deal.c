@@ -139,3 +139,25 @@ Vector3f_t GetVisualOdometryRefPos(void){
 	RefPosition.z = reference_posz.fvalue;
   return RefPosition;
 }
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryStatus
+*功能说明: 获取视觉里程计的状态
+*形    参: 无
+*返 回 值: Status
+**********************************************************************************************************/
+bool GetVisualOdometryStatus(void){
+	static Vector3f_t lastPosition;
+	Vector3f_t Position;
+	Position = GetVisualOdometryPos();
+	bool status;
+	if(abs(Position.x - lastPosition.x)!=0 
+		|| abs(Position.y - lastPosition.y)!=0 
+			|| abs(Position.z - lastPosition.z)!=0){
+			status = true;
+	}else{
+		status = false;
+	}
+	lastPosition = Position;
+	
+  return status;
+}

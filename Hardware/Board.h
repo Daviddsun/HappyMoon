@@ -17,9 +17,14 @@
 #include "UsbDriver.h"
 #include "MessageQueue.h"
 
+//定义硬件飞控板
+
 void Board_Init(void);
 
-#define MPU6000 //定义IMU型号
+#define BirdFlight //定义飞控型号 BirdFlight  SpeedyBeeF4
+
+
+
 
 #endif
 

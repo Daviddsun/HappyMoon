@@ -11,7 +11,11 @@ typedef struct {
 	OffsetInfo Offset_Data;
 }FlashData;
 
-void Load_Config(void);
+void Load_SensorConfig(void);
+void Load_PIDConfig(void);
 void Write_Config(void);
 
+
 #endif
+
+

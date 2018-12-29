@@ -3,6 +3,7 @@
 
 #include "MPU6000.h"
 #include "MPU6500.h"
+#include "Board.h"
 //默认设置传感器自带低通滤波频率为42Hz
 
 //陀螺仪低通滤波截止频率

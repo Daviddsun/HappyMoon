@@ -31,6 +31,13 @@ typedef struct {
 } Vector3l_t;
 
 typedef struct {
+    float qw;
+    float qx;
+    float qy;
+		float qz;
+} Vector4q_t;
+
+typedef struct {
     float pitch;
     float roll;
     float yaw;

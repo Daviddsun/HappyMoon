@@ -133,18 +133,15 @@ void SendRTInfo(void)
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0X01;
 		
-	//temp = AHRSAngle.pitch * 180/PI;
-	temp = acc.x * 100;
+	temp = AHRSAngle.pitch * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-	//temp = AHRSAngle.roll * 180/PI;
-	temp = acc.y * 100;
+	temp = AHRSAngle.roll * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	//temp = AHRSAngle.yaw * 180/PI;
-	temp = acc.z * 100;
+	temp = AHRSAngle.yaw * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	

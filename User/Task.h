@@ -4,7 +4,6 @@
 #include "explore_system.h"
 #include "explore_systick.h"
 #include "stm32f4xx.h"
-#include "includes.h"
 #include "DronePara.h"
 #include "Data_PC.h"
 #include "Data_deal.h"
@@ -17,13 +16,14 @@
 #include "Vector3.h"
 #include "MPU6000.h"
 #include "MPU6500.h"
-#include "MessageQueue.h"
 #include "MahonyAHRS.h"
 #include "ThrustMixer.h"
 #include "Gyroscope.h"
 #include "Accelerometer.h"
 #include "Parameter.h"
 #include "SafeControl.h"
+#include "Board.h"
+#include "Navigation.h"
 
 extern OffsetInfo OffsetData;  										 
 extern PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,

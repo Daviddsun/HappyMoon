@@ -1,14 +1,14 @@
 #include "Parameter.h"
 
 FlashData flashData;
+
 /***********************************************************************************************
 *函 数 名: Write_Config
 *功能说明: 向flash写入参数
 *形    参: 无
 *返 回 值: 无
 ************************************************************************************************/
-void Write_Config(void)
-{																
+void Write_Config(void){																
 	u32 *ptr = &flashData.isGood;
 	flashData.pidPara = PID_ParaInfo;
 	flashData.Offset_Data = OffsetData;
@@ -16,18 +16,69 @@ void Write_Config(void)
 }
 
 /***********************************************************************************************
-*函 数 名: Load_Config
-*功能说明: 从flash读出参数
+*函 数 名: Load_SensorConfig
+*功能说明: 从flash读出参数IMU校准参数
 *形    参: 无
 *返 回 值: 无
 ************************************************************************************************/
-void Load_Config(void){
+void Load_SensorConfig(void){
 	
 	u32 *ptr = &flashData.isGood;
 	STMFLASH_Read(0X080E0004,ptr,sizeof(flashData));
 	
-	if(flashData.isGood==0xA55A5AA5)
-	{
+	if(flashData.isGood==0xA55A5AA5){
+		//传感器校准参数
+		OffsetData.acc_offectx=flashData.Offset_Data.acc_offectx;
+		OffsetData.acc_offecty=flashData.Offset_Data.acc_offecty;
+		OffsetData.acc_offectz=flashData.Offset_Data.acc_offectz;
+
+		OffsetData.acc_scalex=flashData.Offset_Data.acc_scalex;
+		OffsetData.acc_scaley=flashData.Offset_Data.acc_scaley;
+		OffsetData.acc_scalez=flashData.Offset_Data.acc_scalez;
+		
+		OffsetData.gyro_offectx=flashData.Offset_Data.gyro_offectx;
+		OffsetData.gyro_offecty=flashData.Offset_Data.gyro_offecty;
+		OffsetData.gyro_offectz=flashData.Offset_Data.gyro_offectz;
+		
+		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex;
+		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley;
+		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez;
+		
+	}else{
+		flashData.isGood=0xA55A5AA5;
+		//传感器校准参数
+		OffsetData.acc_offectx=flashData.Offset_Data.acc_offectx = 0;
+		OffsetData.acc_offecty=flashData.Offset_Data.acc_offecty = 0;
+		OffsetData.acc_offectz=flashData.Offset_Data.acc_offectz = 0;
+		
+		OffsetData.acc_scalex=flashData.Offset_Data.acc_scalex = 1;
+		OffsetData.acc_scaley=flashData.Offset_Data.acc_scaley = 1;
+		OffsetData.acc_scalez=flashData.Offset_Data.acc_scalez = 1;
+		
+		OffsetData.gyro_offectx=flashData.Offset_Data.gyro_offectx = 0;
+		OffsetData.gyro_offecty=flashData.Offset_Data.gyro_offecty = 0;
+		OffsetData.gyro_offectz=flashData.Offset_Data.gyro_offectz = 0;
+		
+		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex = 1;
+		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley = 1;
+		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez = 1;
+	
+		Write_Config();	
+	}
+}
+
+/***********************************************************************************************
+*函 数 名: Load_PIDConfig
+*功能说明: 从flash读出参数IMU校准参数
+*形    参: 无
+*返 回 值: 无
+************************************************************************************************/
+void Load_PIDConfig(void){
+	
+	u32 *ptr = &flashData.isGood;
+	STMFLASH_Read(0X080E0004,ptr,sizeof(flashData));
+	if(flashData.isGood==0xA55A5AA5){
+		
 		//姿态外环参数
 		OriginalPitch.kP=PID_ParaInfo.Pitch.Kp=flashData.pidPara.Pitch.Kp;
 		OriginalPitch.kI=PID_ParaInfo.Pitch.Ki=flashData.pidPara.Pitch.Ki;
@@ -76,26 +127,8 @@ void Load_Config(void){
 		OriginalVelZ.kP=PID_ParaInfo.VelZ.Kp=flashData.pidPara.VelZ.Kp;
 		OriginalVelZ.kI=PID_ParaInfo.VelZ.Ki=flashData.pidPara.VelZ.Ki;
 		OriginalVelZ.kD=PID_ParaInfo.VelZ.Kd=flashData.pidPara.VelZ.Kd;	
-		
-		//传感器校准参数
-		OffsetData.acc_offectx=flashData.Offset_Data.acc_offectx;
-		OffsetData.acc_offecty=flashData.Offset_Data.acc_offecty;
-		OffsetData.acc_offectz=flashData.Offset_Data.acc_offectz;
-
-		OffsetData.acc_scalex=flashData.Offset_Data.acc_scalex;
-		OffsetData.acc_scaley=flashData.Offset_Data.acc_scaley;
-		OffsetData.acc_scalez=flashData.Offset_Data.acc_scalez;
-		
-		OffsetData.gyro_offectx=flashData.Offset_Data.gyro_offectx;
-		OffsetData.gyro_offecty=flashData.Offset_Data.gyro_offecty;
-		OffsetData.gyro_offectz=flashData.Offset_Data.gyro_offectz;
-		
-		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex;
-		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley;
-		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez;
-		
-	}else{
-		
+	}
+	else{
 		flashData.isGood=0xA55A5AA5;
 		//姿态外环参数
 		OriginalPitch.kP=PID_ParaInfo.Pitch.Kp=flashData.pidPara.Pitch.Kp=0;
@@ -145,25 +178,13 @@ void Load_Config(void){
 		OriginalVelZ.kP=PID_ParaInfo.VelZ.Kp=flashData.pidPara.VelZ.Kp=0;
 		OriginalVelZ.kI=PID_ParaInfo.VelZ.Ki=flashData.pidPara.VelZ.Ki=0;
 		OriginalVelZ.kD=PID_ParaInfo.VelZ.Kd=flashData.pidPara.VelZ.Kd=0;	
-		//传感器校准参数
-		OffsetData.acc_offectx=flashData.Offset_Data.acc_offectx = 0;
-		OffsetData.acc_offecty=flashData.Offset_Data.acc_offecty = 0;
-		OffsetData.acc_offectz=flashData.Offset_Data.acc_offectz = 0;
 		
-		OffsetData.acc_scalex=flashData.Offset_Data.acc_scalex = 1;
-		OffsetData.acc_scaley=flashData.Offset_Data.acc_scaley = 1;
-		OffsetData.acc_scalez=flashData.Offset_Data.acc_scalez = 1;
-		
-		OffsetData.gyro_offectx=flashData.Offset_Data.gyro_offectx = 0;
-		OffsetData.gyro_offecty=flashData.Offset_Data.gyro_offecty = 0;
-		OffsetData.gyro_offectz=flashData.Offset_Data.gyro_offectz = 0;
-		
-		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex = 1;
-		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley = 1;
-		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez = 1;
-	
 		Write_Config();	
 	}
 }
 
 
+
+
+
+/* END */
