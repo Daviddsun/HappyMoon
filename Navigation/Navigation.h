@@ -26,7 +26,19 @@ typedef struct {
     Vector3f_t posMeasure;
 } NAVGATION_t;
 
+typedef struct {
+	float PosCurrentTime;
+	uint64_t PosLastTime;
+	float VelCurrentTime;
+	uint64_t VelLastTime;
+} FPS_Navigation;
+
+
 void NavigationInit(void);
 void VelocityEstimate(void);
 void PositionEstimate(void);
+Vector3f_t GetCopterPosition(void);
+Vector3f_t GetCopterVelocity(void);
+float GetFPSNavigationPos(void);
+float GetFPSNavigationVel(void);
 #endif

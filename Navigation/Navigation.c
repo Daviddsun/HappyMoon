@@ -2,7 +2,7 @@
 NAVGATION_t nav;
 KalmanVel_t kalmanVel;
 Kalman_t kalmanPos;
-
+FPS_Navigation FPSNavigation;
 void KalmanVelInit(void);
 void KalmanPosInit(void);
 /**********************************************************************************************************
@@ -123,16 +123,14 @@ void KalmanVelInit(void)
 void VelocityEstimate(void)
 {
 	OS_ERR err;
-	static uint64_t previousT;
-	float deltaT;
 	Vector3f_t VIOVel;
 	static uint32_t count;
 	static bool fuseFlag;
 			
 	//计算时间间隔，用于积分
-	deltaT = (OSTimeGet(&err) - previousT) * 1e-3;
-	deltaT = ConstrainFloat(deltaT, 0.0005, 0.005);
-	previousT = OSTimeGet(&err);
+	FPSNavigation.VelCurrentTime = (OSTimeGet(&err) - FPSNavigation.VelLastTime) * 1e-3;
+	FPSNavigation.VelCurrentTime = ConstrainFloat(FPSNavigation.VelCurrentTime, 0.0005, 0.005);
+	FPSNavigation.VelLastTime = OSTimeGet(&err);
 
 	//获取运动加速度
 	nav.accel = EarthAccGetData();
@@ -169,7 +167,7 @@ void VelocityEstimate(void)
 	更新卡尔曼滤波器
 	估计飞行速度及加速度bias
 	*/
-	KalmanVelUpdate(&kalmanVel, &nav.velocity, &nav.accel_bias, nav.accel, nav.velMeasure, deltaT, fuseFlag);
+	KalmanVelUpdate(&kalmanVel, &nav.velocity, &nav.accel_bias, nav.accel, nav.velMeasure, FPSNavigation.VelCurrentTime, fuseFlag);
 }
 
 /**********************************************************************************************************
@@ -181,16 +179,14 @@ void VelocityEstimate(void)
 void PositionEstimate(void)
 {
 	OS_ERR err;
-	static uint64_t previousT;
-	float deltaT;
 	Vector3f_t input;
 	static uint32_t count;
 	static bool fuseFlag;
 
 	//计算时间间隔，用于积分
-	deltaT = (OSTimeGet(&err) - previousT) * 1e-3;
-	deltaT = ConstrainFloat(deltaT, 0.0005, 0.002);
-	previousT = OSTimeGet(&err);
+	FPSNavigation.PosCurrentTime = (OSTimeGet(&err) - FPSNavigation.PosLastTime) * 1e-3;
+	FPSNavigation.PosCurrentTime = ConstrainFloat(FPSNavigation.PosCurrentTime, 0.0005, 0.002);
+	FPSNavigation.PosLastTime = OSTimeGet(&err);
 
 	//速度数据更新频率1KHz，VIO数据只有10hz
 	//这里将VIO更新频率拉到20hz
@@ -207,9 +203,9 @@ void PositionEstimate(void)
 	}
 
 	//速度积分
-	input.x = nav.velocity.x * deltaT;
-	input.y = nav.velocity.y * deltaT;
-	input.z = nav.velocity.z * deltaT;
+	input.x = nav.velocity.x * FPSNavigation.PosCurrentTime;
+	input.y = nav.velocity.y * FPSNavigation.PosCurrentTime;
+	input.z = nav.velocity.z * FPSNavigation.PosCurrentTime;
 
 	//位置估计
 	KalmanUpdate(&kalmanPos, input, nav.posMeasure, fuseFlag);
@@ -289,3 +285,24 @@ Vector3f_t GetCopterPosMeasure(void)
 {
     return nav.posMeasure;
 }
+/**********************************************************************************************************
+*函 数 名: GetFPSNavigationPos
+*功能说明: 获取位置融合FPS
+*形    参: 无
+*返 回 值: 
+**********************************************************************************************************/
+float GetFPSNavigationPos(void)
+{
+    return FPSNavigation.PosCurrentTime;
+}
+/**********************************************************************************************************
+*函 数 名: GetFPSNavigationVel
+*功能说明: 获取位置融合FPS
+*形    参: 无
+*返 回 值: 
+**********************************************************************************************************/
+float GetFPSNavigationVel(void)
+{
+    return FPSNavigation.VelCurrentTime;
+}
+

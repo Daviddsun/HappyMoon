@@ -1,6 +1,7 @@
 #include "Visiondata_deal.h"
-//估计状态定义
 
+FPS_VisualOdometry FPSVisualOdometry;
+//估计状态定义
 float_union position_x,position_y,position_z,                       //估计位置
 							velocity_x,velocity_y,velocity_z,										  //估计速度
 								Quaternion0,Quaternion1,Quaternion2,Quaternion3,	  //估计姿态
@@ -12,9 +13,13 @@ float_union position_x,position_y,position_z,                       //估计位�
 *形    参: 无
 *返 回 值: Position
 **********************************************************************************************************/
-void Vision_DataDeal(Receive_VisualOdometry rx){	
+void Vision_DataDeal(Receive_VisualOdometry rx){
+	OS_ERR err;
 	if(rx.buf[0]==0x55 && rx.buf[1]==0xAA && rx.buf[55]==0xAA){
 		if(rx.buf[2] == 0x30){
+			//计算函数运行时间间隔
+			FPSVisualOdometry.CurrentTime = (OSTimeGet(&err) - FPSVisualOdometry.LastTime) * 1e-3;
+			FPSVisualOdometry.LastTime = OSTimeGet(&err);
 			//X轴位置数据
 			position_x.cv[0] = rx.buf[3];
 			position_x.cv[1] = rx.buf[4];
@@ -161,3 +166,13 @@ bool GetVisualOdometryStatus(void){
 	
   return status;
 }
+/**********************************************************************************************************
+*函 数 名: GetFPSVisualOdometry
+*功能说明: 返回视觉里程计的FPS
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+float GetFPSVisualOdometry(void){
+  return FPSVisualOdometry.CurrentTime;
+}
+
