@@ -12,5 +12,6 @@ enum{
 void Adc_Init(void);
 float Get_Battery(void);
 void BatteryVoltageUpdate(void);
+int16_t GetBatteryVoltage(void);
 uint8_t GetBatteryStatus(void);
 #endif 

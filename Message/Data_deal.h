@@ -9,8 +9,8 @@
 #include "Type_conversion.h"
 
 void GroundStationDataDeal(Receive_GroundStation rx);
-void DataStitching(Data_Rx rx);
 uint8_t GetCopterStatus(void);
+void SetCopterStatus(DroneFlightOnOff_TypeDef status);
 uint8_t GetCopterTest(void);
 uint8_t SendPID(void); 
 void ResetSendPID(void);

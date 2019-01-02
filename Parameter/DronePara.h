@@ -118,12 +118,7 @@ typedef struct{
 }Desired_acceleration;
 
 typedef struct{
-	unsigned int len;
-	unsigned char buf[64];
-}Data_Rx;
-
-typedef struct{
-	unsigned char buf[32];
+	unsigned char buf[20];
 }Receive_GroundStation;
 
 typedef struct{

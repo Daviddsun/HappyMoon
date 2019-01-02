@@ -85,8 +85,8 @@ void Navigation_task(void *p_arg){
 	CPU_TS       ts;
 	Vector3f_t accCalibData,gyroCalibData;
 	static uint32_t count = 0;
-	//导航参数初始化
-  NavigationInit();
+//	//导航参数初始化
+//  NavigationInit();
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[ACC_DATA_PRETREAT],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -97,27 +97,14 @@ void Navigation_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			gyroCalibData = *((Vector3f_t *)p_msg);
 		}
-		//飞行速度估计
-		VelocityEstimate();
-		//飞行位置估计
-		PositionEstimate();
+//		//飞行速度估计
+//		VelocityEstimate();
+//		//飞行位置估计
+//		PositionEstimate();
 		//飞行姿态估计
 		MahonyAHRSupdateIMU(gyroCalibData.x,gyroCalibData.y,gyroCalibData.z,
 															accCalibData.x,accCalibData.y,accCalibData.z);
 		count ++;
-	}
-}
-
-/**
- * @Description 其他传感器数据更新
- */
-void OtherSensorUpdate_task(void *p_arg){
-	OS_ERR err;
-	p_arg = p_arg;
-	while(1){
-		//电池电压电流采样更新 100Hz
-    BatteryVoltageUpdate();
-		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 
@@ -142,43 +129,64 @@ void FlightControl_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			Estimate_Gyro = *((Vector3f_t *)p_msg);
 		}
-		//关机不进入控制
-		if(GetCopterStatus() == Drone_Off){
+		//起飞检测
+		uint8_t status = GetCopterStatus();
+		if(status == Drone_Off){
+			count = 0;
 			PWM_OUTPUT(0,0,0,0);
-			return;
 		}
-		//100hz
-		if(count % 10 == 0){
-			//安全保护
-			SafeControl();
-		}
-		//200hz
-		if(count % 5 == 0){
-			//飞行位置控制
-			
-			//期望角度选择
-			if(GetCopterTest() == Drone_Mode_Pitch || 
-									GetCopterTest() == Drone_Mode_Roll){
-				Expect_Angle = GetRemoteControlAngle();
+		else{
+			if(count <1000){
+				PWM_OUTPUT(200,200,200,200);
 			}
-			//飞行角度控制
-			Expect_Gyro.x = (Attitude_OuterControl(Expect_Angle)).roll;
-			Expect_Gyro.y = (Attitude_OuterControl(Expect_Angle)).pitch;
-			Expect_Gyro.z = (Attitude_OuterControl(Expect_Angle)).yaw;
-		}
-		//500hz
-		if(count % 2 == 0){
-			//期望角速率选择
-			if(GetCopterTest() == Drone_Mode_RatePitch || 
-									GetCopterTest() == Drone_Mode_RateRoll){
-				Expect_Gyro = GetRemoteControlAngleVel();
+			else{
+				//100hz
+				if(count % 10 == 0){
+					//安全保护
+					SafeControl();
+				}
+				//200hz
+				if(count % 5 == 0){
+					//飞行位置控制
+					
+					//期望角度选择
+					if(GetCopterTest() == Drone_Mode_Pitch || 
+											GetCopterTest() == Drone_Mode_Roll){
+						Expect_Angle = GetRemoteControlAngle();
+					}
+					//飞行角度控制
+					Expect_Gyro.x = (Attitude_OuterControl(Expect_Angle)).roll;
+					Expect_Gyro.y = (Attitude_OuterControl(Expect_Angle)).pitch;
+					Expect_Gyro.z = (Attitude_OuterControl(Expect_Angle)).yaw;
+				}
+				//500hz
+				if(count % 2 == 0){
+					//期望角速率选择
+					if(GetCopterTest() == Drone_Mode_RatePitch || 
+											GetCopterTest() == Drone_Mode_RateRoll){
+						Expect_Gyro = GetRemoteControlAngleVel();
+					}
+					//飞行角速率环控制
+					Rotate_Thrust = Attitude_InnerControl(Expect_Gyro,Estimate_Gyro);
+					//推力融合
+					ThrustMixer(ARM_Length,Rotate_Thrust);
+				}
 			}
-			//飞行角速率环控制
-			Rotate_Thrust = Attitude_InnerControl(Expect_Gyro,Estimate_Gyro);
-			//推力融合
-			ThrustMixer(ARM_Length,Rotate_Thrust);
+			count++;
 		}
-		count++;
+	}
+}
+
+/**
+ * @Description 其他传感器数据更新
+ */
+void OtherSensorUpdate_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	while(1){
+		//电池电压电流采样更新 100Hz
+    BatteryVoltageUpdate();
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 
@@ -223,7 +231,7 @@ void GroundStation_task(void *p_arg){
 }
 
 /**
- * @Description 飞行状态任务
+ * @Description 飞行状态任务 50hz
  */
 void FlightStatus_task(void *p_arg){
 	OS_ERR err;
@@ -238,7 +246,7 @@ void FlightStatus_task(void *p_arg){
 }
 
 /**
- * @Description Message任务
+ * @Description Message任务 25hz
  */
 void Message_task(void *p_arg){
 	OS_ERR err;
@@ -251,7 +259,7 @@ void Message_task(void *p_arg){
 		}
 		//发送传感器数据
 		SendRTInfo();
-		OSTimeDlyHMSM(0,0,0,50,OS_OPT_TIME_HMSM_STRICT,&err);
+		OSTimeDlyHMSM(0,0,0,40,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 

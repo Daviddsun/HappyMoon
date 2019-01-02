@@ -7,8 +7,15 @@
 #include <os.h>
 #include "Board.h"
 
+typedef struct{
+	unsigned int len;
+	unsigned char buf[40];
+}Data_Rx;
+
 void Usart3toBluetooth_Init(u32 Bound);
 
 void Uart3_tx(uint8_t *data,uint16_t size);
+
+
 
 #endif 

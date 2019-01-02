@@ -3,6 +3,7 @@
 
 #include "Task.h"
 #include "DronePara.h"
+#include "Board.h"
 
 typedef struct{
 	float f1;

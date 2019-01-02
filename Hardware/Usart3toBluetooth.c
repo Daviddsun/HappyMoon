@@ -1,7 +1,7 @@
 #include "Usart3toBluetooth.h"
 
 unsigned char Tx_Buf_Uart3[160];
-unsigned char Rx_Buf_Uart3[160];
+unsigned char Rx_Buf_Uart3[32];
 
 int Flag_Tx_Uart3_Busy=0;
 
@@ -95,12 +95,12 @@ void Usart3toBluetooth_Init(u32 Bound){
 	GPIO_PinAFConfig(GPIOC,GPIO_PinSource11,GPIO_AF_USART3); //GPIOC11复用为USART3
 	
 	//USART3端口配置
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11; //GPIOB10与GPIOB11
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11; //GPIOC10与GPIOC11
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;						 //复用功能
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;				 //速度50MHz
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 					 //推挽复用输出
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 						 //上拉
-	GPIO_Init(GPIOC,&GPIO_InitStructure); 									 //初始化PB10，PB11
+	GPIO_Init(GPIOC,&GPIO_InitStructure); 									 //初始化PC10，PC11
 #else
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource10,GPIO_AF_USART3); 
 	GPIO_PinAFConfig(GPIOB,GPIO_PinSource11,GPIO_AF_USART3); 
@@ -250,18 +250,14 @@ void Uart3_dma_tx_irq_handler(void)
     inf_Uart3_deal_irq_dma_tx();  
 }  
      
-
+Data_Rx Bluetooth_rx;
 void Uart3_irq_handler(void)                                
 {     
 	OS_ERR err; 
-	Data_Rx Bluetooth_rx;
-	Receive_GroundStation GroundStationData;
 	inf_Uart3_deal_irq_tx_end();  
 	Bluetooth_rx.len = inf_Uart3_deal_irq_rx_end(Bluetooth_rx.buf);
-	memcpy(&GroundStationData,&Bluetooth_rx.buf,Bluetooth_rx.len);
 	if (Bluetooth_rx.len != 0){ 
-		//更新消息队列
-		OSQPost(&messageQueue[GROUND_STATION],&GroundStationData,Bluetooth_rx.len,OS_OPT_POST_FIFO,&err);
+		OSQPost(&messageQueue[GROUND_STATION],&Bluetooth_rx.buf,Bluetooth_rx.len,OS_OPT_POST_FIFO,&err);
 	}				
 } 
 

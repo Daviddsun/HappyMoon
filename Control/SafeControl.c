@@ -7,10 +7,11 @@
 ************************************************************************************************/
 void Roll_Protection(void){
 	Vector3angle_t Attitude = GetCopterAngle();
-	if(Attitude.pitch * 180/PI > 30.0f || Attitude.pitch * 180/PI < -30.0f 
-				|| Attitude.roll * 180/PI > 30.0f || Attitude.roll * 180/PI < -30.0f){
+	//角度大于35度直接关闭浆叶
+	if(Attitude.pitch * 180/PI > 35.0f || Attitude.pitch * 180/PI < -35.0f 
+				|| Attitude.roll * 180/PI > 35.0f || Attitude.roll * 180/PI < -35.0f){
 		PWM_OUTPUT(0,0,0,0);
-		//FlightControl.OnOffLand = Drone_Off;
+		SetCopterStatus(Drone_Off);
 	}
 }
 

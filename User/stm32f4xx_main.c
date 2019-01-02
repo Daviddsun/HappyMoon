@@ -86,8 +86,10 @@ int main(void)
 	CPU_SR_ALLOC();
 	/** 飞控板各个硬件初始化 **/
 	Board_Init();
-	/** 各个传感器初始化 **/
+	/** IMU传感器初始化 **/
 	Sensor_Init();
+	/** 电机MotorPWM初始化 **/
+	MotorPWM_Init();
 	/** 启动操作系统 **/
 	OSInit(&err);	
 	/** 创建一个消息队列 **/
