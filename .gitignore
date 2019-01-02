@@ -3,6 +3,6 @@ Listings/
 Project/*.txt
 Project/*.ini
 Project/DebugConfig/
-Project/*.Administrator
+Project/*.admin
 Project/*.uvoptx
 Project/*.YuyingJin
