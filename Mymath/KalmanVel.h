@@ -38,16 +38,16 @@ typedef struct {
     float r[6][6];
 } KalmanVel_t;
 
-void KalmanVelUpdate(KalmanVel_t* kalman, Vector3f_t* velocity, Vector3f_t* bias, Vector3f_t accel, 
+void KalmanVelUpdate(KalmanVel_t *kalman, Vector3f_t *velocity, Vector3f_t *bias, Vector3f_t accel, 
                      float observe[6], float deltaT, bool fuseFlag);
 
-void KalmanVelStateTransMatSet(KalmanVel_t* kalman, float f[6][6]);
-void KalmanVelObserveMapMatSet(KalmanVel_t* kalman, float h[6][6]);
-void KalmanVelCovarianceMatSet(KalmanVel_t* kalman, float p[6][6]);
-void KalmanVelQMatSet(KalmanVel_t* kalman, float q[6][6]);
-void KalmanVelRMatSet(KalmanVel_t* kalman, float r[6][6]);
-void KalmanVelBMatSet(KalmanVel_t* kalman, float b[6][6]);
+void KalmanVelStateTransMatSet(KalmanVel_t *kalman, float f[6][6]);
+void KalmanVelObserveMapMatSet(KalmanVel_t *kalman, float h[6][6]);
+void KalmanVelCovarianceMatSet(KalmanVel_t *kalman, float p[6][6]);
+void KalmanVelQMatSet(KalmanVel_t *kalman, float q[6][6]);
+void KalmanVelRMatSet(KalmanVel_t *kalman, float r[6][6]);
+void KalmanVelBMatSet(KalmanVel_t *kalman, float b[6][6]);
 
-void KalmanVelUseMeasurement(KalmanVel_t* kalman, uint8_t num, bool flag);
+void KalmanVelUseMeasurement(KalmanVel_t *kalman, uint8_t num, bool flag);
 
 #endif

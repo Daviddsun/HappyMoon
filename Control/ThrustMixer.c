@@ -10,15 +10,15 @@ ThrustUav UavThrust;
 void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThrust){
 	
 	if(GetCopterTest()==Drone_Mode_Pitch || GetCopterTest()==Drone_Mode_RatePitch){
-		UavThrust.f1 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;	
-		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;
-		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;
-		UavThrust.f4 = -1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_acceleration * Drone_Mass / 4.0f;
+		UavThrust.f1 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_Acceleration * Drone_Mass / 4.0f;	
+		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_Acceleration * Drone_Mass / 4.0f;
+		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_Acceleration * Drone_Mass / 4.0f;
+		UavThrust.f4 = -1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_Acceleration * Drone_Mass / 4.0f;
 	}else if(GetCopterTest()==Drone_Mode_Roll || GetCopterTest()==Drone_Mode_RateRoll){
-		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
-		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
-		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
-		UavThrust.f4 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_acceleration * Drone_Mass / 4.0f;
+		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_Acceleration * Drone_Mass / 4.0f;
+		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_Acceleration * Drone_Mass / 4.0f;
+		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_Acceleration * Drone_Mass / 4.0f;
+		UavThrust.f4 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_Acceleration * Drone_Mass / 4.0f;
 	}else if(GetCopterTest()==Drone_Mode_4Axis){
 		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
 										+1.414f / (arm_length * 4.0f) * RotateThrust.y                                  	//pitch

@@ -41,7 +41,7 @@ void KalmanPosInit(void)
     KalmanObserveMapMatSet(&kalmanPos, hMatInit);
 
     //状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-    kalmanPos.slidWindowSize = 100;
+    kalmanPos.slidWindowSize = 120;
     kalmanPos.fuseDelay.x = 100;    //0.1s延时
     kalmanPos.fuseDelay.y = 100;    //0.1s延时
     kalmanPos.fuseDelay.z = 100;    //0.1s延时
@@ -106,12 +106,12 @@ void KalmanVelInit(void)
     KalmanVelBMatSet(&kalmanVel, bMatInit);
                             
     //状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-    kalmanVel.slidWindowSize = 100;
+    kalmanVel.slidWindowSize = 120;
     kalmanVel.fuseDelay[VIO_VEL_X] = 100;    //VIO速度x轴数据延迟参数：0.1s
     kalmanVel.fuseDelay[VIO_VEL_Y] = 100;    //VIO速度y轴数据延迟参数：0.1s
     kalmanVel.fuseDelay[VIO_VEL_Z] = 100;    //VIO速度z轴数据延迟参数：0.1s
-    kalmanVel.fuseDelay[BARO_VEL]  = 100;    //气压速度数据延迟参数：0.1s
-    kalmanVel.fuseDelay[TOF_VEL]   = 100;    //TOF速度数据延迟参数：
+    kalmanVel.fuseDelay[BARO_VEL]  = 50;    //气压速度数据延迟参数：0.1s
+    kalmanVel.fuseDelay[TOF_VEL]   = 30;    //TOF速度数据延迟参数：
 }
 
 /**********************************************************************************************************
@@ -139,7 +139,9 @@ void VelocityEstimate(void)
 	//融合的频率强制统一为20Hz 
 	if(count++ % 50 == 0)
 	{
+		
 		VIOVel = GetVisualOdometryVel();
+		
 		nav.velMeasure[0] = VIOVel.x;           //VIO速度x轴
 		nav.velMeasure[1] = VIOVel.y;           //VIO速度y轴
 		nav.velMeasure[2] = VIOVel.z;           //VIO速度z轴
@@ -147,7 +149,7 @@ void VelocityEstimate(void)
 		nav.velMeasure[4] = 0;                  //TOF速度值
 		nav.velMeasure[5] = 0; 
 			
-		//启用VIO观测量
+		//启用VIO观测量z轴数据
 		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_Z, true);
 		
 		//禁用气压观测
@@ -167,7 +169,8 @@ void VelocityEstimate(void)
 	更新卡尔曼滤波器
 	估计飞行速度及加速度bias
 	*/
-	KalmanVelUpdate(&kalmanVel, &nav.velocity, &nav.accel_bias, nav.accel, nav.velMeasure, FPSNavigation.VelCurrentTime, fuseFlag);
+	KalmanVelUpdate(&kalmanVel, &nav.velocity, &nav.accel_bias, nav.accel, 
+											nav.velMeasure, FPSNavigation.VelCurrentTime, fuseFlag);
 }
 
 /**********************************************************************************************************

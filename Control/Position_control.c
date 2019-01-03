@@ -33,7 +33,7 @@ void Position_Controller(Vector3f_t ExpectPos){
 	z_pos_error = ConstrainFloat(z_pos_error,-pz_error_max,pz_error_max);
 	float z_vel_error = ExpectVel.z - EstimateVel.z;
 	z_vel_error = ConstrainFloat(z_vel_error,-vz_error_max,vz_error_max);
-	acc_error.z = OriginalPosZ.kP * z_pos_error + OriginalPosZ.kD * z_vel_error + Gravity_acceleration; //z轴加上重力加速度
+	acc_error.z = OriginalPosZ.kP * z_pos_error + OriginalPosZ.kD * z_vel_error + Gravity_Acceleration; //z轴加上重力加速度
 	// 计算期望控制量
 	PosControllerOut.ExpectAcc = acc_error.z;
 
