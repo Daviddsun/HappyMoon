@@ -6,7 +6,7 @@ FPS_AttitudeControl FPSAttitudeControl;
 *形    参: 角速度测量值
 *返 回 值: 无
 **********************************************************************************************************/
-Vector3f_t Attitude_InnerControl(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro){
+Vector3f_t Attitude_InnerController(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro){
 	OS_ERR err;
 	Vector3f_t ErrorGyro,Thrust;
 	//计算函数运行时间间隔
@@ -33,10 +33,11 @@ Vector3f_t Attitude_InnerControl(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro)
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-Vector3angle_t Attitude_OuterControl(Vector3angle_t ExpectAngle){
-  Vector3angle_t Angle,AngleLpf,ExpectAnguleRate,ErrorAngle;
+Vector3angle_t Attitude_OuterController(Vector3angle_t ExpectAngle){
+	static Vector3angle_t AngleLpf;
+  Vector3angle_t Angle,ExpectAnguleRate,ErrorAngle;
 	//获取当前飞机的姿态角
-//  angle = GetCopterAngle();
+  Angle = GetCopterAngle();
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
 	AngleLpf.roll = AngleLpf.roll * 0.92f + Angle.roll * 0.08f;
 	AngleLpf.pitch = AngleLpf.pitch * 0.92f + Angle.pitch * 0.08f;
@@ -45,10 +46,13 @@ Vector3angle_t Attitude_OuterControl(Vector3angle_t ExpectAngle){
 	ErrorAngle.roll = ExpectAngle.roll - AngleLpf.roll;
 	ErrorAngle.pitch = ExpectAngle.pitch - AngleLpf.pitch;
 	ErrorAngle.yaw = ExpectAngle.yaw - AngleLpf.yaw;
-	//PID算法，计算出姿态外环的控制量
+	//PID算法，计算出姿态外环的控制量 限幅 2.5rad/s
 	ExpectAnguleRate.roll = PID_GetP(&OriginalRoll,  ErrorAngle.roll);
+	ExpectAnguleRate.roll = ConstrainFloat(ExpectAnguleRate.roll,-2.5,2.5); 
 	ExpectAnguleRate.pitch = PID_GetP(&OriginalPitch, ErrorAngle.pitch);
+	ExpectAnguleRate.pitch = ConstrainFloat(ExpectAnguleRate.pitch,-2.5,2.5);
 	ExpectAnguleRate.yaw = PID_GetP(&OriginalYaw, ErrorAngle.yaw);
+	ExpectAnguleRate.yaw = ConstrainFloat(ExpectAnguleRate.yaw,-2.5,2.5);
 	return ExpectAnguleRate;
 }
 

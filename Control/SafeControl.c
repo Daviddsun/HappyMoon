@@ -10,8 +10,11 @@ void Roll_Protection(void){
 	//角度大于35度直接关闭浆叶
 	if(Attitude.pitch * 180/PI > 35.0f || Attitude.pitch * 180/PI < -35.0f 
 				|| Attitude.roll * 180/PI > 35.0f || Attitude.roll * 180/PI < -35.0f){
-		PWM_OUTPUT(0,0,0,0);
-		SetCopterStatus(Drone_Off);
+		//只有在飞行状态下有用，平衡实验时无用
+		if(GetCopterTest() == Drone_Mode_4Axis){
+			PWM_OUTPUT(0,0,0,0);
+			SetCopterStatus(Drone_Off);
+		}
 	}
 }
 
@@ -24,6 +27,7 @@ void Roll_Protection(void){
 static void LowPowerProtect(void){
 	//严重低电量时直接降落
 	if(GetBatteryStatus() == BATTERY_LOW){
+//		SetCopterStatus(Drone_Land);
 	}
 }
 

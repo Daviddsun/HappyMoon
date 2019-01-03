@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="gb2312"?>
 <pidPara>
   <Pitch>
-    <Kp>4</Kp>
+    <Kp>5</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Pitch>
   <Roll>
-    <Kp>4</Kp>
+    <Kp>5</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Roll>
   <Yaw>
-    <Kp>4</Kp>
+    <Kp>0</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Yaw>
   <Height>
-    <Kp>2</Kp>
+    <Kp>0</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Height>
   <ratePitch>
-    <Kp>0.75</Kp>
+    <Kp>4</Kp>
     <Ki>0</Ki>
-    <Kd>0.015</Kd>
+    <Kd>0.08</Kd>
   </ratePitch>
   <rateRoll>
-    <Kp>0.75</Kp>
+    <Kp>4</Kp>
     <Ki>0</Ki>
-    <Kd>0.015</Kd>
+    <Kd>0.08</Kd>
   </rateRoll>
   <rateYaw>
-    <Kp>0.9</Kp>
+    <Kp>0</Kp>
     <Ki>0</Ki>
-    <Kd>0.005</Kd>
+    <Kd>0</Kd>
   </rateYaw>
   <accHeight>
-    <Kp>200</Kp>
+    <Kp>0</Kp>
     <Ki>0</Ki>
-    <Kd>25</Kd>
+    <Kd>0</Kd>
   </accHeight>
 </pidPara>

@@ -6,8 +6,14 @@
 #include "PID_control.h"
 #include "Limits.h"
 
-void Position_control(void);
-void PositionParameterclear(void);
+#define pxy_error_max 	0.6f
+#define vxy_error_max 	1.0f
+#define pz_error_max    0.3f
+#define vz_error_max    0.75f
+
+void Position_Controller(Vector3f_t ExpectPos);
+float GetDesiredControlAcc(void);
+Vector3f_t GetExpectVel(void);
 #endif
 
 

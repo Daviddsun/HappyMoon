@@ -711,9 +711,9 @@
           <GroupName>Hardware</GroupName>
           <Files>
             <File>
-              <FileName>UsbDriver.c</FileName>
+              <FileName>Board.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Hardware\UsbDriver.c</FilePath>
+              <FilePath>..\Hardware\Board.c</FilePath>
             </File>
             <File>
               <FileName>Adc_Battery.c</FileName>
@@ -721,34 +721,9 @@
               <FilePath>..\Hardware\Adc_Battery.c</FilePath>
             </File>
             <File>
-              <FileName>Flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\Flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>General_Gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\General_Gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>mcpwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\mcpwm.c</FilePath>
-            </File>
-            <File>
               <FileName>SPI1.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\SPI1.c</FilePath>
-            </File>
-            <File>
-              <FileName>Usart3toBluetooth.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\Usart3toBluetooth.c</FilePath>
-            </File>
-            <File>
-              <FileName>Board.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\Board.c</FilePath>
             </File>
             <File>
               <FileName>SPI3.c</FileName>
@@ -759,6 +734,31 @@
               <FileName>Usart1toOnboardPC.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\Usart1toOnboardPC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Usart3toBluetooth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Usart3toBluetooth.c</FilePath>
+            </File>
+            <File>
+              <FileName>mcpwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\mcpwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>General_Gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\General_Gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>Flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>UsbDriver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\UsbDriver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -771,14 +771,14 @@
               <FilePath>..\Control\Attitude_control.c</FilePath>
             </File>
             <File>
-              <FileName>PID_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\PID_control.c</FilePath>
-            </File>
-            <File>
               <FileName>Position_control.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Control\Position_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Control\PID_control.c</FilePath>
             </File>
             <File>
               <FileName>ThrustMixer.c</FileName>
@@ -796,14 +796,14 @@
           <GroupName>Message</GroupName>
           <Files>
             <File>
-              <FileName>Data_deal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Message\Data_deal.c</FilePath>
-            </File>
-            <File>
               <FileName>Data_PC.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Message\Data_PC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Data_deal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Message\Data_deal.c</FilePath>
             </File>
             <File>
               <FileName>Visiondata_deal.c</FileName>

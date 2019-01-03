@@ -43,17 +43,17 @@ typedef struct {
     float yaw;
 } Vector3angle_t;
 
-typedef struct {
-    float Wx;
-    float Wy;
-    float Wz;
-} Vector3w_t;
 
 typedef struct {
     float pos;
     float vel;
     float acc;
 } Vector3pos_t;
+
+typedef struct {
+	Vector3angle_t ExpectAngle;
+	float ExpectAcc;
+}Vector4PosController;
 
 
 void Vector3f_Normalize(Vector3f_t* vector);

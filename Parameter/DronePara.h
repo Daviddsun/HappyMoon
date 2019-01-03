@@ -9,18 +9,17 @@
 #define ARM_Length 0.190f
 #define Drone_Mass 1.700f
 #define Gravity_acceleration  9.805f
-#define TorqueLimit   0.25f
 #define Inertia_Wx    0.001f
 #define Inertia_Wy    0.001f
 #define Inertia_Wz    0.002f
 
 typedef enum{ 
-	Drone_Mode_None= 0,
-  Drone_Mode_Pitch= 1,		 	
-  Drone_Mode_Roll= 2, 
-	Drone_Mode_4Axis= 3,	
-	Drone_Mode_RatePitch= 4, 
-  Drone_Mode_RateRoll= 5, 	
+	Drone_Mode_None = 0,
+  Drone_Mode_Pitch = 1,		 	
+  Drone_Mode_Roll = 2, 
+	Drone_Mode_4Axis = 3,	
+	Drone_Mode_RatePitch = 4, 
+  Drone_Mode_RateRoll = 5, 	
 }DroneFlightMode_TypeDef;
 
 typedef enum{  

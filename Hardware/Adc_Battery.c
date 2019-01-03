@@ -88,7 +88,7 @@ void BatteryVoltageUpdate(void){
 *形    参: 无
 *返 回 值: 电压值
 **********************************************************************************************************/
-int16_t GetBatteryVoltage(void){
+float GetBatteryVoltage(void){
     return batVoltage;
 }
 

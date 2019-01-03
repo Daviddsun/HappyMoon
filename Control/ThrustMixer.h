@@ -21,7 +21,7 @@ typedef struct
 }Throttle;
 
 
-void ThrustMixer(float arm_length,Vector3f_t RotateThrust);
+void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThrust);
 void MotorThrust(float f1,float f2,float f3,float f4);
 void PWM_OUTPUT(unsigned int Motor1,unsigned int Motor2,
 									unsigned int Motor3,unsigned int Motor4);

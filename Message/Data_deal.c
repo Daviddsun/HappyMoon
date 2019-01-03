@@ -208,12 +208,14 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					for(i=0;i<4;i++){
 						HexToFloat[i]=rx.buf[3+i];
 					}
-					Target_Info.TargetW.y = Hex_To_Decimal(HexToFloat,4); 
+					Target_Info.TargetW.y = Hex_To_Decimal(HexToFloat,4);
+					Target_Info.TargetW.y = Target_Info.TargetW.y * 0.0002f;//2rad/s最高
 					/* Target_RateRoll */
 					for(i=0;i<4;i++){
 						HexToFloat[i]=rx.buf[7+i];
 					}
-					Target_Info.TargetW.x = Hex_To_Decimal(HexToFloat,4);		
+					Target_Info.TargetW.x = Hex_To_Decimal(HexToFloat,4);	
+					Target_Info.TargetW.x = Target_Info.TargetW.x * 0.0002f;//2rad/s最高
 					break;
 				/* 阶跃信号测试 */	
 				case 16:
