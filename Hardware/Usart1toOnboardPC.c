@@ -1,11 +1,11 @@
-#include "Usart1toOdroid.h"
+#include "Usart1toOnboardPC.h"
 
 unsigned char Tx_Buf_Uart1[160];
 unsigned char Rx_Buf_Uart1[64];
 
 int Flag_Tx_Uart1_Busy=0;
 
-void Usart1toOdroid_Init(u32 Bound)
+void Usart1toOnboardPC_Init(u32 Bound)
 {
 	//GPIO管脚配置
 	GPIO_InitTypeDef GPIO_InitStructure;

@@ -12,7 +12,7 @@
 #include "Adc_Battery.h"
 #include "General_Gpio.h"
 #include "Bluetooth.h"
-#include "Usart1toOdroid.h"
+#include "Usart1toOnboardPC.h"
 #include "Sensor.h"
 #include "UsbDriver.h"
 #include "MessageQueue.h"

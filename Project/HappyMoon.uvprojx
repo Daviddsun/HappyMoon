@@ -741,11 +741,6 @@
               <FilePath>..\Hardware\SPI1.c</FilePath>
             </File>
             <File>
-              <FileName>Usart1toOdroid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\Usart1toOdroid.c</FilePath>
-            </File>
-            <File>
               <FileName>Usart3toBluetooth.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\Usart3toBluetooth.c</FilePath>
@@ -759,6 +754,11 @@
               <FileName>SPI3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Hardware\SPI3.c</FilePath>
+            </File>
+            <File>
+              <FileName>Usart1toOnboardPC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Usart1toOnboardPC.c</FilePath>
             </File>
           </Files>
         </Group>

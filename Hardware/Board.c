@@ -23,7 +23,7 @@ void Board_Init(void){
 	Adc_Init();
 	delay_ms(100);
 	// 用于与高性能板载ARM或板载PC通信 波特率230400
-	Usart1toOdroid_Init(230400); 
+	Usart1toOnboardPC_Init(230400); 
 	delay_ms(100);
 	// 蓝牙串口打开，用于与地面站通信
 	Usart3toBluetooth_Init(115200);
