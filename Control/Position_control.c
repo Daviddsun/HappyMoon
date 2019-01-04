@@ -35,8 +35,8 @@ void Position_Controller(Vector3f_t ExpectPos){
 	z_vel_error = ConstrainFloat(z_vel_error,-vz_error_max,vz_error_max);
 	acc_error.z = OriginalPosZ.kP * z_pos_error + OriginalPosZ.kD * z_vel_error + Gravity_Acceleration; //z轴加上重力加速度
 //	// 计算期望控制量
-//	PosControllerOut.ExpectAcc = acc_error.z;
-	PosControllerOut.ExpectAcc = Gravity_Acceleration + (GetRemoteControlFlyData().ZaxisPos) * 2.5f;
+	PosControllerOut.ExpectAcc = acc_error.z;
+//	PosControllerOut.ExpectAcc = Gravity_Acceleration + (GetRemoteControlFlyData().ZaxisPos) * 2.5f;
 	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
 	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 	PosControllerOut.ExpectAngle.yaw = 0;

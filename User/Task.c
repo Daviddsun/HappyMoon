@@ -84,9 +84,6 @@ void Navigation_task(void *p_arg){
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
 	Vector3f_t accCalibData,gyroCalibData;
-	static uint32_t count = 0;
-	//导航参数初始化
-  NavigationInit();
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[ACC_DATA_PRETREAT],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -97,12 +94,9 @@ void Navigation_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			gyroCalibData = *((Vector3f_t *)p_msg);
 		}
-		//飞行位置估计
-		PositionEstimate();
 		//飞行姿态估计
 		MahonyAHRSupdateIMU(gyroCalibData.x,gyroCalibData.y,gyroCalibData.z,
 															accCalibData.x,accCalibData.y,accCalibData.z);
-		count ++;
 	}
 }
 
