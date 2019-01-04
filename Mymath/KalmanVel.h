@@ -2,20 +2,18 @@
 #define _KALMANVEL_H_
 
 #include "mathTool.h"
-#include "Vector3.h"
 #include "matrix6.h"
-#include "DronePara.h"
 
 typedef struct {
     //状态矩阵
+	  //滑动窗口大小
+    int16_t slidWindowSize;
+	  //观测信号相位补偿值
+    int16_t fuseDelay[6];
+	  //状态滑动窗口
+    Vector3f_t stateSlidWindow[60];
     //状态量为：x轴速度 y轴速度 z轴速度 x轴加速度bias y轴加速度bias z轴加速度bias
     float state[6];
-    //滑动窗口大小
-    int16_t slidWindowSize;
-    //状态滑动窗口
-    Vector3f_t stateSlidWindow[150];
-    //观测信号相位补偿值
-    int16_t fuseDelay[6];
     //残差矩阵
     float residual[6];
     //状态转移矩阵

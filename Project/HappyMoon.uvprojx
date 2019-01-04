@@ -851,11 +851,6 @@
               <FilePath>..\Mymath\lowPassFilter.c</FilePath>
             </File>
             <File>
-              <FileName>KalmanVel.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\KalmanVel.c</FilePath>
-            </File>
-            <File>
               <FileName>matrix3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mymath\matrix3.c</FilePath>
@@ -886,6 +881,11 @@
               <FilePath>..\Sensor\MPU6000.c</FilePath>
             </File>
             <File>
+              <FileName>MPU6500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Sensor\MPU6500.c</FilePath>
+            </File>
+            <File>
               <FileName>Accelerometer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Sensor\Accelerometer.c</FilePath>
@@ -894,11 +894,6 @@
               <FileName>Gyroscope.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Sensor\Gyroscope.c</FilePath>
-            </File>
-            <File>
-              <FileName>MPU6500.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Sensor\MPU6500.c</FilePath>
             </File>
           </Files>
         </Group>

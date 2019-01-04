@@ -88,8 +88,8 @@ int main(void)
 	Board_Init();
 	/** IMU传感器初始化 **/
 	Sensor_Init();
-	/** 电机MotorPWM初始化 **/
-	MotorPWM_Init();
+//	/** 电机MotorPWM初始化 **/
+//	MotorPWM_Init();
 	/** 启动操作系统 **/
 	OSInit(&err);	
 	/** 创建一个消息队列 **/

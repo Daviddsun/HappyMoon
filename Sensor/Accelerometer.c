@@ -246,7 +246,7 @@ Vector3f_t EarthAccGetData(void){
 	
 	EarthAcc.z = (((2.f * (quaternion.qx*quaternion.qz - quaternion.qw*quaternion.qy))*accValue.data.x
 					+ (2.f * (quaternion.qy*quaternion.qz + quaternion.qw*quaternion.qx))*accValue.data.y 
-								+ (quaternion.qw*quaternion.qw - quaternion.qx*quaternion.qx - quaternion.qy*quaternion.qy + quaternion.qz*quaternion.qz)*accValue.data.z) - 1) * Gravity_Acceleration;
+								+ (quaternion.qw*quaternion.qw - quaternion.qx*quaternion.qx - quaternion.qy*quaternion.qy + quaternion.qz*quaternion.qz)*accValue.data.z) - 1.0f) * Gravity_Acceleration;
   return EarthAcc;
 }
 

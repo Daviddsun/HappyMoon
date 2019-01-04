@@ -32,7 +32,7 @@ void KalmanVelUpdate(KalmanVel_t *kalman, Vector3f_t *velocity, Vector3f_t *bias
     input[2] = accel.z;
 
     //更新输入转移矩阵
-    kalman->b[0][0] = kalman->b[1][1] = kalman->b[2][2] = deltaT * Gravity_Acceleration;
+    kalman->b[0][0] = kalman->b[1][1] = kalman->b[2][2] = deltaT * 9.805f;
 
     //更新状态转移矩阵
     kalman->f[0][3] = kalman->f[1][4] = kalman->f[2][5] = deltaT;
@@ -224,7 +224,7 @@ void KalmanVelBMatSet(KalmanVel_t *kalman, float b[6][6])
 *形    参: 卡尔曼结构体指针
 *返 回 值: 无
 **********************************************************************************************************/
-static void KalmanVelSlidWindowUpdate(KalmanVel_t *kalman)
+void KalmanVelSlidWindowUpdate(KalmanVel_t *kalman)
 {
     uint16_t i;
 

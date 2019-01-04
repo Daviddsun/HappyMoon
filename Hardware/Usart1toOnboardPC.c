@@ -222,19 +222,16 @@ void Uart1_dma_tx_irq_handler(void)
 {  
     inf_Uart1_deal_irq_dma_tx();  
 }  
- 
+Data_Rx OnboardPC;
 void Uart1_irq_handler(void)                                
 {  
-		OS_ERR err;	 
-		Data_Rx OnboardPC;
-		Receive_VisualOdometry  VisualOdometryData;
+		OS_ERR err;	
     inf_Uart1_deal_irq_tx_end();  
     OnboardPC.len = inf_Uart1_deal_irq_rx_end(OnboardPC.buf);
-		memcpy(&VisualOdometryData,&OnboardPC.buf,OnboardPC.len);  
     if (OnboardPC.len != 0)  
     { 
 			//消息队列
-			OSQPost(&messageQueue[VISUAL_ODOMETRY],&VisualOdometryData,OnboardPC.len,OS_OPT_POST_FIFO,&err);
+			OSQPost(&messageQueue[VISUAL_ODOMETRY],&OnboardPC.buf,OnboardPC.len,OS_OPT_POST_FIFO,&err);
 		}	
 } 
 

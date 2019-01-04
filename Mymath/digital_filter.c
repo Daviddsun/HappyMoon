@@ -1,10 +1,3 @@
-/******************** (C) COPYRIGHT 2015-2017 Xiluna Tech *********************
- * 作者 	:Xiluna Tech
- * 文件名 :digital_filter.c
- * 描述   :FIR数字滤波器
- * 官网   :http://xiluna.com/
- * 公众号 :XilunaTech
-******************************************************************************/
 #include  "digital_filter.h"
 
 // Found at http://paulbourke.net/miscellaneous//dft/

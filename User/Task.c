@@ -97,8 +97,6 @@ void Navigation_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			gyroCalibData = *((Vector3f_t *)p_msg);
 		}
-		//飞行速度估计
-		VelocityEstimate();
 		//飞行位置估计
 		PositionEstimate();
 		//飞行姿态估计
@@ -117,7 +115,7 @@ void FlightControl_task(void *p_arg){
 	void   *p_msg;
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust;
+	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust,Expect_Pos;
 	Vector3angle_t Expect_Angle;
 	Vector4PosController DesiredControlCommands;
 	static uint32_t count = 0;
@@ -132,11 +130,11 @@ void FlightControl_task(void *p_arg){
 		//起飞检测
 		if(GetCopterStatus() == Drone_Off){
 			count = 0;
-			PWM_OUTPUT(0,0,0,0);
+//			PWM_OUTPUT(0,0,0,0);
 		}
 		else if(GetCopterStatus() == Drone_On){
 			if(count < 2000 && GetCopterTest() == Drone_Mode_4Axis){
-				PWM_OUTPUT(200,200,200,200);
+//				PWM_OUTPUT(200,200,200,200);
 			}
 			else{
 				//100hz
@@ -147,11 +145,15 @@ void FlightControl_task(void *p_arg){
 				//200hz
 				if(count % 5 == 0){
 					//飞行位置控制
-//					Position_Controller();
+					Position_Controller(Expect_Pos);
 					//期望角度选择
 					if(GetCopterTest() == Drone_Mode_Pitch || 
 											GetCopterTest() == Drone_Mode_Roll){
+						//手柄控制
 						Expect_Angle = GetRemoteControlAngle();
+					}else{
+						//位置控制
+						Expect_Angle = GetDesiredControlAngle();
 					}
 					//飞行角度控制
 					Expect_Gyro.x = (Attitude_OuterController(Expect_Angle)).roll;
@@ -184,8 +186,8 @@ void OtherSensorUpdate_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1){
-		//电池电压电流采样更新
-    BatteryVoltageUpdate();
+//		//电池电压电流采样更新
+//    BatteryVoltageUpdate();
 		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }

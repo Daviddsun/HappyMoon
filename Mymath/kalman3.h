@@ -7,12 +7,8 @@
 typedef struct {
     //状态矩阵
     Vector3f_t state;
-    //滑动窗口大小
-    int16_t slidWindowSize;
     //状态滑动窗口
-    Vector3f_t statusSlidWindow[150];
-    //观测信号相位补偿值
-    Vector3i_t fuseDelay;
+    Vector3f_t statusSlidWindow;
     //残差矩阵
     Vector3f_t residual;
     //状态转移矩阵

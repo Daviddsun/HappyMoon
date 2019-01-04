@@ -86,22 +86,22 @@ void MotorThrust(float f1,float f2,float f3,float f4){
 	M3 = -0.0022714f * f3 * f3 + 0.096917f * f3 + 0.11769f;
 	M4 = -0.0022714f * f4 * f4 + 0.096917f * f4 + 0.11769f;
 	
-	ThrottleInfo.M1 = (int)(M1 * 1000.0f);//+ ((int)UavThrust.collective_thrust)
+	ThrottleInfo.M1 = (int)(M1 * 1000.0f);
 	ThrottleInfo.M2 = (int)(M2 * 1000.0f);
 	ThrottleInfo.M3 = (int)(M3 * 1000.0f);
 	ThrottleInfo.M4 = (int)(M4 * 1000.0f);
 	
-	if(ThrottleInfo.M1 > 750)  ThrottleInfo.M1=750;
-	if(ThrottleInfo.M2 > 750)  ThrottleInfo.M2=750;
-	if(ThrottleInfo.M3 > 750)  ThrottleInfo.M3=750;
-	if(ThrottleInfo.M4 > 750)  ThrottleInfo.M4=750;
+	if(ThrottleInfo.M1 > 800)  ThrottleInfo.M1=800;
+	if(ThrottleInfo.M2 > 800)  ThrottleInfo.M2=800;
+	if(ThrottleInfo.M3 > 800)  ThrottleInfo.M3=800;
+	if(ThrottleInfo.M4 > 800)  ThrottleInfo.M4=800;
 
 	if(ThrottleInfo.M1 < 100)  ThrottleInfo.M1=100;
 	if(ThrottleInfo.M2 < 100)  ThrottleInfo.M2=100;
 	if(ThrottleInfo.M3 < 100)  ThrottleInfo.M3=100;
 	if(ThrottleInfo.M4 < 100)  ThrottleInfo.M4=100;
 	
-	PWM_OUTPUT(ThrottleInfo.M1,ThrottleInfo.M2,ThrottleInfo.M3,ThrottleInfo.M4);
+//	PWM_OUTPUT(ThrottleInfo.M1,ThrottleInfo.M2,ThrottleInfo.M3,ThrottleInfo.M4);
 	
 }
 /***********************************************************************************************

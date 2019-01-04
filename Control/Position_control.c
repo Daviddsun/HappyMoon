@@ -9,9 +9,9 @@ Vector4PosController PosControllerOut;
 **********************************************************************************************************/
 void Position_Controller(Vector3f_t ExpectPos){
 	Vector3f_t acc_error,EstimatePos,EstimateVel,ExpectVel;
-	//获取kalman里面的速度和位移
-	EstimatePos = GetCopterPosition();
-	EstimateVel = GetCopterVelocity();
+//	//获取kalman里面的速度和位移
+//	EstimatePos = GetCopterPosition();
+//	EstimateVel = GetCopterVelocity();
 	//期望速度获取 二次函数获取 1.5f * X * X
 	ExpectVel.x = 1.5f * (ExpectPos.x - EstimatePos.x) * (ExpectPos.x - EstimatePos.x);
 	ExpectVel.y = 1.5f * (ExpectPos.y - EstimatePos.y) * (ExpectPos.y - EstimatePos.y);
@@ -34,9 +34,12 @@ void Position_Controller(Vector3f_t ExpectPos){
 	float z_vel_error = ExpectVel.z - EstimateVel.z;
 	z_vel_error = ConstrainFloat(z_vel_error,-vz_error_max,vz_error_max);
 	acc_error.z = OriginalPosZ.kP * z_pos_error + OriginalPosZ.kD * z_vel_error + Gravity_Acceleration; //z轴加上重力加速度
-	// 计算期望控制量
-	PosControllerOut.ExpectAcc = acc_error.z;
-
+//	// 计算期望控制量
+//	PosControllerOut.ExpectAcc = acc_error.z;
+	PosControllerOut.ExpectAcc = Gravity_Acceleration + (GetRemoteControlFlyData().ZaxisPos) * 2.5f;
+	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+	PosControllerOut.ExpectAngle.yaw = 0;
 }
 
 /**********************************************************************************************************
@@ -47,6 +50,15 @@ void Position_Controller(Vector3f_t ExpectPos){
 **********************************************************************************************************/	
 float GetDesiredControlAcc(void){
 	return PosControllerOut.ExpectAcc;
+}
+/**********************************************************************************************************
+*函 数 名: GetDesiredControlAngle
+*功能说明: 获取期望角度值
+*形    参: 期望位置，期望速度，估计位置，估计数据
+*返 回 值: 无
+**********************************************************************************************************/	
+Vector3angle_t GetDesiredControlAngle(void){
+	return PosControllerOut.ExpectAngle;
 }
 
 

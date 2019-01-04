@@ -13,7 +13,7 @@
 
 void Position_Controller(Vector3f_t ExpectPos);
 float GetDesiredControlAcc(void);
-Vector3f_t GetExpectVel(void);
+Vector3angle_t GetDesiredControlAngle(void);
 #endif
 
 

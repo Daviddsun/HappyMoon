@@ -7,7 +7,7 @@
 #define TX_LEN  160
 #define RX_LEN  128
 #define ARM_Length 0.190f
-#define Drone_Mass 1.700f
+#define Drone_Mass 1.600f
 #define Gravity_Acceleration  9.805f
 #define Inertia_Wx    0.001f
 #define Inertia_Wy    0.001f
@@ -117,7 +117,12 @@ typedef struct{
 }Desired_acceleration;
 
 typedef struct{
-	unsigned char buf[20];
+	unsigned int len;
+	unsigned char buf[64];
+}Data_Rx;
+
+typedef struct{
+	unsigned char buf[32];
 }Receive_GroundStation;
 
 typedef struct{

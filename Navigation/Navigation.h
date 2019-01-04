@@ -1,11 +1,9 @@
 #ifndef _NAVIGATION_H_
 #define _NAVIGATION_H_
 #include "mathTool.h"
-#include "Vector3.h"
-#include "Kalman3.h"
-#include "KalmanVel.h"
+#include "kalman3.h"
 #include "Visiondata_deal.h"
-
+#include "Task.h"
 enum
 {
     VIO_VEL_X = 0,

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "stdbool.h"
 
+#include "vector3.h"
 #define PI 3.14159265358979323846f
 
 float ConstrainFloat(float amt, float low, float high);
