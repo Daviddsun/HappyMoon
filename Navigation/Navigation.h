@@ -3,14 +3,9 @@
 #include "mathTool.h"
 #include "Visiondata_deal.h"
 #include "Task.h"
+#include "kalman3.h"
 
-typedef struct {
-    Vector3f_t accel;
-    Vector3f_t accel_bias;
-    
-    Vector3f_t velocity;
-    float      velMeasure[6];
-    
+typedef struct {  
     Vector3f_t position;
     Vector3f_t posMeasure;
 } NAVGATION_t;

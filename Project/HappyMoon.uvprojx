@@ -760,6 +760,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\UsbDriver.c</FilePath>
             </File>
+            <File>
+              <FileName>kalman3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\kalman3.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -859,11 +864,6 @@
               <FileName>matrix6.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mymath\matrix6.c</FilePath>
-            </File>
-            <File>
-              <FileName>kalman3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\kalman3.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -16,8 +16,19 @@ enum {
     QUEUE_NUM
 };
 
+enum {
+	GYRO_SENSOR_RAW,
+	ACC_SENSOR_RAW,
+	TEMP_SENSOR_RAW,
+	GYRO_SENSOR_PRETREAT,
+	ACC_SENSOR_PRETREAT,
+	GYRO_SENSOR_LPF,
+	MEM_NUM
+};
+
 void MessageQueueCreate(OS_ERR p_err);
+void MemoryCreate(OS_ERR p_err);
 
 extern OS_Q messageQueue[QUEUE_NUM];
-
+extern OS_MEM memoryInfo[MEM_NUM];
 #endif

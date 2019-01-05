@@ -37,7 +37,7 @@ void Navigation_task(void *p_arg);
 
 //飞行控制任务
 #define FlightControl_TASK_PRIO 7						
-#define FlightControl_STK_SIZE 512						
+#define FlightControl_STK_SIZE 1024						
 OS_TCB FlightControlTaskTCB;				
 CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
 void FlightControl_task(void *p_arg);
@@ -72,7 +72,7 @@ void FlightStatus_task(void *p_arg);
 
 //Message任务
 #define Message_TASK_PRIO 12						
-#define Message_STK_SIZE 512						
+#define Message_STK_SIZE 1024						
 OS_TCB MessageTaskTCB;				
 CPU_STK Message_TASK_STK[Message_STK_SIZE];					
 void Message_task(void *p_arg);
@@ -93,6 +93,7 @@ int main(void)
 	/** 启动操作系统 **/
 	OSInit(&err);	
 	/** 创建一个消息队列 **/
+	MemoryCreate(err);
 	MessageQueueCreate(err);
 	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务

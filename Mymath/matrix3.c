@@ -6,7 +6,7 @@
 *形    参: 矩阵a 矩阵b 矩阵c
 *返 回 值: 无
 **********************************************************************************************************/
-void Matrix3_Add(float* a,float* b,float* c)
+void Matrix3_Add(float *a,float *b,float *c)
 {
     uint8_t i,j;
     for (i=0; i<3; i++)
@@ -24,7 +24,7 @@ void Matrix3_Add(float* a,float* b,float* c)
 *形    参: 矩阵a 矩阵b 矩阵c
 *返 回 值: 无
 **********************************************************************************************************/
-void Matrix3_Sub(float* a,float* b,float* c)
+void Matrix3_Sub(float *a,float *b,float *c)
 {
     uint8_t i,j;
     for (i=0; i<3; i++)
@@ -42,7 +42,7 @@ void Matrix3_Sub(float* a,float* b,float* c)
 *形    参: 矩阵a 矩阵b 矩阵c
 *返 回 值: 无
 **********************************************************************************************************/
-void Matrix3_Mul(float* a,float* b,float* c)
+void Matrix3_Mul(float *a,float *b,float *c)
 {
     uint8_t i,j;
     for (i=0; i<3; i++)
@@ -60,7 +60,7 @@ void Matrix3_Mul(float* a,float* b,float* c)
 *形    参: 矩阵a 矩阵b
 *返 回 值: 无
 **********************************************************************************************************/
-void Matrix3_Copy(float* a, float* b)
+void Matrix3_Copy(float *a, float *b)
 {
     uint8_t i;
     for(i=0; i<9; i++)
@@ -75,7 +75,7 @@ void Matrix3_Copy(float* a, float* b)
 *形    参: 矩阵a 矩阵b
 *返 回 值: 无
 **********************************************************************************************************/
-void Matrix3_Tran(float* a, float* b)
+void Matrix3_Tran(float *a, float *b)
 {
     b[0] = a[0];
     b[1] = a[3];
@@ -94,7 +94,7 @@ void Matrix3_Tran(float* a, float* b)
 *形    参: 矩阵a 矩阵b
 *返 回 值: 无
 **********************************************************************************************************/
-void Matrix3_Det(float* a,float* b)
+void Matrix3_Det(float *a,float *b)
 {
     float det;
 

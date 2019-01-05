@@ -10,18 +10,20 @@ OffsetInfo OffsetData;
 void IMUSensorRead_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
-	Vector3f_t accRawData,gyroRawData;
+	// 申请内存
+	Vector3f_t *accRawData = OSMemGet(&memoryInfo[ACC_SENSOR_RAW],&err);
+	Vector3f_t *gyroRawData = OSMemGet(&memoryInfo[GYRO_SENSOR_RAW],&err);
 	while(1){
 #ifdef SpeedyBeeF4
 		//读取加速计 陀螺仪 传感器
-		MPU6000_ReadAccGyro(&accRawData ,&gyroRawData);
+		MPU6000_ReadAccGyro(accRawData ,gyroRawData);
 #else
 		//读取加速计 陀螺仪 传感器
-		MPU6500_ReadAccGyro(&accRawData ,&gyroRawData);
+		MPU6500_ReadAccGyro(accRawData ,gyroRawData);
 #endif
 		//更新消息队列
-		OSQPost(&messageQueue[ACC_SENSOR_READ],&accRawData,sizeof(accRawData),OS_OPT_POST_FIFO,&err);
-		OSQPost(&messageQueue[GYRO_SENSOR_READ],&gyroRawData,sizeof(gyroRawData),OS_OPT_POST_FIFO,&err);
+		OSQPost(&messageQueue[ACC_SENSOR_READ],accRawData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
+		OSQPost(&messageQueue[GYRO_SENSOR_READ],gyroRawData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
 		//睡眠一个时钟节拍，1ms
 		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
@@ -36,7 +38,11 @@ void IMUSensorPreDeal_task(void *p_arg){
 	void   *p_msg;
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t accRawData,gyroRawData,accCalibData,gyroCalibData,gyroLpfData;
+	Vector3f_t accRawData,gyroRawData;
+	//申请内存
+	Vector3f_t *accCalibData = OSMemGet(&memoryInfo[ACC_SENSOR_PRETREAT],&err);
+	Vector3f_t *gyroCalibData = OSMemGet(&memoryInfo[GYRO_SENSOR_PRETREAT],&err);
+	Vector3f_t *gyroLpfData = OSMemGet(&memoryInfo[GYRO_SENSOR_LPF],&err);
 	//默认不进行传感器校准
 	OffsetData.acc_success = false;
 	OffsetData.gyro_success = false;
@@ -63,14 +69,14 @@ void IMUSensorPreDeal_task(void *p_arg){
 		GyroCalibration(gyroRawData);
 	
 		//加速计数据处理
-		AccDataPreTreat(accRawData, &accCalibData);
+		AccDataPreTreat(accRawData, accCalibData);
 		//陀螺仪数据处理
-		GyroDataPreTreat(gyroRawData, &gyroCalibData, &gyroLpfData);
+		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData);
 		
 		//更新消息队列
-		OSQPost(&messageQueue[ACC_DATA_PRETREAT],&accCalibData,sizeof(accCalibData),OS_OPT_POST_FIFO,&err);
-		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],&gyroCalibData,sizeof(gyroCalibData),OS_OPT_POST_FIFO,&err);
-		OSQPost(&messageQueue[GYRO_FOR_CONTROL],&gyroLpfData,sizeof(gyroLpfData),OS_OPT_POST_FIFO,&err);	
+		OSQPost(&messageQueue[ACC_DATA_PRETREAT],accCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
+		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],gyroCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
+		OSQPost(&messageQueue[GYRO_FOR_CONTROL],gyroLpfData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);	
 	}
 }
 
