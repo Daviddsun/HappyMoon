@@ -19,18 +19,18 @@ void Board_Init(void){
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
 	// 延时2s等待上电
 	delay_ms(2000);
-//	// ADC初始化
-//	Adc_Init();
-//	delay_ms(100);
-//	// 用于与高性能板载ARM或板载PC通信 波特率230400
-//	Usart1toOnboardPC_Init(230400); 
-//	delay_ms(100);
+	// ADC初始化
+	Adc_Init();
+	delay_ms(100);
+	// 用于与高性能板载ARM或板载PC通信 波特率230400
+	Usart1toOnboardPC_Init(230400); 
+	delay_ms(100);
 	// 蓝牙串口打开，用于与地面站通信
 	Usart3toBluetooth_Init(115200);
 	delay_ms(100);
-//	// GPIO初始化 一些通用GPIO口可以在这里配置
-//	GeneralGpio_Init(); 	
-//	delay_ms(100);
+	// GPIO初始化 一些通用GPIO口可以在这里配置
+	GeneralGpio_Init(); 	
+	delay_ms(100);
 #ifdef SpeedyBeeF4
 	// SPI1初始化 用于陀螺仪和加速计读取 MPU6000
 	SPI1_Configuration();

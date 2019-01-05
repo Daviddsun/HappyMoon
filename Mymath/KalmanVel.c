@@ -9,7 +9,7 @@ static float I[6][6] = {{1,0,0,0,0,0},
     {0,0,0,0,0,1}
 };
 
-static void KalmanVelSlidWindowUpdate(KalmanVel_t *kalman);
+static void KalmanVelSlidWindowUpdate(KalmanVel_t* kalman);
 
 /**********************************************************************************************************
 *函 数 名: KalmanVelUpdate
@@ -17,8 +17,8 @@ static void KalmanVelSlidWindowUpdate(KalmanVel_t *kalman);
 *形    参: 卡尔曼结构体指针 速度输出 bias输出 输入量（加速度） 观测矩阵 时间间隔 融合标志位
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelUpdate(KalmanVel_t *kalman, Vector3f_t *velocity, Vector3f_t *bias, 
-											Vector3f_t accel,float observe[6], float deltaT, bool fuseFlag)
+void KalmanVelUpdate(KalmanVel_t* kalman, Vector3f_t* velocity, Vector3f_t* bias, Vector3f_t accel,
+                     float observe[6], float deltaT, bool fuseFlag)
 {
     //用于存放计算结果的临时矩阵
     float S[6][6], m1[6][6], m2[6][6], m3[6][6], m4[6][6], m5[6][6];
@@ -32,7 +32,7 @@ void KalmanVelUpdate(KalmanVel_t *kalman, Vector3f_t *velocity, Vector3f_t *bias
     input[2] = accel.z;
 
     //更新输入转移矩阵
-    kalman->b[0][0] = kalman->b[1][1] = kalman->b[2][2] = deltaT * 9.805f;
+    kalman->b[0][0] = kalman->b[1][1] = kalman->b[2][2] = deltaT * Gravity_Acceleration;
 
     //更新状态转移矩阵
     kalman->f[0][3] = kalman->f[1][4] = kalman->f[2][5] = deltaT;
@@ -111,7 +111,7 @@ void KalmanVelUpdate(KalmanVel_t *kalman, Vector3f_t *velocity, Vector3f_t *bias
 *形    参: 卡尔曼结构体指针 状态转移矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelStateTransMatSet(KalmanVel_t *kalman, float f[6][6])
+void KalmanVelStateTransMatSet(KalmanVel_t* kalman, float f[6][6])
 {
     uint8_t i, j;
 
@@ -132,7 +132,7 @@ void KalmanVelStateTransMatSet(KalmanVel_t *kalman, float f[6][6])
 *形    参: 卡尔曼结构体指针 观测映射矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelObserveMapMatSet(KalmanVel_t *kalman, float h[6][6])
+void KalmanVelObserveMapMatSet(KalmanVel_t* kalman, float h[6][6])
 {
     uint8_t i, j;
 
@@ -153,7 +153,7 @@ void KalmanVelObserveMapMatSet(KalmanVel_t *kalman, float h[6][6])
 *形    参: 卡尔曼结构体指针 协方差矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelCovarianceMatSet(KalmanVel_t *kalman, float p[6][6])
+void KalmanVelCovarianceMatSet(KalmanVel_t* kalman, float p[6][6])
 {
     uint8_t i, j;
 
@@ -171,7 +171,7 @@ void KalmanVelCovarianceMatSet(KalmanVel_t *kalman, float p[6][6])
 *形    参: 卡尔曼结构体指针 协方差矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelQMatSet(KalmanVel_t *kalman, float q[6][6])
+void KalmanVelQMatSet(KalmanVel_t* kalman, float q[6][6])
 {
     uint8_t i, j;
 
@@ -189,7 +189,7 @@ void KalmanVelQMatSet(KalmanVel_t *kalman, float q[6][6])
 *形    参: 卡尔曼结构体指针 协方差矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelRMatSet(KalmanVel_t *kalman, float r[6][6])
+void KalmanVelRMatSet(KalmanVel_t* kalman, float r[6][6])
 {
     uint8_t i, j;
 
@@ -207,7 +207,7 @@ void KalmanVelRMatSet(KalmanVel_t *kalman, float r[6][6])
 *形    参: 卡尔曼结构体指针 输入控制矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelBMatSet(KalmanVel_t *kalman, float b[6][6])
+void KalmanVelBMatSet(KalmanVel_t* kalman, float b[6][6])
 {
     uint8_t i, j;
 
@@ -224,11 +224,11 @@ void KalmanVelBMatSet(KalmanVel_t *kalman, float b[6][6])
 *形    参: 卡尔曼结构体指针
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelSlidWindowUpdate(KalmanVel_t *kalman)
+static void KalmanVelSlidWindowUpdate(KalmanVel_t* kalman)
 {
     uint16_t i;
 
-    for(i=0; i<(kalman->slidWindowSize-1); i++)
+    for(i=0; i<kalman->slidWindowSize-1; i++)
     {
         kalman->stateSlidWindow[i] = kalman->stateSlidWindow[i+1];
     }
@@ -244,36 +244,34 @@ void KalmanVelSlidWindowUpdate(KalmanVel_t *kalman)
 *形    参: 卡尔曼结构体指针 观测量序号 使能标志
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanVelUseMeasurement(KalmanVel_t *kalman, uint8_t num, bool flag)
+void KalmanVelUseMeasurement(KalmanVel_t* kalman, uint8_t num, bool flag)
 {
     switch(num)
     {
-			case 0:
-					kalman->h[0][0] = flag;
-					break;
+    case 0:
+        kalman->h[0][0] = flag;
+        break;
 
-			case 1:
-					kalman->h[1][1] = flag;
-					break;
+    case 1:
+        kalman->h[1][1] = flag;
+        break;
 
-			case 2:
-					kalman->h[2][2] = flag;
-					break;
+    case 2:
+        kalman->h[2][2] = flag;
+        break;
 
-			case 3:
-					kalman->h[3][2] = flag;
-					break;
+    case 3:
+        kalman->h[3][2] = flag;
+        break;
 
-			case 4:
-					kalman->h[4][2] = flag;
-					break;
+    case 4:
+        kalman->h[4][2] = flag;
+        break;
 
-			default:
-					break;
+    default:
+        break;
     }
     
     //计算观测映射矩阵的转置
     Matrix6_Tran(kalman->h, kalman->h_t);
 }
-
-

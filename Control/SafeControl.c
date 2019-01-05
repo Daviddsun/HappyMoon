@@ -12,7 +12,7 @@ void Roll_Protection(void){
 				|| Attitude.roll * 180/PI > 35.0f || Attitude.roll * 180/PI < -35.0f){
 		//只有在飞行状态下有用，平衡实验时无用
 		if(GetCopterTest() == Drone_Mode_4Axis){
-//			PWM_OUTPUT(0,0,0,0);
+			PWM_OUTPUT(0,0,0,0);
 			SetCopterStatus(Drone_Off);
 		}
 	}

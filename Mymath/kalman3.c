@@ -3,13 +3,15 @@
 //单位矩阵
 static float I[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 
+static void KalmanSlidWindowUpdate(Kalman_t* kalman);
+
 /**********************************************************************************************************
 *函 数 名: KalmanUpdate
 *功能说明: 三阶卡尔曼算法更新
 *形    参: 卡尔曼结构体指针 输入矩阵 观测矩阵 更新标志位(为真时才融合，否则只进行状态预估)
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanUpdate(Kalman_t *kalman, Vector3f_t input, Vector3f_t observe, bool flag)
+void KalmanUpdate(Kalman_t* kalman, Vector3f_t input, Vector3f_t observe, bool flag)
 {
     //用于存放计算结果的临时矩阵
     float S[9], m1[9], m2[9], m3[9], m4[9], m5[9];
@@ -18,7 +20,8 @@ void KalmanUpdate(Kalman_t *kalman, Vector3f_t input, Vector3f_t observe, bool f
     kalman->state = Vector3f_Add(Matrix3MulVector3(kalman->f, kalman->state), Matrix3MulVector3(kalman->b, input));
 
     //状态窗口更新
-		kalman->statusSlidWindow = kalman->state;
+    KalmanSlidWindowUpdate(kalman);
+
     //当观测值未更新时不进行融合，退出本函数
     if(flag == false)
     {
@@ -32,9 +35,9 @@ void KalmanUpdate(Kalman_t *kalman, Vector3f_t input, Vector3f_t observe, bool f
 
     //取出窗口中的状态量
     Vector3f_t statusDelay;
-    statusDelay.x = kalman->statusSlidWindow.x;
-    statusDelay.y = kalman->statusSlidWindow.y;
-    statusDelay.z = kalman->statusSlidWindow.z;
+    statusDelay.x = kalman->statusSlidWindow[kalman->slidWindowSize - kalman->fuseDelay.x].x;
+    statusDelay.y = kalman->statusSlidWindow[kalman->slidWindowSize - kalman->fuseDelay.y].y;
+    statusDelay.z = kalman->statusSlidWindow[kalman->slidWindowSize - kalman->fuseDelay.z].z;
 
     //3：计算残差矩阵 Yk = Zk - Hk*Xk
     kalman->residual = Vector3f_Sub(observe, Matrix3MulVector3(kalman->h, statusDelay));
@@ -70,7 +73,7 @@ void KalmanUpdate(Kalman_t *kalman, Vector3f_t input, Vector3f_t observe, bool f
 *形    参: 卡尔曼结构体指针 状态转移矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanStateTransMatSet(Kalman_t *kalman, float *f)
+void KalmanStateTransMatSet(Kalman_t* kalman, float* f)
 {
     uint8_t i;
 
@@ -89,7 +92,7 @@ void KalmanStateTransMatSet(Kalman_t *kalman, float *f)
 *形    参: 卡尔曼结构体指针 观测映射矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanObserveMapMatSet(Kalman_t *kalman, float *h)
+void KalmanObserveMapMatSet(Kalman_t* kalman, float* h)
 {
     uint8_t i;
 
@@ -108,7 +111,7 @@ void KalmanObserveMapMatSet(Kalman_t *kalman, float *h)
 *形    参: 卡尔曼结构体指针 协方差矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanCovarianceMatSet(Kalman_t *kalman, float *p)
+void KalmanCovarianceMatSet(Kalman_t* kalman, float* p)
 {
     uint8_t i;
 
@@ -125,7 +128,7 @@ void KalmanCovarianceMatSet(Kalman_t *kalman, float *p)
 *形    参: 卡尔曼结构体指针 协方差矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanQMatSet(Kalman_t *kalman, float *q)
+void KalmanQMatSet(Kalman_t* kalman, float* q)
 {
     uint8_t i;
 
@@ -142,7 +145,7 @@ void KalmanQMatSet(Kalman_t *kalman, float *q)
 *形    参: 卡尔曼结构体指针 协方差矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanRMatSet(Kalman_t *kalman, float *r)
+void KalmanRMatSet(Kalman_t* kalman, float* r)
 {
     uint8_t i;
 
@@ -159,7 +162,7 @@ void KalmanRMatSet(Kalman_t *kalman, float *r)
 *形    参: 卡尔曼结构体指针 输入控制矩阵
 *返 回 值: 无
 **********************************************************************************************************/
-void KalmanBMatSet(Kalman_t *kalman, float *b)
+void KalmanBMatSet(Kalman_t* kalman, float* b)
 {
     uint8_t i;
 
@@ -169,6 +172,20 @@ void KalmanBMatSet(Kalman_t *kalman, float *b)
     }
 }
 
+/**********************************************************************************************************
+*函 数 名: KalmanSlidWindowUpdate
+*功能说明: 卡尔曼状态量滑动窗口更新
+*形    参: 卡尔曼结构体指针
+*返 回 值: 无
+**********************************************************************************************************/
+static void KalmanSlidWindowUpdate(Kalman_t* kalman)
+{
+    for(uint16_t i=0; i<kalman->slidWindowSize-1; i++)
+    {
+        kalman->statusSlidWindow[i] = kalman->statusSlidWindow[i+1];
+    }
+    kalman->statusSlidWindow[kalman->slidWindowSize - 1] = kalman->state;
+}
 
 
 

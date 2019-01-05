@@ -15,12 +15,12 @@
 #include "Usart1toOnboardPC.h"
 #include "Sensor.h"
 #include "UsbDriver.h"
-#include "MessageQueue.h"
+#include "MemoryMessage.h"
 
 //定义硬件飞控板
 void Board_Init(void);
 
-#define BirdFlight //定义飞控型号 BirdFlight  SpeedyBeeF4
+#define SpeedyBeeF4 //定义飞控型号 BirdFlight  SpeedyBeeF4
 #define T_Motor     //定义电机动力 T_Motor     Hoppywing
 
 #endif

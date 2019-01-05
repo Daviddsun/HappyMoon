@@ -3,17 +3,18 @@
 
 #include "mathTool.h"
 #include "matrix6.h"
+#include "DronePara.h"
 
 typedef struct {
     //状态矩阵
-	  //滑动窗口大小
-    int16_t slidWindowSize;
-	  //观测信号相位补偿值
-    int16_t fuseDelay[6];
-	  //状态滑动窗口
-    Vector3f_t stateSlidWindow[60];
     //状态量为：x轴速度 y轴速度 z轴速度 x轴加速度bias y轴加速度bias z轴加速度bias
     float state[6];
+    //滑动窗口大小
+    int16_t slidWindowSize;
+    //状态滑动窗口
+    Vector3f_t stateSlidWindow[100];
+    //观测信号相位补偿值
+    int16_t fuseDelay[6];
     //残差矩阵
     float residual[6];
     //状态转移矩阵
@@ -36,16 +37,16 @@ typedef struct {
     float r[6][6];
 } KalmanVel_t;
 
-void KalmanVelUpdate(KalmanVel_t *kalman, Vector3f_t *velocity, Vector3f_t *bias, Vector3f_t accel, 
+void KalmanVelUpdate(KalmanVel_t* kalman, Vector3f_t* velocity, Vector3f_t* bias, Vector3f_t accel, 
                      float observe[6], float deltaT, bool fuseFlag);
 
-void KalmanVelStateTransMatSet(KalmanVel_t *kalman, float f[6][6]);
-void KalmanVelObserveMapMatSet(KalmanVel_t *kalman, float h[6][6]);
-void KalmanVelCovarianceMatSet(KalmanVel_t *kalman, float p[6][6]);
-void KalmanVelQMatSet(KalmanVel_t *kalman, float q[6][6]);
-void KalmanVelRMatSet(KalmanVel_t *kalman, float r[6][6]);
-void KalmanVelBMatSet(KalmanVel_t *kalman, float b[6][6]);
+void KalmanVelStateTransMatSet(KalmanVel_t* kalman, float f[6][6]);
+void KalmanVelObserveMapMatSet(KalmanVel_t* kalman, float h[6][6]);
+void KalmanVelCovarianceMatSet(KalmanVel_t* kalman, float p[6][6]);
+void KalmanVelQMatSet(KalmanVel_t* kalman, float q[6][6]);
+void KalmanVelRMatSet(KalmanVel_t* kalman, float r[6][6]);
+void KalmanVelBMatSet(KalmanVel_t* kalman, float b[6][6]);
 
-void KalmanVelUseMeasurement(KalmanVel_t *kalman, uint8_t num, bool flag);
+void KalmanVelUseMeasurement(KalmanVel_t* kalman, uint8_t num, bool flag);
 
 #endif

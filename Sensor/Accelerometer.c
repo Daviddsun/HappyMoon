@@ -236,17 +236,17 @@ Vector3f_t AccGetData(void){
 Vector3f_t EarthAccGetData(void){
 	Vector3f_t EarthAcc;
 	Vector4q_t quaternion = GetCopterQuaternion();
-	EarthAcc.x = ((quaternion.qw*quaternion.qw + quaternion.qx*quaternion.qx - quaternion.qy*quaternion.qy - quaternion.qz*quaternion.qz)*accValue.data.x 
+	EarthAcc.x = (quaternion.qw*quaternion.qw + quaternion.qx*quaternion.qx - quaternion.qy*quaternion.qy - quaternion.qz*quaternion.qz)*accValue.data.x 
 					+ (2.f * (quaternion.qx*quaternion.qy - quaternion.qw*quaternion.qz))*accValue.data.y 
-								+ (2.f * (quaternion.qx*quaternion.qz + quaternion.qw*quaternion.qy))*accValue.data.z) * Gravity_Acceleration;
+								+ (2.f * (quaternion.qx*quaternion.qz + quaternion.qw*quaternion.qy))*accValue.data.z;
 	
-	EarthAcc.y = ((2.f * (quaternion.qx*quaternion.qy + quaternion.qw*quaternion.qz))*accValue.data.x
+	EarthAcc.y = (2.f * (quaternion.qx*quaternion.qy + quaternion.qw*quaternion.qz))*accValue.data.x
 					+ (quaternion.qw*quaternion.qw - quaternion.qx*quaternion.qx + quaternion.qy*quaternion.qy - quaternion.qz*quaternion.qz)*accValue.data.y 
-								+ (2.f * (quaternion.qy*quaternion.qz - quaternion.qw*quaternion.qx))*accValue.data.z) * Gravity_Acceleration;
+								+ (2.f * (quaternion.qy*quaternion.qz - quaternion.qw*quaternion.qx))*accValue.data.z;
 	
-	EarthAcc.z = (((2.f * (quaternion.qx*quaternion.qz - quaternion.qw*quaternion.qy))*accValue.data.x
+	EarthAcc.z = ((2.f * (quaternion.qx*quaternion.qz - quaternion.qw*quaternion.qy))*accValue.data.x
 					+ (2.f * (quaternion.qy*quaternion.qz + quaternion.qw*quaternion.qx))*accValue.data.y 
-								+ (quaternion.qw*quaternion.qw - quaternion.qx*quaternion.qx - quaternion.qy*quaternion.qy + quaternion.qz*quaternion.qz)*accValue.data.z) - 1.0f) * Gravity_Acceleration;
+								+ (quaternion.qw*quaternion.qw - quaternion.qx*quaternion.qx - quaternion.qy*quaternion.qy + quaternion.qz*quaternion.qz)*accValue.data.z) - 1.0f;
   return EarthAcc;
 }
 

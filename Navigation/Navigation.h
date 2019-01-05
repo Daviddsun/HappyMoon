@@ -3,9 +3,24 @@
 #include "mathTool.h"
 #include "Visiondata_deal.h"
 #include "Task.h"
+#include "kalmanVel.h"
 #include "kalman3.h"
+enum
+{
+    VIO_VEL_X = 0,
+    VIO_VEL_Y,
+    VIO_VEL_Z,
+    BARO_VEL,
+    TOF_VEL
+};
 
 typedef struct {  
+	  Vector3f_t accel;
+    Vector3f_t accel_bias;
+    
+    Vector3f_t velocity;
+    float      velMeasure[6];
+	
     Vector3f_t position;
     Vector3f_t posMeasure;
 } NAVGATION_t;
@@ -20,6 +35,7 @@ typedef struct {
 
 void NavigationInit(void);
 void VelocityEstimate(void);
+void NavigationReset(void);
 void PositionEstimate(void);
 Vector3f_t GetCopterPosition(void);
 Vector3f_t GetCopterVelocity(void);

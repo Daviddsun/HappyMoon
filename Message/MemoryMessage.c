@@ -1,7 +1,9 @@
-#include "MessageQueue.h"
+#include "MemoryMessage.h"
 //创建出内存
 OS_MEM memoryInfo[MEM_NUM];
-Vector3f_t accRawData,gyroRawData,accCalibData,gyroCalibData,gyroCalibDataLpf;
+Vector3f_t accRawData,gyroRawData,accCalibData,
+						gyroCalibData,gyroCalibDataLpf,Vel_stateSlidWindow,Pos_stateSlidWindow;
+
 
 //声明消息队列句柄
 OS_Q messageQueue[QUEUE_NUM];
@@ -66,7 +68,15 @@ void MemoryCreate(OS_ERR p_err)
 								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
 										(OS_MEM_SIZE  )24,					//每个内存块的大小(字节)
 												(OS_ERR      *)&p_err);	
-
+//	// 滑动窗口内存分配
+//  OSMemCreate((OS_MEM     *)&memoryInfo[VEL_STATE_SlidWindow],(CPU_CHAR *)"VEL_STATE_SlidWindow",(void *)&Vel_stateSlidWindow,//内存分区起始地址
+//								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
+//										(OS_MEM_SIZE  )1500,					//每个内存块的大小(字节)
+//												(OS_ERR      *)&p_err);	
+//  OSMemCreate((OS_MEM     *)&memoryInfo[POS_STATE_SlidWindow],(CPU_CHAR *)"POS_STATE_SlidWindow",(void *)&Pos_stateSlidWindow,//内存分区起始地址
+//								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
+//										(OS_MEM_SIZE  )1500,					//每个内存块的大小(字节)
+//												(OS_ERR      *)&p_err);	
 }
 
 

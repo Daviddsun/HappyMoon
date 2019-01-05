@@ -760,11 +760,6 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\UsbDriver.c</FilePath>
             </File>
-            <File>
-              <FileName>kalman3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Mymath\kalman3.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -816,14 +811,14 @@
               <FilePath>..\Message\Visiondata_deal.c</FilePath>
             </File>
             <File>
-              <FileName>MessageQueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Message\MessageQueue.c</FilePath>
-            </File>
-            <File>
               <FileName>Type_conversion.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Message\Type_conversion.c</FilePath>
+            </File>
+            <File>
+              <FileName>MemoryMessage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Message\MemoryMessage.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -864,6 +859,16 @@
               <FileName>matrix6.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mymath\matrix6.c</FilePath>
+            </File>
+            <File>
+              <FileName>KalmanVel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\KalmanVel.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalman3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Mymath\kalman3.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -28,12 +28,12 @@ OS_TCB IMUSensorPreDealTaskTCB;
 CPU_STK IMUSensorPreDeal_TASK_STK[IMUSensorPreDeal_STK_SIZE];					
 void IMUSensorPreDeal_task(void *p_arg);
 
-//导航任务
-#define Navigation_TASK_PRIO 6						
-#define Navigation_STK_SIZE 1024						
-OS_TCB NavigationTaskTCB;				
-CPU_STK Navigation_TASK_STK[Navigation_STK_SIZE];					
-void Navigation_task(void *p_arg);
+//姿态融合 mahony滤波
+#define AttitudeFilter_TASK_PRIO 6						
+#define AttitudeFilter_STK_SIZE 1024						
+OS_TCB AttitudeFilterTaskTCB;				
+CPU_STK AttitudeFilter_TASK_STK[AttitudeFilter_STK_SIZE];					
+void AttitudeFilter_task(void *p_arg);
 
 //飞行控制任务
 #define FlightControl_TASK_PRIO 7						
@@ -42,37 +42,44 @@ OS_TCB FlightControlTaskTCB;
 CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
 void FlightControl_task(void *p_arg);
 
+//全向融合任务
+#define OmniFusion_TASK_PRIO 8						
+#define OmniFusion_STK_SIZE 1024						
+OS_TCB OmniFusionTaskTCB;				
+CPU_STK OmniFusion_TASK_STK[OmniFusion_STK_SIZE];					
+void OmniFusion_task(void *p_arg);
+
 //视觉里程计数据处理
-#define VisualOdometry_TASK_PRIO 8						
+#define VisualOdometry_TASK_PRIO 9						
 #define VisualOdometry_STK_SIZE 1024						
 OS_TCB VisualOdometryTaskTCB;				
 CPU_STK VisualOdometry_TASK_STK[VisualOdometry_STK_SIZE];					
 void VisualOdometry_task(void *p_arg);
 
 //地面站数据处理
-#define GroundStation_TASK_PRIO 9						
-#define GroundStation_STK_SIZE 1024				
+#define GroundStation_TASK_PRIO 10						
+#define GroundStation_STK_SIZE 512				
 OS_TCB GroundStationTaskTCB;				
 CPU_STK GroundStation_TASK_STK[GroundStation_STK_SIZE];					
 void GroundStation_task(void *p_arg);
 
 //其他传感器数据更新任务
-#define OtherSensorUpdate_TASK_PRIO 10						
+#define OtherSensorUpdate_TASK_PRIO 11						
 #define OtherSensorUpdate_STK_SIZE 512						
 OS_TCB OtherSensorUpdateTaskTCB;				
 CPU_STK OtherSensorUpdate_TASK_STK[OtherSensorUpdate_STK_SIZE];					
 void OtherSensorUpdate_task(void *p_arg);
 
 //飞行状态任务
-#define FlightStatus_TASK_PRIO 11						
+#define FlightStatus_TASK_PRIO 12						
 #define FlightStatus_STK_SIZE 512						
 OS_TCB FlightStatusTaskTCB;				
 CPU_STK FlightStatus_TASK_STK[FlightStatus_STK_SIZE];					
 void FlightStatus_task(void *p_arg);
 
 //Message任务
-#define Message_TASK_PRIO 12						
-#define Message_STK_SIZE 1024						
+#define Message_TASK_PRIO 13						
+#define Message_STK_SIZE 512						
 OS_TCB MessageTaskTCB;				
 CPU_STK Message_TASK_STK[Message_STK_SIZE];					
 void Message_task(void *p_arg);
@@ -88,12 +95,13 @@ int main(void)
 	Board_Init();
 	/** IMU传感器初始化 **/
 	Sensor_Init();
-//	/** 电机MotorPWM初始化 **/
-//	MotorPWM_Init();
+	/** 电机MotorPWM初始化 **/
+	MotorPWM_Init();
 	/** 启动操作系统 **/
 	OSInit(&err);	
-	/** 创建一个消息队列 **/
+	/** 创建一个动态内存 **/
 	MemoryCreate(err);
+	/** 创建一个消息队列 **/
 	MessageQueueCreate(err);
 	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务
@@ -171,14 +179,14 @@ void start_task(void *p_arg){
 		(OS_ERR*)&err
 		);
 	OSTaskCreate(																				// 导航任务读取任务
-		(OS_TCB*)&NavigationTaskTCB,
-		(CPU_CHAR*)"Navigation task",
-		(OS_TASK_PTR )Navigation_task,
+		(OS_TCB*)&AttitudeFilterTaskTCB,
+		(CPU_CHAR*)"AttitudeFilter task",
+		(OS_TASK_PTR )AttitudeFilter_task,
 		(void*)0,
-		(OS_PRIO)Navigation_TASK_PRIO,
-		(CPU_STK*)&Navigation_TASK_STK[0],
-		(CPU_STK_SIZE)Navigation_STK_SIZE/10,
-		(CPU_STK_SIZE)Navigation_STK_SIZE,
+		(OS_PRIO)AttitudeFilter_TASK_PRIO,
+		(CPU_STK*)&AttitudeFilter_TASK_STK[0],
+		(CPU_STK_SIZE)AttitudeFilter_STK_SIZE/10,
+		(CPU_STK_SIZE)AttitudeFilter_STK_SIZE,
 		(OS_MSG_QTY)0,
 		(OS_TICK)0,
 		(void*)0,
@@ -199,7 +207,22 @@ void start_task(void *p_arg){
 		(void*)0,
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
-		);		
+		);	
+	OSTaskCreate(																				// 全向融合任务
+		(OS_TCB*)&OmniFusionTaskTCB,
+		(CPU_CHAR*)"OmniFusion task",
+		(OS_TASK_PTR )OmniFusion_task,
+		(void*)0,
+		(OS_PRIO)OmniFusion_TASK_PRIO,
+		(CPU_STK*)&OmniFusion_TASK_STK[0],
+		(CPU_STK_SIZE)OmniFusion_STK_SIZE/10,
+		(CPU_STK_SIZE)OmniFusion_STK_SIZE,
+		(OS_MSG_QTY)0,
+		(OS_TICK)0,
+		(void*)0,
+		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
+		(OS_ERR*)&err
+		);			
 	OSTaskCreate(																				// 视觉里程计任务
 		(OS_TCB*)&VisualOdometryTaskTCB,
 		(CPU_CHAR*)"VisualOdometry task",

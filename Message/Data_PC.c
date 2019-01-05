@@ -162,7 +162,9 @@ void SendRTInfo(void)
 	//各个数据获取
 	Vector3angle_t AHRSAngle = GetCopterAngle();
 	Vector3f_t VIOVel = GetVisualOdometryVel();
-//	Vector3f_t KalmanVel = GetCopterVelocity();
+	Vector3f_t VIOPos = GetVisualOdometryPos();
+	Vector3f_t KalmanVel = GetCopterVelocity();
+	Vector3f_t KalmanPos = GetCopterPosition();
 	float FPS_VisualOdometry = GetFPSVisualOdometry();
 	float FPS_AttitudeControl = GetFPSAttitudeControl();
 	float BatteryVoltage = GetBatteryVoltage();
@@ -183,7 +185,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
-	temp = VIOVel.z;
+	temp = KalmanPos.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
@@ -191,7 +193,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = 0;
+	temp = VIOPos.z * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	

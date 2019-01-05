@@ -101,7 +101,7 @@ void MotorThrust(float f1,float f2,float f3,float f4){
 	if(ThrottleInfo.M3 < 100)  ThrottleInfo.M3=100;
 	if(ThrottleInfo.M4 < 100)  ThrottleInfo.M4=100;
 	
-//	PWM_OUTPUT(ThrottleInfo.M1,ThrottleInfo.M2,ThrottleInfo.M3,ThrottleInfo.M4);
+	PWM_OUTPUT(ThrottleInfo.M1,ThrottleInfo.M2,ThrottleInfo.M3,ThrottleInfo.M4);
 	
 }
 /***********************************************************************************************

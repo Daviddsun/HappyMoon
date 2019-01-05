@@ -1,5 +1,5 @@
-#ifndef __MESSAGEQUEUE_H
-#define __MESSAGEQUEUE_H
+#ifndef __MEMORYMESSAGE_H
+#define __MEMORYMESSAGE_H
 
 #include "stm32f4xx.h"
 #include "includes.h"
@@ -23,6 +23,8 @@ enum {
 	GYRO_SENSOR_PRETREAT,
 	ACC_SENSOR_PRETREAT,
 	GYRO_SENSOR_LPF,
+//	VEL_STATE_SlidWindow,
+//	POS_STATE_SlidWindow,
 	MEM_NUM
 };
 
@@ -32,3 +34,4 @@ void MemoryCreate(OS_ERR p_err);
 extern OS_Q messageQueue[QUEUE_NUM];
 extern OS_MEM memoryInfo[MEM_NUM];
 #endif
+

@@ -81,9 +81,9 @@ void IMUSensorPreDeal_task(void *p_arg){
 }
 
 /**
- * @Description 所有导航任务
+ * @Description 姿态解算 Mahony 滤波
  */
-void Navigation_task(void *p_arg){
+void AttitudeFilter_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	void   *p_msg;
@@ -130,11 +130,11 @@ void FlightControl_task(void *p_arg){
 		//起飞检测
 		if(GetCopterStatus() == Drone_Off){
 			count = 0;
-//			PWM_OUTPUT(0,0,0,0);
+			PWM_OUTPUT(0,0,0,0);
 		}
 		else if(GetCopterStatus() == Drone_On){
 			if(count < 2000 && GetCopterTest() == Drone_Mode_4Axis){
-//				PWM_OUTPUT(200,200,200,200);
+				PWM_OUTPUT(200,200,200,200);
 			}
 			else{
 				//100hz
@@ -180,14 +180,31 @@ void FlightControl_task(void *p_arg){
 }
 
 /**
+ * @Description 全项数据融合 500Hz
+ */
+void OmniFusion_task(void *p_arg){
+	OS_ERR err;
+	p_arg = p_arg;
+	//导航参数初始化
+	NavigationInit();
+	while(1){
+		//飞行速度估计
+		VelocityEstimate();
+		//飞行位移估计
+		PositionEstimate();
+		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err);
+	}
+}
+
+/**
  * @Description 其他传感器数据更新 100Hz
  */
 void OtherSensorUpdate_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1){
-//		//电池电压电流采样更新
-//    BatteryVoltageUpdate();
+		//电池电压电流采样更新
+    BatteryVoltageUpdate();
 		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
