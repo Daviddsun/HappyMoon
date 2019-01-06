@@ -37,7 +37,7 @@ void AttitudeFilter_task(void *p_arg);
 
 //飞行控制任务
 #define FlightControl_TASK_PRIO 7						
-#define FlightControl_STK_SIZE 1024						
+#define FlightControl_STK_SIZE 512						
 OS_TCB FlightControlTaskTCB;				
 CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
 void FlightControl_task(void *p_arg);
