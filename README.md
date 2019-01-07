@@ -31,7 +31,7 @@
 
 2.GPS （室外精准定位） 暂时还未融合
 
-#### 航向规划
+#### 航线规划
 
 1. ethz-asl/waypoint_navigator 苏黎世算法：https://github.com/ethz-asl/waypoint_navigator
 
