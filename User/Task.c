@@ -176,6 +176,10 @@ void FlightControl_task(void *p_arg){
 			}
 			count++;
 		}
+		else{
+			//置位期望位置
+			ResetExpectPosition(&Expect_Pos);
+		}
 	}
 }
 
