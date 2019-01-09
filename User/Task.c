@@ -169,8 +169,9 @@ void FlightControl_task(void *p_arg){
 											GetCopterTest() == Drone_Mode_RateRoll){
 						Expect_Gyro = GetRemoteControlAngleVel();
 					}
-					//飞行角速率控制
+					//期望高度加速度
 					DesiredControlCommands.ExpectAcc = GetDesiredControlAcc();
+					//飞行角速率控制
 					Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
 					//推力融合
 					ThrustMixer(ARM_Length,DesiredControlCommands.ExpectAcc,Rotate_Thrust);

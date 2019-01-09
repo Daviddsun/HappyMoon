@@ -100,9 +100,9 @@ void Load_PIDConfig(void){
 		OriginalWyRate.kI=PID_ParaInfo.WyRate.Ki=flashData.pidPara.WyRate.Ki;
 		OriginalWyRate.kD=PID_ParaInfo.WyRate.Kd=flashData.pidPara.WyRate.Kd;
 		
-		OriginalWyRate.kP=PID_ParaInfo.WzRate.Kp=flashData.pidPara.WzRate.Kp;
-		OriginalWyRate.kI=PID_ParaInfo.WzRate.Ki=flashData.pidPara.WzRate.Ki;
-		OriginalWyRate.kD=PID_ParaInfo.WzRate.Kd=flashData.pidPara.WzRate.Kd;	
+		OriginalWzRate.kP=PID_ParaInfo.WzRate.Kp=flashData.pidPara.WzRate.Kp;
+		OriginalWzRate.kI=PID_ParaInfo.WzRate.Ki=flashData.pidPara.WzRate.Ki;
+		OriginalWzRate.kD=PID_ParaInfo.WzRate.Kd=flashData.pidPara.WzRate.Kd;	
 		//三轴position参数
 		OriginalPosX.kP=PID_ParaInfo.PosX.Kp=flashData.pidPara.PosX.Kp;
 		OriginalPosX.kI=PID_ParaInfo.PosX.Ki=flashData.pidPara.PosX.Ki;
@@ -151,9 +151,9 @@ void Load_PIDConfig(void){
 		OriginalWyRate.kI=PID_ParaInfo.WyRate.Ki=flashData.pidPara.WyRate.Ki=0;
 		OriginalWyRate.kD=PID_ParaInfo.WyRate.Kd=flashData.pidPara.WyRate.Kd=0;
 		
-		OriginalWyRate.kP=PID_ParaInfo.WzRate.Kp=flashData.pidPara.WzRate.Kp=0;
-		OriginalWyRate.kI=PID_ParaInfo.WzRate.Ki=flashData.pidPara.WzRate.Ki=0;
-		OriginalWyRate.kD=PID_ParaInfo.WzRate.Kd=flashData.pidPara.WzRate.Kd=0;	
+		OriginalWzRate.kP=PID_ParaInfo.WzRate.Kp=flashData.pidPara.WzRate.Kp=0;
+		OriginalWzRate.kI=PID_ParaInfo.WzRate.Ki=flashData.pidPara.WzRate.Ki=0;
+		OriginalWzRate.kD=PID_ParaInfo.WzRate.Kd=flashData.pidPara.WzRate.Kd=0;	
 		//三轴position参数
 		OriginalPosX.kP=PID_ParaInfo.PosX.Kp=flashData.pidPara.PosX.Kp=0;
 		OriginalPosX.kI=PID_ParaInfo.PosX.Ki=flashData.pidPara.PosX.Ki=0;

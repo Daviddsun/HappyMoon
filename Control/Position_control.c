@@ -10,8 +10,8 @@ FPS_PositionControl FPSPositionControl;
 **********************************************************************************************************/
 void Position_Controller(Vector3f_t ExpectPos){
 	OS_ERR err;
-	Vector3f_t ExpectVel, ErrorVel;	
-	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
+	Vector3f_t ErrorVel;	
+	static Vector3f_t EstimatePosLpf,EstimateVelLpf,ExpectVel;
 	static uint64_t count = 0;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
@@ -31,7 +31,7 @@ void Position_Controller(Vector3f_t ExpectPos){
 	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
 	// 外环进行二分频
-	if(count++ %2 == 0){
+	if(count++ %2 == 0){ 
 		//速度限幅在1m/s
 		ExpectVel.x = OriginalPosX.kP * (ExpectPos.x - EstimatePosLpf.x);
 		ExpectVel.x = ConstrainFloat(ExpectVel.x,-1.0,1.0);
@@ -45,9 +45,9 @@ void Position_Controller(Vector3f_t ExpectPos){
 		}
 	}
 	//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
-	EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
-	EstimateVelLpf.y = EstimateVelLpf.y * 0.9f + GetCopterVelocity().y * 0.1f;
-	EstimateVelLpf.z = EstimateVelLpf.z * 0.9f + GetCopterVelocity().z * 0.1f;
+	EstimateVelLpf.x = EstimateVelLpf.x * 0.95f + GetCopterVelocity().x * 0.05f;
+	EstimateVelLpf.y = EstimateVelLpf.y * 0.95f + GetCopterVelocity().y * 0.05f;
+	EstimateVelLpf.z = EstimateVelLpf.z * 0.95f + GetCopterVelocity().z * 0.05f;
 	//速度误差计算
 	ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
 	ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
