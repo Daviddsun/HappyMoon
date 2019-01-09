@@ -118,7 +118,7 @@ void FlightControl_task(void *p_arg){
 	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust,Expect_Pos;
 	Vector3angle_t Expect_Angle;
 	Vector4PosController DesiredControlCommands;
-	static uint32_t count = 0;
+	static uint64_t count = 0;
 	/** 控制参数读取 **/
 	Load_PIDConfig();
 	while(1){
@@ -135,8 +135,8 @@ void FlightControl_task(void *p_arg){
 			count = 0;
 		}
 		else{
-			if(count < 2000 && GetCopterTest() == Drone_Mode_4Axis){
-				PWM_OUTPUT(200,200,200,200);
+			if(count < 3000 && GetCopterTest() == Drone_Mode_4Axis){
+				PreTakeOff(count);
 			}
 			else{
 				//100hz

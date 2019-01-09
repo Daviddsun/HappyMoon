@@ -43,6 +43,17 @@ void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThr
 	}
 	MotorThrust(UavThrust.f1,UavThrust.f2,UavThrust.f3,UavThrust.f4);
 }
+/**********************************************************************************************************
+*函 数 名: PreTakeOff
+*功能说明: 预起飞函数
+*形    参: 
+*返 回 值: 无
+**********************************************************************************************************/
+void PreTakeOff(uint16_t Time){
+	float ThurstValue = sqrt(Time/60) * Drone_Mass / 4.0f;
+	MotorThrust(ThurstValue,ThurstValue,ThurstValue,ThurstValue);
+	
+}
 /***********************************************************************************************
 *函 数 名: MotorThrust
 *功能说明: 电机推力生成
@@ -69,7 +80,7 @@ void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThr
 */
 
 /*
-															HoppyWing 电机
+													   HoppyWing 电机
 	%拟合二次函数
 
 	
