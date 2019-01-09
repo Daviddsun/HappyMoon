@@ -17,13 +17,13 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 		if(rx.buf[2] == 0xff){ 
 			switch(rx.buf[3]){
 				case 0:
-					FlightControl.OnOffLand = Drone_Off;
+					FlightControl.OnOff = Drone_Off;
 					break;
 				case 1:
-					FlightControl.OnOffLand = Drone_On;
+					FlightControl.OnOff = Drone_On;
 					break;
 				case 2:
-					FlightControl.OnOffLand = Drone_Land;
+					FlightControl.DroneStatus = Land;
 					break;
 				default:
 					break;
@@ -324,22 +324,42 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 
 /**********************************************************************************************************
 *函 数 名: GetCopterStatus
-*功能说明: 获取飞行器状态 起飞 关机 降落
+*功能说明: 获取飞行器状态 起飞 关机
 *形    参: 无
 *返 回 值: uint8_t 类型
 **********************************************************************************************************/
 uint8_t GetCopterStatus(void){
-  return FlightControl.OnOffLand;
+  return FlightControl.OnOff;
 }
 
 /**********************************************************************************************************
 *函 数 名: SetCopterStatus
-*功能说明: 设置飞行器状态 起飞 关机 降落
+*功能说明: 设置飞行器状态 起飞 关机
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
 void SetCopterStatus(DroneFlightOnOff_TypeDef status){
-  FlightControl.OnOffLand = status;
+  FlightControl.OnOff = status;
+}
+
+/**********************************************************************************************************
+*函 数 名: GetCopterFlyMode
+*功能说明: 获取飞行器飞行模式
+*形    参: 无
+*返 回 值: uint8_t 类型
+**********************************************************************************************************/
+uint8_t GetCopterFlyMode(void){
+  return FlightControl.DroneStatus;
+}
+
+/**********************************************************************************************************
+*函 数 名: SetCopterFlyMode
+*功能说明: 设置飞行模式
+*形    参: 无
+*返 回 值: uint8_t 类型
+**********************************************************************************************************/
+void SetCopterFlyMode(DroneFlightStatus_TypeDef FlyMode){
+  FlightControl.DroneStatus = FlyMode;
 }
 
 /**********************************************************************************************************

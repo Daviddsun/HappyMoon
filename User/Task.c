@@ -129,10 +129,12 @@ void FlightControl_task(void *p_arg){
 		}
 		//起飞检测
 		if(GetCopterStatus() == Drone_Off){
-			count = 0;
+			//置位期望位置
+			ResetExpectPosition(&Expect_Pos);
 			PWM_OUTPUT(0,0,0,0);
+			count = 0;
 		}
-		else if(GetCopterStatus() == Drone_On){
+		else{
 			if(count < 2000 && GetCopterTest() == Drone_Mode_4Axis){
 				PWM_OUTPUT(200,200,200,200);
 			}
@@ -175,10 +177,6 @@ void FlightControl_task(void *p_arg){
 				}
 			}
 			count++;
-		}
-		else{
-			//置位期望位置
-			ResetExpectPosition(&Expect_Pos);
 		}
 	}
 }

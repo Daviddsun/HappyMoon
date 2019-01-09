@@ -7,7 +7,7 @@
 #define TX_LEN  160
 #define RX_LEN  128
 #define ARM_Length 0.190f
-#define Drone_Mass 1.600f
+#define Drone_Mass 1.650f
 #define Gravity_Acceleration  9.805f
 #define Inertia_Wx    0.001f
 #define Inertia_Wy    0.001f
@@ -25,8 +25,12 @@ typedef enum{
 typedef enum{  
 	Drone_Off  = 0x00,
   Drone_On   = 0x01,
-	Drone_Land = 0x02,
 }DroneFlightOnOff_TypeDef;
+
+typedef enum{  
+	Nothing = 0x00,
+	Land  	= 0x01,
+}DroneFlightStatus_TypeDef;
 
 typedef enum{  
 	Report_SET      = 0x01,
@@ -34,8 +38,9 @@ typedef enum{
 }DroneReportSW_TypeDef;
 
 typedef struct{
-	DroneFlightOnOff_TypeDef OnOffLand;
+	DroneFlightOnOff_TypeDef OnOff;
 	DroneFlightMode_TypeDef DroneMode;
+	DroneFlightStatus_TypeDef DroneStatus;
 	DroneReportSW_TypeDef ReportSW;
 }DroneFlightControl;
 

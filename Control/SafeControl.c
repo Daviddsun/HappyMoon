@@ -27,7 +27,7 @@ void Roll_Protection(void){
 static void LowPowerProtect(void){
 	//严重低电量时直接降落
 	if(GetBatteryStatus() == BATTERY_LOW){
-//		SetCopterStatus(Drone_Land);
+
 	}
 }
 

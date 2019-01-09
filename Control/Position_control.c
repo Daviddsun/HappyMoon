@@ -1,6 +1,7 @@
 #include "Position_control.h"
 Vector4PosController PosControllerOut;
 FPS_PositionControl FPSPositionControl;
+
 /**********************************************************************************************************
 *函 数 名: Position_Controller
 *功能说明: 位置控制器
@@ -9,28 +10,39 @@ FPS_PositionControl FPSPositionControl;
 **********************************************************************************************************/
 void Position_Controller(Vector3f_t ExpectPos){
 	OS_ERR err;
-	Vector3f_t ExpectVel,ErrorVel;	
+	Vector3f_t ExpectVel, ErrorVel;	
 	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
 	static uint64_t count = 0;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
   FPSPositionControl.LastTime = OSTimeGet(&err);
+/******* 降落控制 ********/	
+	if(GetCopterFlyMode() == Land){
+		ExpectVel.z = -0.2f;
+		if(GetCopterPosition().z < 0.05f){
+			SetCopterFlyMode(Nothing);
+			SetCopterStatus(Drone_Off);
+		}
+	}
+	
 /******* 原始串级PID控制 ********/	
 	// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
 	EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
 	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
 	// 外环进行二分频
-	if(count++ %2 == 0 ){
+	if(count++ %2 == 0){
 		//速度限幅在1m/s
 		ExpectVel.x = OriginalPosX.kP * (ExpectPos.x - EstimatePosLpf.x);
 		ExpectVel.x = ConstrainFloat(ExpectVel.x,-1.0,1.0);
 		//速度限幅在1m/s
 		ExpectVel.y = OriginalPosY.kP * (ExpectPos.y - EstimatePosLpf.y);
 		ExpectVel.y = ConstrainFloat(ExpectVel.y,-1.0,1.0);
-		//速度限幅在1m/s
-		ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
-		ExpectVel.z = ConstrainFloat(ExpectVel.z,-1.0,1.0);
+		if(GetCopterFlyMode() == Nothing){
+			//速度限幅在0.75m/s
+			ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
+			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.75,0.75);
+		}
 	}
 	//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
 	EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
@@ -44,10 +56,11 @@ void Position_Controller(Vector3f_t ExpectPos){
 	//角度转化为rad弧度
 //	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
 //	PosControllerOut.ExpectAngle.roll = PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
-	PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime);
+	PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
 	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
 	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 	PosControllerOut.ExpectAngle.yaw = 0;	
+	
 /******* 苏黎世控制框架暂不使用，因为没有解决视觉里程计与自身飞控板之间的四元数对齐问题 ********/
 //	Vector3f_t acc_error,EstimatePos,EstimateVel,ExpectVel;
 ////	//获取kalman里面的速度和位移
@@ -82,7 +95,6 @@ void Position_Controller(Vector3f_t ExpectPos){
 //	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 //	PosControllerOut.ExpectAngle.yaw = 0;
 }
-
 /**********************************************************************************************************
 *函 数 名: GetDesiredControlAcc
 *功能说明: 获取期望加速度

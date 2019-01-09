@@ -11,6 +11,8 @@
 void GroundStationDataDeal(Receive_GroundStation rx);
 uint8_t GetCopterStatus(void);
 void SetCopterStatus(DroneFlightOnOff_TypeDef status);
+uint8_t GetCopterFlyMode(void);
+void SetCopterFlyMode(DroneFlightStatus_TypeDef FlyMode);
 uint8_t GetCopterTest(void);
 uint8_t SendPID(void); 
 void ResetSendPID(void);

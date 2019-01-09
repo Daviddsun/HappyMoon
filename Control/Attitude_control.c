@@ -35,13 +35,15 @@ Vector3f_t Attitude_InnerController(Vector3f_t ExpectGyro, Vector3f_t EstimateGy
 **********************************************************************************************************/
 Vector3angle_t Attitude_OuterController(Vector3angle_t ExpectAngle){
 	static Vector3angle_t AngleLpf;
-  Vector3angle_t Angle,ExpectAnguleRate,ErrorAngle;
-	//获取当前飞机的姿态角
+  Vector3angle_t Angle,VIOAngle,ExpectAnguleRate,ErrorAngle;
+	//获取当前飞机的姿态角(mahany filter)
   Angle = GetCopterAngle();
+	//获取视觉里程计姿态
+	VIOAngle = GetVisualOdometryAtt();
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
 	AngleLpf.roll = AngleLpf.roll * 0.92f + Angle.roll * 0.08f;
 	AngleLpf.pitch = AngleLpf.pitch * 0.92f + Angle.pitch * 0.08f;
-	AngleLpf.yaw = AngleLpf.yaw * 0.92f + Angle.yaw * 0.08f;
+	AngleLpf.yaw = AngleLpf.yaw * 0.92f + VIOAngle.yaw * 0.08f;
 	//计算姿态外环控制误差：目标角度 - 实际角度
 	ErrorAngle.roll = ExpectAngle.roll - AngleLpf.roll;
 	ErrorAngle.pitch = ExpectAngle.pitch - AngleLpf.pitch;

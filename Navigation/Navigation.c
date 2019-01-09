@@ -103,7 +103,7 @@ static void KalmanVelInit(void)
 static void KalmanPosInit(void)
 {
 	float qMatInit[9] = {0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05};
-	float rMatInit[9] = {100, 0,  0, 0, 100, 0, 0, 0, 100};
+	float rMatInit[9] = {25, 0,  0, 0, 25, 0, 0, 0, 25};
 	float pMatInit[9] = {5, 0, 0, 0, 5, 0, 0, 0, 5};
 	float fMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 	float hMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
