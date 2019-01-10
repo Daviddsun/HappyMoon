@@ -75,69 +75,69 @@ void SendParaInfo(void)
 	FloatToByte(OriginalVelZ.kD,floatToHex);
 	arrycat(paraToPC,95,floatToHex,4);
 	
-//	/* PosX PidPara */
-//	FloatToByte(OriginalPosX.kP,floatToHex);
-//	arrycat(paraToPC,99,floatToHex,4);
-//	FloatToByte(OriginalPosX.kI,floatToHex);
-//	arrycat(paraToPC,103,floatToHex,4);
-//	FloatToByte(OriginalPosX.kD,floatToHex);
-//	arrycat(paraToPC,107,floatToHex,4);
-//	
-//	/* PosY PidPara */
-//	FloatToByte(OriginalPosY.kP,floatToHex);
-//	arrycat(paraToPC,111,floatToHex,4);
-//	FloatToByte(OriginalPosY.kI,floatToHex);
-//	arrycat(paraToPC,115,floatToHex,4);
-//	FloatToByte(OriginalPosY.kD,floatToHex);
-//	arrycat(paraToPC,119,floatToHex,4);
-//	
-//	/* SpeedX PidPara */
-//	FloatToByte(OriginalVelX.kP,floatToHex);
-//	arrycat(paraToPC,123,floatToHex,4);
-//	FloatToByte(OriginalVelX.kI,floatToHex);
-//	arrycat(paraToPC,127,floatToHex,4);
-//	FloatToByte(OriginalVelX.kD,floatToHex);
-//	arrycat(paraToPC,131,floatToHex,4);
-//	
-//	/* SpeedY PidPara */
-//	FloatToByte(OriginalVelY.kP,floatToHex);
-//	arrycat(paraToPC,135,floatToHex,4);
-//	FloatToByte(OriginalVelY.kI,floatToHex);
-//	arrycat(paraToPC,139,floatToHex,4);
-//	FloatToByte(OriginalVelY.kD,floatToHex);
-//	arrycat(paraToPC,143,floatToHex,4);
-
-	/* acc_offect */
-	FloatToByte(OffsetData.acc_offectx,floatToHex);
+	/* PosX PidPara */
+	FloatToByte(OriginalPosX.kP,floatToHex);
 	arrycat(paraToPC,99,floatToHex,4);
-	FloatToByte(OffsetData.acc_offecty,floatToHex);
+	FloatToByte(OriginalPosX.kI,floatToHex);
 	arrycat(paraToPC,103,floatToHex,4);
-	FloatToByte(OffsetData.acc_offectz,floatToHex);
+	FloatToByte(OriginalPosX.kD,floatToHex);
 	arrycat(paraToPC,107,floatToHex,4);
 	
-	/* gyro_offect */
-	FloatToByte(OffsetData.gyro_offectx,floatToHex);
+	/* PosY PidPara */
+	FloatToByte(OriginalPosY.kP,floatToHex);
 	arrycat(paraToPC,111,floatToHex,4);
-	FloatToByte(OffsetData.gyro_offecty,floatToHex);
+	FloatToByte(OriginalPosY.kI,floatToHex);
 	arrycat(paraToPC,115,floatToHex,4);
-	FloatToByte(OffsetData.gyro_offectz,floatToHex);
+	FloatToByte(OriginalPosY.kD,floatToHex);
 	arrycat(paraToPC,119,floatToHex,4);
 	
-	/* acc_scale */
-	FloatToByte(OffsetData.acc_scalex,floatToHex);
+	/* SpeedX PidPara */
+	FloatToByte(OriginalVelX.kP,floatToHex);
 	arrycat(paraToPC,123,floatToHex,4);
-	FloatToByte(OffsetData.acc_scaley,floatToHex);
+	FloatToByte(OriginalVelX.kI,floatToHex);
 	arrycat(paraToPC,127,floatToHex,4);
-	FloatToByte(OffsetData.acc_scalez,floatToHex);
+	FloatToByte(OriginalVelX.kD,floatToHex);
 	arrycat(paraToPC,131,floatToHex,4);
 	
-	/* gyro_scale */
-	FloatToByte(OffsetData.gyro_scalex,floatToHex);
+	/* SpeedY PidPara */
+	FloatToByte(OriginalVelY.kP,floatToHex);
 	arrycat(paraToPC,135,floatToHex,4);
-	FloatToByte(OffsetData.gyro_scaley,floatToHex);
+	FloatToByte(OriginalVelY.kI,floatToHex);
 	arrycat(paraToPC,139,floatToHex,4);
-	FloatToByte(OffsetData.gyro_scalez,floatToHex);
+	FloatToByte(OriginalVelY.kD,floatToHex);
 	arrycat(paraToPC,143,floatToHex,4);
+
+//	/* acc_offect */
+//	FloatToByte(OffsetData.acc_offectx,floatToHex);
+//	arrycat(paraToPC,99,floatToHex,4);
+//	FloatToByte(OffsetData.acc_offecty,floatToHex);
+//	arrycat(paraToPC,103,floatToHex,4);
+//	FloatToByte(OffsetData.acc_offectz,floatToHex);
+//	arrycat(paraToPC,107,floatToHex,4);
+//	
+//	/* gyro_offect */
+//	FloatToByte(OffsetData.gyro_offectx,floatToHex);
+//	arrycat(paraToPC,111,floatToHex,4);
+//	FloatToByte(OffsetData.gyro_offecty,floatToHex);
+//	arrycat(paraToPC,115,floatToHex,4);
+//	FloatToByte(OffsetData.gyro_offectz,floatToHex);
+//	arrycat(paraToPC,119,floatToHex,4);
+//	
+//	/* acc_scale */
+//	FloatToByte(OffsetData.acc_scalex,floatToHex);
+//	arrycat(paraToPC,123,floatToHex,4);
+//	FloatToByte(OffsetData.acc_scaley,floatToHex);
+//	arrycat(paraToPC,127,floatToHex,4);
+//	FloatToByte(OffsetData.acc_scalez,floatToHex);
+//	arrycat(paraToPC,131,floatToHex,4);
+//	
+//	/* gyro_scale */
+//	FloatToByte(OffsetData.gyro_scalex,floatToHex);
+//	arrycat(paraToPC,135,floatToHex,4);
+//	FloatToByte(OffsetData.gyro_scaley,floatToHex);
+//	arrycat(paraToPC,139,floatToHex,4);
+//	FloatToByte(OffsetData.gyro_scalez,floatToHex);
+//	arrycat(paraToPC,143,floatToHex,4);
 
 	for(i=147;i<157;i++)
 	{
@@ -161,12 +161,11 @@ void SendRTInfo(void)
 	u8 i=0;
 	//各个数据获取
 	Vector3angle_t AHRSAngle = GetCopterAngle();
+	Vector3angle_t ExpectAngle = GetDesiredControlAngle();
 	Vector3f_t VIOVel = GetVisualOdometryVel();
 	Vector3f_t VIOPos = GetVisualOdometryPos();
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
-	float FPS_VisualOdometry = GetFPSVisualOdometry();
-	float FPS_AttitudeControl = GetFPSAttitudeControl();
 	float BatteryVoltage = GetBatteryVoltage();
 	
 	dataToPC[0]=0X55;
@@ -181,11 +180,11 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = AHRSAngle.yaw * 180/PI;
+	temp = ExpectAngle.pitch * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
-	temp = KalmanPos.z;
+	temp = VIOPos.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
@@ -193,7 +192,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = KalmanVel.z * 100.0f;
+	temp = ExpectAngle.roll * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	

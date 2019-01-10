@@ -159,7 +159,7 @@ void VelocityEstimate(void)
 	if(count++ % 25 == 0)
 	{
 		//获取视觉里程计数据
-		VIOVel = GetVisualOdometryVel();
+		VIOVel = GetVisualOdometryVelTrans();
 		
 		nav.velMeasure[0] = VIOVel.x;           //GPS速度x轴
 		nav.velMeasure[1] = VIOVel.y;           //GPS速度y轴
@@ -189,8 +189,8 @@ void VelocityEstimate(void)
 
 /**********************************************************************************************************
 *函 数 名: PositionEstimate
-*功能说明: 位置估计 目前只融合了GPS与气压，以后还会有光流、TOF等模块数据的参与
-*          位置的计算均在地理坐标系（东北天）下进行
+*功能说明: 位置估计 
+*          
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
@@ -211,7 +211,7 @@ void PositionEstimate(void)
 	if(count++ % 25 == 0)
 	{
 			//获取GPS位置
-			nav.posMeasure = GetVisualOdometryPos();
+			nav.posMeasure = GetVisualOdometryPosTrans();
 
 			fuseFlag = true;
 	}

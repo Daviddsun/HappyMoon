@@ -11,22 +11,22 @@
     <Kd>0</Kd>
   </Roll>
   <Yaw>
-    <Kp>0</Kp>
+    <Kp>2</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Yaw>
   <Height>
-    <Kp>0</Kp>
+    <Kp>3</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Height>
   <ratePitch>
-    <Kp>3.5</Kp>
+    <Kp>4</Kp>
     <Ki>0</Ki>
     <Kd>0.1</Kd>
   </ratePitch>
   <rateRoll>
-    <Kp>3.5</Kp>
+    <Kp>4</Kp>
     <Ki>0</Ki>
     <Kd>0.1</Kd>
   </rateRoll>
@@ -36,8 +36,8 @@
     <Kd>0.05</Kd>
   </rateYaw>
   <accHeight>
-    <Kp>0</Kp>
+    <Kp>15</Kp>
     <Ki>0</Ki>
-    <Kd>0</Kd>
+    <Kd>1</Kd>
   </accHeight>
 </pidPara>

@@ -104,6 +104,19 @@ Vector3f_t GetVisualOdometryPos(void){
   return Position;
 }
 /**********************************************************************************************************
+*函 数 名: GetVisualOdometryPosTrans
+*功能说明: 获取视觉里程计的Pos (经过转化)
+*形    参: 无
+*返 回 值: Position
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryPosTrans(void){
+	Vector3f_t TransPosition;
+	TransPosition.x = position_y.fvalue;
+	TransPosition.y = -position_x.fvalue;
+	TransPosition.z = position_z.fvalue;
+  return TransPosition;
+}
+/**********************************************************************************************************
 *函 数 名: GetVisualOdometryVel
 *功能说明: 获取视觉里程计的Vel
 *形    参: 无
@@ -115,6 +128,19 @@ Vector3f_t GetVisualOdometryVel(void){
 	Velocity.y = velocity_y.fvalue;
 	Velocity.z = velocity_z.fvalue;
   return Velocity;
+}
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryVelTrans
+*功能说明: 获取视觉里程计的Vel
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryVelTrans(void){
+	Vector3f_t TransVelocity;
+	TransVelocity.x = velocity_y.fvalue;
+	TransVelocity.y = -velocity_x.fvalue;
+	TransVelocity.z = velocity_z.fvalue;
+  return TransVelocity;
 }
 /**********************************************************************************************************
 *函 数 名: GetVisualOdometryAtt

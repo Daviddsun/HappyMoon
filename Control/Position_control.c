@@ -18,7 +18,7 @@ void Position_Controller(Vector3f_t ExpectPos){
   FPSPositionControl.LastTime = OSTimeGet(&err);
 /******* 降落控制 ********/	
 	if(GetCopterFlyMode() == Land){
-		ExpectVel.z = -0.2f;
+		ExpectVel.z = -0.25f;
 		if(GetCopterPosition().z < 0.05f){
 			SetCopterFlyMode(Nothing);
 			SetCopterStatus(Drone_Off);
@@ -27,8 +27,10 @@ void Position_Controller(Vector3f_t ExpectPos){
 	
 /******* 原始串级PID控制 ********/	
 	// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
-	EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
-	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
+	// 直接来自视觉里程计
+	EstimatePosLpf.x = GetVisualOdometryPos().x ;
+	EstimatePosLpf.y = GetVisualOdometryPos().y ;
+	// 来自自身卡尔曼滤波
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
 	// 外环进行二分频
 	if(count++ %2 == 0){ 
@@ -44,21 +46,21 @@ void Position_Controller(Vector3f_t ExpectPos){
 			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.75,0.75);
 		}
 	}
-	//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
-	EstimateVelLpf.x = EstimateVelLpf.x * 0.95f + GetCopterVelocity().x * 0.05f;
-	EstimateVelLpf.y = EstimateVelLpf.y * 0.95f + GetCopterVelocity().y * 0.05f;
+	// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
+	// 直接来自视觉里程计
+	EstimateVelLpf.x = GetVisualOdometryVel().x;
+	EstimateVelLpf.y = GetVisualOdometryVel().y;
+	// 来自自身卡尔曼滤波
 	EstimateVelLpf.z = EstimateVelLpf.z * 0.95f + GetCopterVelocity().z * 0.05f;
 	//速度误差计算
 	ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
 	ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
 	ErrorVel.z = ExpectVel.z - EstimateVelLpf.z;
 	//PID计算
-	//角度转化为rad弧度
-//	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
-//	PosControllerOut.ExpectAngle.roll = PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
 	PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
-	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
-	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+	//角度转化为rad弧度
+	PosControllerOut.ExpectAngle.roll = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
+	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
 	PosControllerOut.ExpectAngle.yaw = 0;	
 	
 /******* 苏黎世控制框架暂不使用，因为没有解决视觉里程计与自身飞控板之间的四元数对齐问题 ********/

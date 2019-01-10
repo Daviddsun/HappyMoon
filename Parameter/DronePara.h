@@ -61,7 +61,6 @@ typedef struct
     float integrator;
     float lastError;
     float lastDerivative;
-    float dFilter;
 } PID_t;
 
 typedef struct{

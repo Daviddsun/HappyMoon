@@ -1,5 +1,5 @@
 #include "PID_control.h"
-
+#define DFilter 0.00530516f //30hz频率
 /**********************************************************************************************************
 *函 数 名: PID_GetP
 *功能说明: 比例控制器
@@ -56,7 +56,7 @@ float PID_GetD(PID_t* pid, float error, float dt)
 
         derivative = (error - pid->lastError) / dt;
 
-        derivative = pid->lastDerivative + (dt / ( pid->dFilter + dt)) * (derivative - pid->lastDerivative);
+        derivative = pid->lastDerivative + (dt / ( DFilter + dt)) * (derivative - pid->lastDerivative);
 
         pid->lastError	= error;
         pid->lastDerivative = derivative;
@@ -87,4 +87,3 @@ float PID_GetPID(PID_t* pid, float error, float dt)
 {
     return PID_GetP(pid, error) + PID_GetI(pid, error, dt) + PID_GetD(pid, error, dt);
 }
-
