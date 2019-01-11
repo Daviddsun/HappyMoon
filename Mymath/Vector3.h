@@ -67,7 +67,7 @@ Vector3f_t VectorCrossProduct(Vector3f_t a, Vector3f_t b);
 Vector3f_t Matrix3MulVector3(float* m, Vector3f_t vector);
 Vector3f_t VectorRotateToBodyFrame(Vector3f_t vector, Vector3f_t deltaAngle);
 Vector3f_t VectorRotateToEarthFrame(Vector3f_t vector, Vector3f_t deltaAngle);
-
-
+void TransVelToBodyFrame(Vector3f_t velEf, Vector3f_t* velBf, float yaw);
+void TransVelToEarthFrame(Vector3f_t velBf, Vector3f_t* velEf, float yaw);
 #endif
 

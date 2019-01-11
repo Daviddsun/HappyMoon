@@ -50,7 +50,7 @@ void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThr
 *返 回 值: 无
 **********************************************************************************************************/
 void PreTakeOff(uint16_t Time){
-	float ThurstValue = sqrt(Time/60) * Drone_Mass / 4.0f;
+	float ThurstValue = sqrt(Time/50) * Drone_Mass / 4.0f;
 	MotorThrust(ThurstValue,ThurstValue,ThurstValue,ThurstValue);
 	
 }

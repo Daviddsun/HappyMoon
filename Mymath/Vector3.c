@@ -201,6 +201,36 @@ Vector3f_t VectorRotateToEarthFrame(Vector3f_t vector, Vector3f_t deltaAngle)
     //方向余弦矩阵乘以向量，得到旋转后的新向量
     return Matrix3MulVector3(dcMat, vector);
 }
+/**********************************************************************************************************
+*函 数 名: TransVelToBodyFrame
+*功能说明: 将地理坐标系下的速度转化到机体坐标系
+*形    参: 地理坐标系下的速度，机体坐标系速度指针，航向角
+*返 回 值: 无
+**********************************************************************************************************/
+void TransVelToBodyFrame(Vector3f_t velEf, Vector3f_t* velBf, float yaw)
+{
+    float sinYaw = sinf(yaw);
+    float cosYaw = cosf(yaw);
+
+    velBf->x = velEf.x * cosYaw + velEf.y * sinYaw;
+    velBf->y = -velEf.x * sinYaw + velEf.y * cosYaw;
+    velBf->z = velEf.z;
+}
 
 
+/**********************************************************************************************************
+*函 数 名: TransVelToEarthFrame
+*功能说明: 将机体速度转化到地理坐标系
+*形    参: 机体坐标系下的速度，地理坐标系速度指针，航向角
+*返 回 值: 无
+**********************************************************************************************************/
+void TransVelToEarthFrame(Vector3f_t velBf, Vector3f_t* velEf, float yaw)
+{
+    float sinYaw = sinf(yaw);
+    float cosYaw = cosf(yaw);
+
+    velEf->x = velBf.x * cosYaw - velBf.y * sinYaw;
+    velEf->y = velBf.x * sinYaw + velBf.y * cosYaw;
+    velEf->z = velBf.z;
+}
 

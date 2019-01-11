@@ -27,10 +27,9 @@ void Position_Controller(Vector3f_t ExpectPos){
 	
 /******* 原始串级PID控制 ********/	
 	// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
-	// 直接来自视觉里程计
-	EstimatePosLpf.x = GetVisualOdometryPos().x ;
-	EstimatePosLpf.y = GetVisualOdometryPos().y ;
 	// 来自自身卡尔曼滤波
+	EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
+	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
 	// 外环进行二分频
 	if(count++ %2 == 0){ 
@@ -47,11 +46,10 @@ void Position_Controller(Vector3f_t ExpectPos){
 		}
 	}
 	// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
-	// 直接来自视觉里程计
-	EstimateVelLpf.x = GetVisualOdometryVel().x;
-	EstimateVelLpf.y = GetVisualOdometryVel().y;
 	// 来自自身卡尔曼滤波
-	EstimateVelLpf.z = EstimateVelLpf.z * 0.95f + GetCopterVelocity().z * 0.05f;
+	EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
+	EstimateVelLpf.y = EstimateVelLpf.y * 0.9f + GetCopterVelocity().y * 0.1f;
+	EstimateVelLpf.z = EstimateVelLpf.z * 0.9f + GetCopterVelocity().z * 0.1f;
 	//速度误差计算
 	ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
 	ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
@@ -61,6 +59,8 @@ void Position_Controller(Vector3f_t ExpectPos){
 	//角度转化为rad弧度
 	PosControllerOut.ExpectAngle.roll = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
 	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
+//	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+//	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 	PosControllerOut.ExpectAngle.yaw = 0;	
 	
 /******* 苏黎世控制框架暂不使用，因为没有解决视觉里程计与自身飞控板之间的四元数对齐问题 ********/
@@ -124,7 +124,17 @@ Vector3angle_t GetDesiredControlAngle(void){
 void ResetExpectPosition(Vector3f_t *ExpectPos){
 	ExpectPos->x = 0;
 	ExpectPos->y = 0;
-	ExpectPos->z = 1.0; 
+	ExpectPos->z = 0.5; 
 }
-
+/**********************************************************************************************************
+*函 数 名: ResetPositionPara
+*功能说明: 置位位置参数
+*形    参: 无
+*返 回 值: 无
+**********************************************************************************************************/	
+void ResetPositionPara(void){
+	OriginalVelX.integrator = 0;
+	OriginalVelY.integrator = 0;
+	OriginalVelZ.integrator = 0;
+}
 

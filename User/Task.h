@@ -1,6 +1,7 @@
 #ifndef __TASK_H
 #define __TASK_H
 #include "os_app_hooks.h"
+#include "os.h"
 #include "explore_system.h"
 #include "explore_systick.h"
 #include "stm32f4xx.h"

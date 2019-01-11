@@ -24,23 +24,23 @@ void NavigationInit(void)
 **********************************************************************************************************/
 static void KalmanVelInit(void)
 {
-	float qMatInit[6][6] = {{0.05, 0, 0, 0, 0, 0},
-													{0, 0.05, 0, 0, 0, 0},
-													{0, 0, 0.05, 0, 0, 0},      
+	float qMatInit[6][6] = {{0.2, 0, 0, 0, 0, 0},
+													{0, 0.2, 0, 0, 0, 0},
+													{0, 0, 0.2, 0, 0, 0},      
 													{0.003, 0, 0, 0, 0, 0},
 													{0, 0.003, 0, 0, 0, 0},
 													{0, 0, 0.003, 0, 0, 0}};
 
-	float rMatInit[6][6] = {{15, 0, 0, 0, 0, 0},            //VIO速度x轴数据噪声方差
-													{0, 15, 0, 0, 0, 0},            //VIO速度y轴数据噪声方差
-													{0, 0, 15, 0, 0, 0},          	//VIO速度z轴数据噪声方差     
+	float rMatInit[6][6] = {{1, 0, 0, 0, 0, 0},            //VIO速度x轴数据噪声方差
+													{0, 1, 0, 0, 0, 0},            //VIO速度y轴数据噪声方差
+													{0, 0, 1, 0, 0, 0},          	 //VIO速度z轴数据噪声方差     
 													{0, 0, 0, 2500, 0, 0},          //气压速度数据噪声方差
 													{0, 0, 0, 0, 2000, 0},          //TOF速度数据噪声方差
 													{0, 0, 0, 0, 0, 500000}};       //z轴速度高通滤波系数
 
-	float pMatInit[6][6] = {{5, 0, 0, 0, 0, 0},
-													{0, 5, 0, 0, 0, 0},
-													{0, 0, 5, 0, 0, 0},      
+	float pMatInit[6][6] = {{8, 0, 0, 0, 0, 0},
+													{0, 8, 0, 0, 0, 0},
+													{0, 0, 8, 0, 0, 0},      
 													{2, 0, 0, 2, 0, 0},
 													{0, 2, 0, 0, 2, 0},
 													{0, 0, 2, 0, 0, 2}};    //增大协方差P的初值，可以提高初始化时bias的收敛速度
@@ -102,8 +102,8 @@ static void KalmanVelInit(void)
 **********************************************************************************************************/
 static void KalmanPosInit(void)
 {
-	float qMatInit[9] = {0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05};
-	float rMatInit[9] = {25, 0,  0, 0, 25, 0, 0, 0, 25};
+	float qMatInit[9] = {0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5};
+	float rMatInit[9] = {1, 0,  0, 0, 1, 0, 0, 0, 1};
 	float pMatInit[9] = {5, 0, 0, 0, 5, 0, 0, 0, 5};
 	float fMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 	float hMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
@@ -139,8 +139,7 @@ static void KalmanPosInit(void)
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void VelocityEstimate(void)
-{
+void VelocityEstimate(void){
 	OS_ERR err;
 	Vector3f_t VIOVel;
 	static uint32_t count;
@@ -155,15 +154,14 @@ void VelocityEstimate(void)
 	nav.accel = EarthAccGetData();
 
 	//加速度数据更新频率500 Hz，VIO数据只有10Hz
-	//这里强制统一为20Hz
-	if(count++ % 25 == 0)
+	if(count++ % 50 == 0)
 	{
 		//获取视觉里程计数据
 		VIOVel = GetVisualOdometryVelTrans();
 		
-		nav.velMeasure[0] = VIOVel.x;           //GPS速度x轴
-		nav.velMeasure[1] = VIOVel.y;           //GPS速度y轴
-		nav.velMeasure[2] = VIOVel.z;           //GPS速度z轴
+		nav.velMeasure[0] = VIOVel.y;           //机体速度x轴
+		nav.velMeasure[1] = -VIOVel.x;          //机体速度y轴
+		nav.velMeasure[2] = VIOVel.z;           //机体速度z轴
 		nav.velMeasure[3] = 0;  								//气压速度值
 		nav.velMeasure[4] = 0;                  //TOF速度值
 		nav.velMeasure[5] = 0;       
@@ -194,12 +192,12 @@ void VelocityEstimate(void)
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void PositionEstimate(void)
-{
+void PositionEstimate(void){
 	OS_ERR err;
 	Vector3f_t input;
 	static uint32_t count;
 	static bool fuseFlag;
+	Vector3f_t velocityEf;
 
 	//计算时间间隔，用于积分
 	FPSNavigation.PosCurrentTime = (OSTimeGet(&err) - FPSNavigation.PosLastTime) * 1e-3;
@@ -208,18 +206,21 @@ void PositionEstimate(void)
 
 	//速度数据更新频率500khz，vio数据只有10Hz
 	//这里强制统一为20Hz
-	if(count++ % 25 == 0)
+	if(count++ % 50 == 0)
 	{
-			//获取GPS位置
-			nav.posMeasure = GetVisualOdometryPosTrans();
-
+			//获取VIO位置
+			nav.posMeasure.x = GetVisualOdometryPos().y;
+			nav.posMeasure.y = -GetVisualOdometryPos().x;
+			nav.posMeasure.z = GetVisualOdometryPos().z;
 			fuseFlag = true;
 	}
 	else
 	{
 			fuseFlag = false;
 	}
-
+	
+	TransVelToEarthFrame(nav.velocity,&velocityEf,GetVisualOdometryAngle().yaw);
+	
 	//速度积分
 	input.x = nav.velocity.x * FPSNavigation.PosCurrentTime;
 	input.y = nav.velocity.y * FPSNavigation.PosCurrentTime;

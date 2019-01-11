@@ -89,7 +89,6 @@ void Vision_DataDeal(Receive_VisualOdometry rx){
 	}
 }
 
-
 /**********************************************************************************************************
 *函 数 名: GetVisualOdometryPos
 *功能说明: 获取视觉里程计的Pos
@@ -105,15 +104,13 @@ Vector3f_t GetVisualOdometryPos(void){
 }
 /**********************************************************************************************************
 *函 数 名: GetVisualOdometryPosTrans
-*功能说明: 获取视觉里程计的Pos (经过转化)
+*功能说明: 获取视觉里程计的Pos 
 *形    参: 无
 *返 回 值: Position
 **********************************************************************************************************/
 Vector3f_t GetVisualOdometryPosTrans(void){
 	Vector3f_t TransPosition;
-	TransPosition.x = position_y.fvalue;
-	TransPosition.y = -position_x.fvalue;
-	TransPosition.z = position_z.fvalue;
+
   return TransPosition;
 }
 /**********************************************************************************************************
@@ -131,24 +128,23 @@ Vector3f_t GetVisualOdometryVel(void){
 }
 /**********************************************************************************************************
 *函 数 名: GetVisualOdometryVelTrans
-*功能说明: 获取视觉里程计的Vel
+*功能说明: 将VIO坐标系下的速度转化到机体坐标系
 *形    参: 无
 *返 回 值: Velocity
 **********************************************************************************************************/
 Vector3f_t GetVisualOdometryVelTrans(void){
 	Vector3f_t TransVelocity;
-	TransVelocity.x = velocity_y.fvalue;
-	TransVelocity.y = -velocity_x.fvalue;
-	TransVelocity.z = velocity_z.fvalue;
+	TransVelToBodyFrame(GetVisualOdometryVel(),&TransVelocity,GetVisualOdometryAngle().yaw);
   return TransVelocity;
 }
+
 /**********************************************************************************************************
 *函 数 名: GetVisualOdometryAtt
 *功能说明: 获取视觉里程计的Att
 *形    参: 无
 *返 回 值: Attitude
 **********************************************************************************************************/
-Vector3angle_t GetVisualOdometryAtt(void){
+Vector3angle_t GetVisualOdometryAngle(void){
 	Vector3angle_t Attitude;
 	Attitude.roll = atan2(2.0f*(Quaternion0.fvalue*Quaternion1.fvalue + Quaternion2.fvalue*Quaternion3.fvalue), 
 											1 - 2.0f*(Quaternion1.fvalue*Quaternion1.fvalue + Quaternion2.fvalue*Quaternion2.fvalue));

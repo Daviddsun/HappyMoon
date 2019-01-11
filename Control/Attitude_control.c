@@ -39,11 +39,11 @@ Vector3angle_t Attitude_OuterController(Vector3angle_t ExpectAngle){
 	//获取当前飞机的姿态角(mahany filter)
   Angle = GetCopterAngle();
 	//获取视觉里程计姿态
-	VIOAngle = GetVisualOdometryAtt();
+	VIOAngle = GetVisualOdometryAngle();
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
 	AngleLpf.roll = AngleLpf.roll * 0.92f + Angle.roll * 0.08f;
 	AngleLpf.pitch = AngleLpf.pitch * 0.92f + Angle.pitch * 0.08f;
-	AngleLpf.yaw = AngleLpf.yaw * 0.92f + VIOAngle.yaw * 0.08f;
+	AngleLpf.yaw = VIOAngle.yaw;
 	//计算姿态外环控制误差：目标角度 - 实际角度
 	ErrorAngle.roll = ExpectAngle.roll - AngleLpf.roll;
 	ErrorAngle.pitch = ExpectAngle.pitch - AngleLpf.pitch;
