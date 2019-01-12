@@ -1,7 +1,8 @@
 #include "Data_deal.h"
 DroneFlightControl FlightControl;                          
 DroneTargetInfo Target_Info;           
-RemoteControl RockerControl;        
+RemoteControl RockerControl;   
+Vector3f_t StepSignal;
 /**********************************************************************************************************
 *函 数 名: GroundStationDataDeal
 *功能说明: 获取地面站信息
@@ -223,17 +224,17 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					{
 						HexToFloat[i]=rx.buf[3+i];
 					}
-					//reference_state.postionX = Hex_To_Decimal(HexToFloat,4);
+					StepSignal.x = Hex_To_Decimal(HexToFloat,4);
 					for(i=0;i<4;i++)
 					{
 						HexToFloat[i]=rx.buf[7+i];
 					}
-					//reference_state.postionY = Hex_To_Decimal(HexToFloat,4); 
+					StepSignal.y = Hex_To_Decimal(HexToFloat,4); 
 					for(i=0;i<4;i++)
 					{
 						HexToFloat[i]=rx.buf[11+i];
 					}
-					//reference_state.postionZ = Hex_To_Decimal(HexToFloat,4);
+					StepSignal.z = Hex_To_Decimal(HexToFloat,4);
 					break;
 				/* 遥控器数据 */
 				case 17:
@@ -420,4 +421,20 @@ Vector3f_t GetRemoteControlAngleVel(void){
 **********************************************************************************************************/
 RemoteControl GetRemoteControlFlyData(void){
 	return RockerControl;
+}
+
+/**********************************************************************************************************
+*函 数 名: GetRemoteControlFlyData
+*功能说明: 获取遥控器飞行数据
+*形    参: 无
+*返 回 值: 无
+**********************************************************************************************************/
+Vector3f_t GetStepSignalValue(void){
+	Vector3f_t StepSignalBodyFrame;
+	//期望高度不低于0.5m
+	if(StepSignal.z < 0.5f){
+		StepSignal.z = 0.5f;
+	}
+	TransVelToBodyFrame(StepSignal, &StepSignalBodyFrame, GetVisualOdometryAngle().yaw);
+	return StepSignalBodyFrame;
 }

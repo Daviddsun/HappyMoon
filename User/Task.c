@@ -156,8 +156,10 @@ void FlightControl_task(void *p_arg){
 					//安全保护
 					SafeControl();
 				}
-				//200hz
-				if(count % 5 == 0){
+				//125hz
+				if(count % 8 == 0){
+					//接收期望位置
+					Expect_Pos = GetStepSignalValue();
 					//飞行位置控制
 					Position_Controller(Expect_Pos);
 					//期望角度选择
@@ -174,18 +176,20 @@ void FlightControl_task(void *p_arg){
 					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;
 					Expect_Gyro.z = (Attitude_OuterController(Expect_Angle)).yaw;
 				}
-				//1000hz
-				//期望角速率选择
-				if(GetCopterTest() == Drone_Mode_RatePitch || 
-										GetCopterTest() == Drone_Mode_RateRoll){
-					Expect_Gyro = GetRemoteControlAngleVel();
+				//250hz
+				if(count % 4 == 0){
+					//期望角速率选择
+					if(GetCopterTest() == Drone_Mode_RatePitch || 
+											GetCopterTest() == Drone_Mode_RateRoll){
+						Expect_Gyro = GetRemoteControlAngleVel();
+					}
+					//期望高度加速度
+					DesiredControlCommands.ExpectAcc = GetDesiredControlAcc();
+					//飞行角速率控制
+					Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
+					//推力融合
+					ThrustMixer(ARM_Length,DesiredControlCommands.ExpectAcc,Rotate_Thrust);
 				}
-				//期望高度加速度
-				DesiredControlCommands.ExpectAcc = GetDesiredControlAcc();
-				//飞行角速率控制
-				Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
-				//推力融合
-				ThrustMixer(ARM_Length,DesiredControlCommands.ExpectAcc,Rotate_Thrust);
 			}
 			count++;
 		}

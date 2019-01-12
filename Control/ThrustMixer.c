@@ -50,7 +50,7 @@ void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThr
 *返 回 值: 无
 **********************************************************************************************************/
 void PreTakeOff(uint16_t Time){
-	float ThurstValue = sqrt(Time/50) * Drone_Mass / 4.0f;
+	float ThurstValue = sqrt(Time/35) * Drone_Mass / 4.0f;
 	MotorThrust(ThurstValue,ThurstValue,ThurstValue,ThurstValue);
 	
 }
@@ -102,10 +102,10 @@ void MotorThrust(float f1,float f2,float f3,float f4){
 	ThrottleInfo.M3 = (int)(M3 * 1000.0f);
 	ThrottleInfo.M4 = (int)(M4 * 1000.0f);
 	
-	if(ThrottleInfo.M1 > 800)  ThrottleInfo.M1=800;
-	if(ThrottleInfo.M2 > 800)  ThrottleInfo.M2=800;
-	if(ThrottleInfo.M3 > 800)  ThrottleInfo.M3=800;
-	if(ThrottleInfo.M4 > 800)  ThrottleInfo.M4=800;
+	if(ThrottleInfo.M1 > 850)  ThrottleInfo.M1=850;
+	if(ThrottleInfo.M2 > 850)  ThrottleInfo.M2=850;
+	if(ThrottleInfo.M3 > 850)  ThrottleInfo.M3=850;
+	if(ThrottleInfo.M4 > 850)  ThrottleInfo.M4=850;
 
 	if(ThrottleInfo.M1 < 100)  ThrottleInfo.M1=100;
 	if(ThrottleInfo.M2 < 100)  ThrottleInfo.M2=100;

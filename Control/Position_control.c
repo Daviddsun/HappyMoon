@@ -35,14 +35,14 @@ void Position_Controller(Vector3f_t ExpectPos){
 	if(count++ %2 == 0){ 
 		//速度限幅在1m/s
 		ExpectVel.x = OriginalPosX.kP * (ExpectPos.x - EstimatePosLpf.x);
-		ExpectVel.x = ConstrainFloat(ExpectVel.x,-1.0,1.0);
+		ExpectVel.x = ConstrainFloat(ExpectVel.x,-0.75,0.75);
 		//速度限幅在1m/s
 		ExpectVel.y = OriginalPosY.kP * (ExpectPos.y - EstimatePosLpf.y);
-		ExpectVel.y = ConstrainFloat(ExpectVel.y,-1.0,1.0);
+		ExpectVel.y = ConstrainFloat(ExpectVel.y,-0.75,0.75);
 		if(GetCopterFlyMode() == Nothing){
 			//速度限幅在0.75m/s
 			ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
-			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.75,0.75);
+			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
 		}
 	}
 	// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
@@ -57,10 +57,8 @@ void Position_Controller(Vector3f_t ExpectPos){
 	//PID计算
 	PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
 	//角度转化为rad弧度
-	PosControllerOut.ExpectAngle.roll = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
-	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
-//	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
-//	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+	PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
+	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
 	PosControllerOut.ExpectAngle.yaw = 0;	
 	
 /******* 苏黎世控制框架暂不使用，因为没有解决视觉里程计与自身飞控板之间的四元数对齐问题 ********/
@@ -92,7 +90,7 @@ void Position_Controller(Vector3f_t ExpectPos){
 //	acc_error.z = OriginalPosZ.kP * z_pos_error + OriginalPosZ.kD * z_vel_error + Gravity_Acceleration; //z轴加上重力加速度
 ////	// 计算期望控制量
 //	PosControllerOut.ExpectAcc = acc_error.z;
-////	PosControllerOut.ExpectAcc = Gravity_Acceleration + (GetRemoteControlFlyData().ZaxisPos) * 2.5f;
+//	PosControllerOut.ExpectAcc = Gravity_Acceleration + (GetRemoteControlFlyData().ZaxisPos) * 2.5f;
 //	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
 //	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 //	PosControllerOut.ExpectAngle.yaw = 0;
