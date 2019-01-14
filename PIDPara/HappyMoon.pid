@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="gb2312"?>
 <pidPara>
   <Pitch>
-    <Kp>5</Kp>
+    <Kp>6</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Pitch>
@@ -23,21 +23,21 @@
   <ratePitch>
     <Kp>0.7</Kp>
     <Ki>0</Ki>
-    <Kd>0</Kd>
+    <Kd>0.02</Kd>
   </ratePitch>
   <rateRoll>
     <Kp>0.7</Kp>
     <Ki>0</Ki>
-    <Kd>0</Kd>
+    <Kd>0.02</Kd>
   </rateRoll>
   <rateYaw>
-    <Kp>0.95</Kp>
+    <Kp>1</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </rateYaw>
   <accHeight>
     <Kp>10</Kp>
-    <Ki>1.5</Ki>
-    <Kd>1</Kd>
+    <Ki>2</Ki>
+    <Kd>1.5</Kd>
   </accHeight>
 </pidPara>

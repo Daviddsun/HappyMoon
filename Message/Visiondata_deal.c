@@ -164,6 +164,10 @@ Vector3f_t GetVisualOdometryRefPos(void){
 	RefPosition.x = reference_posx.fvalue;
 	RefPosition.y = reference_posy.fvalue;
 	RefPosition.z = reference_posz.fvalue;
+	//期望高度不低于0.5m
+	if(RefPosition.z < 0.5f){
+		RefPosition.z = 0.5f;
+	}
   return RefPosition;
 }
 /**********************************************************************************************************

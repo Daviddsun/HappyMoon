@@ -143,6 +143,7 @@ void FlightControl_task(void *p_arg){
 			ResetExpectPosition(&Expect_Pos);
 			//置位位置参数
 			ResetPositionPara();
+			//电机停止
 			PWM_OUTPUT(0,0,0,0);
 			count = 0;
 		}

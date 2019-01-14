@@ -213,6 +213,10 @@ void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData){
 	accdata.x = (accdata.x - OffsetData.acc_offectx) * OffsetData.acc_scalex;
 	accdata.y = (accdata.y - OffsetData.acc_offecty) * OffsetData.acc_scaley;
 	accdata.z = (accdata.z - OffsetData.acc_offectz) * OffsetData.acc_scalez;
+	
+//	//机械误差校准
+//	accdata = VectorRotateToBodyFrame(accdata, MechanicalError);
+	
 	accValue.data = accdata;
 	*accData = accdata;
 } 
