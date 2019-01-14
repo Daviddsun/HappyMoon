@@ -62,7 +62,7 @@ void GyroCalibration(Vector3f_t gyroRaw)
 *形    参: 陀螺仪原始数据 陀螺仪预处理数据指针
 *返 回 值: 无
 **********************************************************************************************************/
-void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData){
+void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData, Vector3f_t GyroLevelError){
 	
     Vector3f_t gyrodata = gyroRaw;
 
@@ -70,6 +70,8 @@ void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyro
     gyrodata.x = (gyrodata.x - OffsetData.gyro_offectx) * OffsetData.gyro_scalex;
     gyrodata.y = (gyrodata.y - OffsetData.gyro_offecty) * OffsetData.gyro_scaley;
     gyrodata.z = (gyrodata.z - OffsetData.gyro_offectz) * OffsetData.gyro_scalez;
+		//安装误差校准
+    gyrodata = VectorRotateToBodyFrame(gyrodata, GyroLevelError);
 		//低通滤波
 		gyroValue.dataLpf = LowPassFilter2nd(&gyroValue.lpf_2nd, gyrodata);
     *gyroData = gyrodata;

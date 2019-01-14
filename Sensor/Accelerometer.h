@@ -15,7 +15,8 @@ typedef struct {
 
 void AccPreTreatInit(void);
 void AccCalibration(Vector3f_t accRaw);
-void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData);
+void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData, Vector3f_t AccLevelError);
+Vector3f_t ImuLevelCalibration(uint32_t count);
 Vector3f_t AccGetData(void);
 Vector3f_t EarthAccGetData(void);
 #endif

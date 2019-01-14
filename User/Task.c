@@ -4,6 +4,7 @@ PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalP
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
 PIDPara PID_ParaInfo;
 OffsetInfo OffsetData;
+Vector3f_t LevelErrorValue;
 /**
  * @Description 传感器数据读取 1khz读取
  */
@@ -74,9 +75,9 @@ void IMUSensorPreDeal_task(void *p_arg){
 		GyroCalibration(gyroRawData);
 	
 		//加速计数据处理
-		AccDataPreTreat(accRawData, accCalibData);
+		AccDataPreTreat(accRawData, accCalibData, LevelErrorValue);
 		//陀螺仪数据处理
-		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData);
+		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData, LevelErrorValue);
 		
 		//更新消息队列
 		OSQPost(&messageQueue[ACC_DATA_PRETREAT],accCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
@@ -149,6 +150,16 @@ void FlightControl_task(void *p_arg){
 		}
 		else{
 			if(count < 3000 && GetCopterTest() == Drone_Mode_4Axis){
+				//机械安装误差
+				if(count < 1000){
+					LevelErrorValue.x += GetCopterAngle().roll;
+					LevelErrorValue.y += GetCopterAngle().pitch;
+					LevelErrorValue.z += 0;
+				}else if(count == 1000){
+					LevelErrorValue.x /=1000;
+					LevelErrorValue.y /=1000;
+					LevelErrorValue.z /=1000;
+				}
 				PreTakeOff(count);
 			}
 			else{

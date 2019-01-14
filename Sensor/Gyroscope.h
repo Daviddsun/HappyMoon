@@ -19,7 +19,7 @@ enum
 
 void GyroPreTreatInit(void);
 void GyroCalibration(Vector3f_t gyroRaw);
-void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData);
+void GyroDataPreTreat(Vector3f_t gyroRaw, Vector3f_t* gyroData, Vector3f_t* gyroLpfData, Vector3f_t GyroLevelError);
 void PlaceStausCheck(Vector3f_t gyro);
 uint8_t GetPlaceStatus(void);
 Vector3f_t GyroLpfGetData(void);
