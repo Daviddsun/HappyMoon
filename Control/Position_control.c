@@ -134,5 +134,10 @@ void ResetPositionPara(void){
 	OriginalVelX.integrator = 0;
 	OriginalVelY.integrator = 0;
 	OriginalVelZ.integrator = 0;
+	//roll pitch 最大积分角度 5°
+	OriginalVelX.imax = 5;
+	OriginalVelY.imax = 5;
+	//height 最大积分加速度 5m/s^2
+	OriginalVelZ.imax = 5;
 }
 
