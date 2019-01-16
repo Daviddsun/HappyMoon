@@ -100,10 +100,12 @@ typedef struct{
 	float gyro_scalex;
 	float gyro_scaley;
 	float gyro_scalez;
+	Vector3f_t level_scale;
 	unsigned int acc_calibra_cnt;
 	unsigned int gyro_calibra_cnt;
 	bool acc_success;
 	bool gyro_success;
+	bool level_success;
 }OffsetInfo;
 
 

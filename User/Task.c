@@ -4,7 +4,6 @@ PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalP
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
 PIDPara PID_ParaInfo;
 OffsetInfo OffsetData;
-Vector3f_t LevelErrorValue;
 /**
  * @Description 传感器数据读取 1khz读取
  */
@@ -48,6 +47,7 @@ void IMUSensorPreDeal_task(void *p_arg){
 	//默认不进行传感器校准
 	OffsetData.acc_success = false;
 	OffsetData.gyro_success = false;	
+	OffsetData.level_success = false;
 	//进入临界区
 	OS_CRITICAL_ENTER();
 	//IMU传感器校准参数读取 
@@ -73,11 +73,12 @@ void IMUSensorPreDeal_task(void *p_arg){
 		AccCalibration(accRawData);
 		//陀螺仪校准
 		GyroCalibration(gyroRawData);
-	
+		//IMU安装误差校准
+    ImuLevelCalibration();
 		//加速计数据处理
-		AccDataPreTreat(accRawData, accCalibData, LevelErrorValue);
+		AccDataPreTreat(accRawData, accCalibData,OffsetData.level_scale);
 		//陀螺仪数据处理
-		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData, LevelErrorValue);
+		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData,OffsetData.level_scale);
 		
 		//更新消息队列
 		OSQPost(&messageQueue[ACC_DATA_PRETREAT],accCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
@@ -150,16 +151,6 @@ void FlightControl_task(void *p_arg){
 		}
 		else{
 			if(count < 3000 && GetCopterTest() == Drone_Mode_4Axis){
-				//机械安装误差
-				if(count < 1000){
-					LevelErrorValue.x += GetCopterAngle().roll;
-					LevelErrorValue.y += GetCopterAngle().pitch;
-					LevelErrorValue.z += 0;
-				}else if(count == 1000){
-					LevelErrorValue.x /=1000;
-					LevelErrorValue.y /=1000;
-					LevelErrorValue.z /=1000;
-				}
 				PreTakeOff(count);
 			}
 			else{
@@ -168,10 +159,11 @@ void FlightControl_task(void *p_arg){
 					//安全保护
 					SafeControl();
 				}
-				//125hz
-				if(count % 8 == 0){
+				//200hz
+				if(count % 5 == 0){
 					//接收期望位置
-					Expect_Pos = GetStepSignalValue();
+//					Expect_Pos = GetStepSignalValue();
+					Expect_Pos = GetVisualOdometryRefPos();
 					//飞行位置控制
 					Position_Controller(Expect_Pos);
 					//期望角度选择
@@ -209,7 +201,7 @@ void FlightControl_task(void *p_arg){
 }
 
 /**
- * @Description 全项数据融合 500Hz
+ * @Description 全项数据融合 1000Hz
  */
 void OmniFusion_task(void *p_arg){
 	OS_ERR err;
@@ -226,7 +218,7 @@ void OmniFusion_task(void *p_arg){
 		VelocityEstimate();
 		//飞行位移估计
 		PositionEstimate();
-		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err);
+		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 

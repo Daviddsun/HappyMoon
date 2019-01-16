@@ -77,9 +77,9 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 				case 3:
 					FlightControl.ReportSW = Report_SET;
 					break;
-				/* 预留 */
+				/* IMU水平校准 */
 				case 4:
-					
+					OffsetData.level_success = true;	
 					break;
 				/* 写入Pitch PID参数 */	
 				case 5:
@@ -430,11 +430,9 @@ RemoteControl GetRemoteControlFlyData(void){
 *返 回 值: 无
 **********************************************************************************************************/
 Vector3f_t GetStepSignalValue(void){
-	Vector3f_t StepSignalBodyFrame;
 	//期望高度不低于0.5m
 	if(StepSignal.z < 0.5f){
 		StepSignal.z = 0.5f;
 	}
-	TransVelToBodyFrame(StepSignal, &StepSignalBodyFrame, GetVisualOdometryAngle().yaw);
-	return StepSignalBodyFrame;
+	return StepSignal;
 }

@@ -33,17 +33,19 @@ void Position_Controller(Vector3f_t ExpectPos){
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
 	// 外环进行二分频
 	if(count++ %2 == 0){ 
-		//速度限幅在1m/s
+		//速度限幅在0.5m/s
 		ExpectVel.x = OriginalPosX.kP * (ExpectPos.x - EstimatePosLpf.x);
-		ExpectVel.x = ConstrainFloat(ExpectVel.x,-0.75,0.75);
-		//速度限幅在1m/s
+		ExpectVel.x = ConstrainFloat(ExpectVel.x,-0.5,0.5);
+		//速度限幅在0.5m/s
 		ExpectVel.y = OriginalPosY.kP * (ExpectPos.y - EstimatePosLpf.y);
-		ExpectVel.y = ConstrainFloat(ExpectVel.y,-0.75,0.75);
+		ExpectVel.y = ConstrainFloat(ExpectVel.y,-0.5,0.5);
 		if(GetCopterFlyMode() == Nothing){
-			//速度限幅在0.75m/s
+			//速度限幅在0.5m/s
 			ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
 			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
 		}
+		//将控制量转换到机体坐标系
+    TransVelToBodyFrame(ExpectVel, &ExpectVel, GetVisualOdometryAngle().yaw);
 	}
 	// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
 	// 来自自身卡尔曼滤波

@@ -36,8 +36,7 @@ void GyroCalibration(Vector3f_t gyroRaw)
 	gyro_sum[1] += gyro_raw_temp.y;
 	gyro_sum[2] += gyro_raw_temp.z;
 	count++;
-	if(count == CALIBRATING_GYRO_CYCLES)
-	{
+	if(count == CALIBRATING_GYRO_CYCLES){
 		gyro_cali_temp.x = gyro_sum[0] / CALIBRATING_GYRO_CYCLES;
 		gyro_cali_temp.y = gyro_sum[1] / CALIBRATING_GYRO_CYCLES;
 		gyro_cali_temp.z = gyro_sum[2] / CALIBRATING_GYRO_CYCLES;

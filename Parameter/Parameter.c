@@ -44,6 +44,9 @@ void Load_SensorConfig(void){
 		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley;
 		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez;
 		
+		OffsetData.level_scale.x=flashData.Offset_Data.level_scale.x;
+		OffsetData.level_scale.y=flashData.Offset_Data.level_scale.y;
+		OffsetData.level_scale.z=flashData.Offset_Data.level_scale.z;
 	}else{
 		flashData.isGood=0xA55A5AA5;
 		//传感器校准参数
@@ -62,6 +65,10 @@ void Load_SensorConfig(void){
 		OffsetData.gyro_scalex=flashData.Offset_Data.gyro_scalex = 1;
 		OffsetData.gyro_scaley=flashData.Offset_Data.gyro_scaley = 1;
 		OffsetData.gyro_scalez=flashData.Offset_Data.gyro_scalez = 1;
+		
+		OffsetData.level_scale.x=flashData.Offset_Data.level_scale.x = 0;
+		OffsetData.level_scale.y=flashData.Offset_Data.level_scale.y = 0;
+		OffsetData.level_scale.z=flashData.Offset_Data.level_scale.z = 0;
 	
 		Write_Config();	
 	}

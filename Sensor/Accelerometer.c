@@ -206,23 +206,46 @@ void AccCalibration(Vector3f_t accRaw){
 *形    参: 无
 *返 回 值: 水平安装误差
 **********************************************************************************************************/
-Vector3f_t ImuLevelCalibration(uint32_t count){
-//	static float acc_sum[3] = {0, 0, 0};
-//	static uint64_t i = 0;
-	Vector3f_t LevelError;
-//	if(i<count){
-//		acc_sum[0] += GetCopterAngle().roll;
-//		acc_sum[1] += GetCopterAngle().pitch;
-//		acc_sum[2] += 0;
-//	}
-//	if(i == count){
-//		LevelError.x = acc_sum[0]/count;
-//		LevelError.y = acc_sum[1]/count;
-//		LevelError.z = acc_sum[2]/count;
-//	}
-//	i ++;
-//	
-	return LevelError;
+void ImuLevelCalibration(void){
+	const int16_t CALIBRATING_ACC_LEVEL_CYCLES = 3000;
+	static float acc_sum[3] = {0, 0, 0};
+	Vector3f_t accAverage;
+	Vector3f_t caliTemp;
+	static int16_t count = 0;
+	
+	if(!OffsetData.level_success)
+			return;
+	if(count == 0){
+		OffsetData.level_scale.x = 0;
+		OffsetData.level_scale.y = 0;
+		OffsetData.level_scale.z = 0;
+	}else{
+		acc_sum[0] += accValue.data.x;
+		acc_sum[1] += accValue.data.y;
+		acc_sum[2] += accValue.data.z;
+	}
+	count ++;
+	if(count == CALIBRATING_ACC_LEVEL_CYCLES){
+		accAverage.x = acc_sum[0] / (CALIBRATING_ACC_LEVEL_CYCLES-1);
+		accAverage.y = acc_sum[1] / (CALIBRATING_ACC_LEVEL_CYCLES-1);
+		accAverage.z = acc_sum[2] / (CALIBRATING_ACC_LEVEL_CYCLES-1);
+		acc_sum[0] = 0;
+		acc_sum[1] = 0;
+		acc_sum[2] = 0;
+		count = 0;
+		//加速度向量转化为姿态角
+    AccVectorToRollPitchAngle(&caliTemp, accAverage);
+		if(abs(caliTemp.x) < 0.1 && abs(caliTemp.y) < 0.1){
+			OffsetData.level_scale.x = -caliTemp.x;
+			OffsetData.level_scale.y = -caliTemp.y;
+			OffsetData.level_scale.z = 0;
+			Write_Config();
+			OffsetData.level_success = false;
+		}
+		else{
+			OffsetData.level_success = false;
+		}
+	}
 }
 
 /**********************************************************************************************************

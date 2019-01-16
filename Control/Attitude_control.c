@@ -48,7 +48,7 @@ Vector3angle_t Attitude_OuterController(Vector3angle_t ExpectAngle){
 	ErrorAngle.roll = ExpectAngle.roll - AngleLpf.roll;
 	ErrorAngle.pitch = ExpectAngle.pitch - AngleLpf.pitch;
 	ErrorAngle.yaw = ExpectAngle.yaw - AngleLpf.yaw;
-	//PID算法，计算出姿态外环的控制量 限幅 3.5rad/s
+	//PID算法，计算出姿态外环的控制量 限幅 2.0rad/s
 	ExpectAnguleRate.roll = PID_GetP(&OriginalRoll,  ErrorAngle.roll);
 	ExpectAnguleRate.roll = ConstrainFloat(ExpectAnguleRate.roll,-2.0,2.0); 
 	ExpectAnguleRate.pitch = PID_GetP(&OriginalPitch, ErrorAngle.pitch);

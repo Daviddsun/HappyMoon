@@ -234,3 +234,29 @@ void TransVelToEarthFrame(Vector3f_t velBf, Vector3f_t* velEf, float yaw)
     velEf->z = velBf.z;
 }
 
+/**********************************************************************************************************
+*函 数 名: AccVectorToEulerAngle
+*功能说明: 根据重力加速度向量在机体系上的投影计算俯仰和横滚角
+*形    参: 姿态角指针 加速度向量
+*返 回 值: 无
+**********************************************************************************************************/
+void AccVectorToRollPitchAngle(Vector3f_t* angle, Vector3f_t vector)
+{
+    //加速度向量归一化
+    Vector3f_Normalize(&vector);
+
+    angle->x = -safe_asin(vector.y);       //横滚角
+    angle->y = atan2f(vector.x, vector.z);  //俯仰角
+}
+
+/**********************************************************************************************************
+*函 数 名: MagVectorToEulerAngle
+*功能说明: 根据地磁场向量在机体系上的投影计算偏航角
+*形    参: 姿态角指针 地磁场向量
+*返 回 值: 无
+**********************************************************************************************************/
+void MagVectorToYawAngle(Vector3f_t* angle, Vector3f_t vector)
+{
+    angle->z = -atan2f(vector.y, vector.x);     //偏航角
+}
+

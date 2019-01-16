@@ -24,23 +24,23 @@ void NavigationInit(void)
 **********************************************************************************************************/
 static void KalmanVelInit(void)
 {
-	float qMatInit[6][6] = {{0.1, 0, 0, 0, 0, 0},
-													{0, 0.1, 0, 0, 0, 0},
-													{0, 0, 0.1, 0, 0, 0},      
+	float qMatInit[6][6] = {{0.05, 0, 0, 0, 0, 0},
+													{0, 0.05, 0, 0, 0, 0},
+													{0, 0, 0.05, 0, 0, 0},      
 													{0.003, 0, 0, 0, 0, 0},
 													{0, 0.003, 0, 0, 0, 0},
 													{0, 0, 0.003, 0, 0, 0}};
 
-	float rMatInit[6][6] = {{10, 0, 0, 0, 0, 0},            //VIO速度x轴数据噪声方差
-													{0, 10, 0, 0, 0, 0},            //VIO速度y轴数据噪声方差
-													{0, 0, 10, 0, 0, 0},          	//VIO速度z轴数据噪声方差     
+	float rMatInit[6][6] = {{0.7, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
+													{0, 0.7, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
+													{0, 0, 0.7, 0, 0, 0},          //VIO速度z轴数据噪声方差
 													{0, 0, 0, 2500, 0, 0},          //气压速度数据噪声方差
 													{0, 0, 0, 0, 2000, 0},          //TOF速度数据噪声方差
 													{0, 0, 0, 0, 0, 500000}};       //z轴速度高通滤波系数
 
-	float pMatInit[6][6] = {{8, 0, 0, 0, 0, 0},
-													{0, 8, 0, 0, 0, 0},
-													{0, 0, 8, 0, 0, 0},      
+	float pMatInit[6][6] = {{10, 0, 0, 0, 0, 0},
+													{0, 10, 0, 0, 0, 0},
+													{0, 0, 10, 0, 0, 0},      
 													{2, 0, 0, 2, 0, 0},
 													{0, 2, 0, 0, 2, 0},
 													{0, 0, 2, 0, 0, 2}};    //增大协方差P的初值，可以提高初始化时bias的收敛速度
@@ -75,17 +75,17 @@ static void KalmanVelInit(void)
 	KalmanVelBMatSet(&kalmanVel, bMatInit);
 													
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanVel.slidWindowSize = 100;
-	for(int i =0;i<100;i++){
+	kalmanVel.slidWindowSize = 200;
+	for(int i =0;i<200;i++){
 		kalmanVel.stateSlidWindow[i].x=0;
 		kalmanVel.stateSlidWindow[i].y=0;
 		kalmanVel.stateSlidWindow[i].z=0;
 	}
-	kalmanVel.fuseDelay[VIO_VEL_X] = 100;    //VIO速度x轴数据延迟参数：0.2s
-	kalmanVel.fuseDelay[VIO_VEL_Y] = 100;    //VIO速度y轴数据延迟参数：0.2s
-	kalmanVel.fuseDelay[VIO_VEL_Z] = 100;    //VIO速度z轴数据延迟参数：0.2s
-	kalmanVel.fuseDelay[BARO_VEL]  = 100;    //气压速度数据延迟参数：0.2s
-	kalmanVel.fuseDelay[TOF_VEL]   = 100;    //TOF速度数据延迟参数：0.2s
+	kalmanVel.fuseDelay[VIO_VEL_X] = 200;    //VIO速度x轴数据延迟参数：0.2s
+	kalmanVel.fuseDelay[VIO_VEL_Y] = 200;    //VIO速度y轴数据延迟参数：0.2s
+	kalmanVel.fuseDelay[VIO_VEL_Z] = 200;    //VIO速度z轴数据延迟参数：0.2s
+	kalmanVel.fuseDelay[BARO_VEL]  = 100;    //气压速度数据延迟参数：0.1s
+	kalmanVel.fuseDelay[TOF_VEL]   = 100;    //TOF速度数据延迟参数：0.1s
 	
 	kalmanVel.state[0] = 0;
   kalmanVel.state[1] = 0;
@@ -102,8 +102,8 @@ static void KalmanVelInit(void)
 **********************************************************************************************************/
 static void KalmanPosInit(void)
 {
-	float qMatInit[9] = {0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5};
-	float rMatInit[9] = {10, 0,  0, 0, 10, 0, 0, 0, 10};
+	float qMatInit[9] = {0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1};
+	float rMatInit[9] = {0.75, 0,  0, 0, 0.75, 0, 0, 0, 0.75};
 	float pMatInit[9] = {5, 0, 0, 0, 5, 0, 0, 0, 5};
 	float fMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 	float hMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
@@ -118,15 +118,15 @@ static void KalmanPosInit(void)
 	KalmanObserveMapMatSet(&kalmanPos, hMatInit);
 
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanPos.slidWindowSize = 100;
-	for(int i =0;i<100;i++){
+	kalmanPos.slidWindowSize = 200;
+	for(int i =0;i<200;i++){
 		kalmanPos.statusSlidWindow[i].x=0;
 		kalmanPos.statusSlidWindow[i].y=0;
 		kalmanPos.statusSlidWindow[i].z=0;
 }
-	kalmanPos.fuseDelay.x = 100;    //0.2s延时
-	kalmanPos.fuseDelay.y = 100;    //0.2s延时
-	kalmanPos.fuseDelay.z = 100;    //0.2s延时
+	kalmanPos.fuseDelay.x = 200;    //0.2s延时
+	kalmanPos.fuseDelay.y = 200;    //0.2s延时
+	kalmanPos.fuseDelay.z = 200;    //0.2s延时
 	
 	kalmanPos.state.x = 0;
 	kalmanPos.state.y = 0;
@@ -134,8 +134,8 @@ static void KalmanPosInit(void)
 }
 /**********************************************************************************************************
 *函 数 名: VelocityEstimate
-*功能说明: 飞行速度估计 融合加速度、GPS、气压计及TOF等多个传感器的数据
-*          速度的计算均在机体坐标系下进行，所以GPS速度在参与融合时需要先转换到机体坐标系
+*功能说明: 飞行速度估计 融合加速度、VIO、气压计及TOF等多个传感器的数据
+*          
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
@@ -153,10 +153,9 @@ void VelocityEstimate(void){
 	//获取运动加速度
 	nav.accel = EarthAccGetData();
 
-	//加速度数据更新频率500 Hz，VIO数据只有10Hz
+	//加速度数据更新频率1000 Hz，VIO数据只有10Hz
 	//这里强制统一为20Hz
-	if(count++ % 25 == 0)
-	{
+	if(count++ % 50 == 0){
 		//获取视觉里程计数据
 		VIOVel = GetVisualOdometryVelTrans();
 		
@@ -207,7 +206,7 @@ void PositionEstimate(void){
 
 	//速度数据更新频率500khz，vio数据只有10Hz
 	//这里强制统一为20Hz
-	if(count++ % 25 == 0)
+	if(count++ % 50 == 0)
 	{
 			//获取VIO位置
 			nav.posMeasure.x = GetVisualOdometryPos().y;
