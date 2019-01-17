@@ -141,5 +141,10 @@ void ResetPositionPara(void){
 	OriginalVelY.imax = 5;
 	//height 最大积分加速度 5m/s^2
 	OriginalVelZ.imax = 5;
+	//位置输出归零
+	PosControllerOut.ExpectAcc = 0;
+	PosControllerOut.ExpectAngle.pitch = 0;
+	PosControllerOut.ExpectAngle.roll = 0;
+	PosControllerOut.ExpectAngle.yaw = 0;
 }
 
