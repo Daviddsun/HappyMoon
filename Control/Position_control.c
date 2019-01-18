@@ -24,7 +24,6 @@ void Position_Controller(Vector3f_t ExpectPos){
 			SetCopterStatus(Drone_Off);
 		}
 	}
-	
 /******* 原始串级PID控制 ********/	
 	// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
 	// 来自自身卡尔曼滤波
@@ -59,7 +58,7 @@ void Position_Controller(Vector3f_t ExpectPos){
 	//PID计算
 	PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
 	//角度转化为rad弧度
-	PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
+	PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;
 	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
 	PosControllerOut.ExpectAngle.yaw = 0;	
 	

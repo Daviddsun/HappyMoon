@@ -185,8 +185,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
-//	temp = KalmanPos.x;
-	temp = RefPosition.x;
+	temp = KalmanPos.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 

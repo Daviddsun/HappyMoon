@@ -1,7 +1,7 @@
 #include "Usart1toOnboardPC.h"
 
 unsigned char Tx_Buf_Uart1[160];
-unsigned char Rx_Buf_Uart1[64];
+unsigned char Rx_Buf_Uart1[128];
 
 int Flag_Tx_Uart1_Busy=0;
 

@@ -21,14 +21,14 @@
     <Kd>0</Kd>
   </Height>
   <ratePitch>
-    <Kp>0.7</Kp>
+    <Kp>0.8</Kp>
     <Ki>0</Ki>
-    <Kd>0.02</Kd>
+    <Kd>0.01</Kd>
   </ratePitch>
   <rateRoll>
-    <Kp>0.7</Kp>
+    <Kp>0.8</Kp>
     <Ki>0</Ki>
-    <Kd>0.02</Kd>
+    <Kd>0.01</Kd>
   </rateRoll>
   <rateYaw>
     <Kp>1</Kp>
@@ -38,6 +38,6 @@
   <accHeight>
     <Kp>10</Kp>
     <Ki>5</Ki>
-    <Kd>3</Kd>
+    <Kd>2</Kd>
   </accHeight>
 </pidPara>

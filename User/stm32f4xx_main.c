@@ -30,7 +30,7 @@ void IMUSensorPreDeal_task(void *p_arg);
 
 //姿态融合 mahony滤波
 #define AttitudeFilter_TASK_PRIO 6						
-#define AttitudeFilter_STK_SIZE 1024						
+#define AttitudeFilter_STK_SIZE 512						
 OS_TCB AttitudeFilterTaskTCB;				
 CPU_STK AttitudeFilter_TASK_STK[AttitudeFilter_STK_SIZE];					
 void AttitudeFilter_task(void *p_arg);
@@ -51,28 +51,28 @@ void OmniFusion_task(void *p_arg);
 
 //视觉里程计数据处理
 #define VisualOdometry_TASK_PRIO 9						
-#define VisualOdometry_STK_SIZE 1024						
+#define VisualOdometry_STK_SIZE 512						
 OS_TCB VisualOdometryTaskTCB;				
 CPU_STK VisualOdometry_TASK_STK[VisualOdometry_STK_SIZE];					
 void VisualOdometry_task(void *p_arg);
 
 //地面站数据处理
 #define GroundStation_TASK_PRIO 10						
-#define GroundStation_STK_SIZE 512				
+#define GroundStation_STK_SIZE 256				
 OS_TCB GroundStationTaskTCB;				
 CPU_STK GroundStation_TASK_STK[GroundStation_STK_SIZE];					
 void GroundStation_task(void *p_arg);
 
 //其他传感器数据更新任务
 #define OtherSensorUpdate_TASK_PRIO 11						
-#define OtherSensorUpdate_STK_SIZE 512						
+#define OtherSensorUpdate_STK_SIZE 256						
 OS_TCB OtherSensorUpdateTaskTCB;				
 CPU_STK OtherSensorUpdate_TASK_STK[OtherSensorUpdate_STK_SIZE];					
 void OtherSensorUpdate_task(void *p_arg);
 
 //飞行状态任务
 #define FlightStatus_TASK_PRIO 12						
-#define FlightStatus_STK_SIZE 512						
+#define FlightStatus_STK_SIZE 256						
 OS_TCB FlightStatusTaskTCB;				
 CPU_STK FlightStatus_TASK_STK[FlightStatus_STK_SIZE];					
 void FlightStatus_task(void *p_arg);

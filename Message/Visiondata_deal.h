@@ -10,6 +10,11 @@ typedef struct {
 	uint64_t LastTime;
 }FPS_VisualOdometry;
 
+typedef struct {
+	float CurrentTime;
+	uint64_t LastTime;
+}FPS_ReferenceRoute;
+
 void Vision_DataDeal(Receive_VisualOdometry rx);
 Vector3f_t GetVisualOdometryPos(void);
 Vector3f_t GetVisualOdometryVel(void);
