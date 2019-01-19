@@ -17,10 +17,9 @@ typedef struct {
 	uint64_t LastTime;
 }FPS_PositionControl;
 
-void Position_Controller(Vector3f_t ExpectPos);
+void Position_Controller(void);
 float GetDesiredControlAcc(void);
 Vector3angle_t GetDesiredControlAngle(void);
-void ResetExpectPosition(Vector3f_t *ExpectPos);
 void ResetPositionPara(void);
 #endif
 

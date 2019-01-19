@@ -8,14 +8,18 @@ FPS_PositionControl FPSPositionControl;
 *形    参: 期望位置，期望速度，估计位置，估计数据
 *返 回 值: 无
 **********************************************************************************************************/
-void Position_Controller(Vector3f_t ExpectPos){
+void Position_Controller(void){
 	OS_ERR err;
-	Vector3f_t ErrorVel;	
-	static Vector3f_t EstimatePosLpf,EstimateVelLpf,ExpectVel;
-	static uint64_t count = 0;
+	Vector3f_t ExpectPos,ExpectVel,ErrorVel;	
+	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
   FPSPositionControl.LastTime = OSTimeGet(&err);
+	// 期望获取
+	ExpectPos = GetVisualOdometryRefPos();
+	ExpectVel = GetVisualOdometryRefVel();
+	TransVelToBodyFrame(ExpectPos, &ExpectPos, GetVisualOdometryAngle().yaw);
+	TransVelToBodyFrame(ExpectVel, &ExpectVel, GetVisualOdometryAngle().yaw);
 /******* 降落控制 ********/	
 	if(GetCopterFlyMode() == Land){
 		ExpectVel.z = -0.25f;
@@ -24,27 +28,17 @@ void Position_Controller(Vector3f_t ExpectPos){
 			SetCopterStatus(Drone_Off);
 		}
 	}
-/******* 原始串级PID控制 ********/	
+/******* 高度原始串级PID控制 ********/	
 	// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
 	// 来自自身卡尔曼滤波
 	EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
 	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
-	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
-	// 外环进行二分频
-	if(count++ %2 == 0){ 
+	EstimatePosLpf.z = EstimatePosLpf.z * 0.9f + GetCopterPosition().z * 0.1f;
+	// 计算速度期望
+	if(GetCopterFlyMode() == Nothing){
 		//速度限幅在0.5m/s
-		ExpectVel.x = OriginalPosX.kP * (ExpectPos.x - EstimatePosLpf.x);
-		ExpectVel.x = ConstrainFloat(ExpectVel.x,-0.5,0.5);
-		//速度限幅在0.5m/s
-		ExpectVel.y = OriginalPosY.kP * (ExpectPos.y - EstimatePosLpf.y);
-		ExpectVel.y = ConstrainFloat(ExpectVel.y,-0.5,0.5);
-		if(GetCopterFlyMode() == Nothing){
-			//速度限幅在0.5m/s
-			ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
-			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
-		}
-		//将控制量转换到机体坐标系
-    TransVelToBodyFrame(ExpectVel, &ExpectVel, GetVisualOdometryAngle().yaw);
+		ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
+		ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
 	}
 	// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
 	// 来自自身卡尔曼滤波
@@ -52,15 +46,26 @@ void Position_Controller(Vector3f_t ExpectPos){
 	EstimateVelLpf.y = EstimateVelLpf.y * 0.9f + GetCopterVelocity().y * 0.1f;
 	EstimateVelLpf.z = EstimateVelLpf.z * 0.9f + GetCopterVelocity().z * 0.1f;
 	//速度误差计算
-	ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
-	ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
 	ErrorVel.z = ExpectVel.z - EstimateVelLpf.z;
 	//PID计算
 	PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
-	//角度转化为rad弧度
-	PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;
-	PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
-	PosControllerOut.ExpectAngle.yaw = 0;	
+
+/******* 位置控制 ********/		
+	// x轴加速度
+	float x_pos_error = ExpectPos.x - EstimatePosLpf.x;
+	x_pos_error = ConstrainFloat(x_pos_error,-0.6,0.6);	
+	float x_vel_error = ExpectVel.x - EstimateVelLpf.x;
+	x_vel_error = ConstrainFloat(x_vel_error,-1.0,1.0);	
+//	PosControllerOut.ExpectAngle.pitch = (OriginalPosX.kP * x_pos_error + OriginalPosX.kD * x_vel_error) * PI/180;
+	// y轴加速度
+	float y_pos_error = ExpectPos.y - EstimatePosLpf.y;
+	y_pos_error = ConstrainFloat(y_pos_error,-0.6,0.6);
+	float y_vel_error = ExpectVel.y - EstimateVelLpf.y;
+	y_vel_error = ConstrainFloat(y_vel_error,-1.0,1.0);
+//	PosControllerOut.ExpectAngle.roll = - (OriginalPosY.kP * y_pos_error + OriginalPosY.kD * y_vel_error) * PI/180;	
+	
+	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 	
 /******* 苏黎世控制框架暂不使用，因为没有解决视觉里程计与自身飞控板之间的四元数对齐问题 ********/
 //	Vector3f_t acc_error,EstimatePos,EstimateVel,ExpectVel;
@@ -113,17 +118,6 @@ float GetDesiredControlAcc(void){
 **********************************************************************************************************/	
 Vector3angle_t GetDesiredControlAngle(void){
 	return PosControllerOut.ExpectAngle;
-}
-/**********************************************************************************************************
-*函 数 名: ResetExpectPosition
-*功能说明: 置位期望位移
-*形    参: 期望
-*返 回 值: 无
-**********************************************************************************************************/	
-void ResetExpectPosition(Vector3f_t *ExpectPos){
-	ExpectPos->x = 0;
-	ExpectPos->y = 0;
-	ExpectPos->z = 0.5; 
 }
 /**********************************************************************************************************
 *函 数 名: ResetPositionPara

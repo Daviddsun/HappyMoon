@@ -82,8 +82,20 @@ void PreTakeOff(uint16_t Time){
 /*
 													   HoppyWing 电机
 	%拟合二次函数
-
+	16.0V
+	x=[0.519665; 4.64994; 8.246005; 11.47185; 15.2958]; %推力数据 单位N
+	y=[0.05; 0.28; 0.52; 0.76; 1.00]; %油门数据 占空比
+	p=polyfit(x,y,2);  % 拟合出的二次函数的系数
+	ye=y-polyval(p,x);  % 计算误差
+	ye2s=sum(ye.^2); % 误差的平方和
+	disp(sprintf('误差的平方和=%d',ye2s));
+	xx=linspace(min(x),max(x));  % 绘图用到的点的横坐标
+	yy=polyval(p,xx);   % 拟合曲线的纵坐标
+	plot(x,y,'o',xx,yy);  % 绘图，原始数据+拟合曲线
 	
+	A = 0.00044084
+	B = 0.05836
+	C = 0.012826
 */
 
 
@@ -91,11 +103,17 @@ void PreTakeOff(uint16_t Time){
 void MotorThrust(float f1,float f2,float f3,float f4){
 	
 	float M1,M2,M3,M4;
-
+#ifdef T_Motor
 	M1 = -0.0022714f * f1 * f1 + 0.096917f * f1 + 0.11769f;
 	M2 = -0.0022714f * f2 * f2 + 0.096917f * f2 + 0.11769f;
 	M3 = -0.0022714f * f3 * f3 + 0.096917f * f3 + 0.11769f;
 	M4 = -0.0022714f * f4 * f4 + 0.096917f * f4 + 0.11769f;
+#else
+	M1 = 0.00044084f * f1 * f1 + 0.05836f * f1 + 0.012826f;
+	M2 = 0.00044084f * f2 * f2 + 0.05836f * f2 + 0.012826f;
+	M3 = 0.00044084f * f3 * f3 + 0.05836f * f3 + 0.012826f;
+	M4 = 0.00044084f * f4 * f4 + 0.05836f * f4 + 0.012826f;
+#endif
 	
 	ThrottleInfo.M1 = (int)(M1 * 1000.0f);
 	ThrottleInfo.M2 = (int)(M2 * 1000.0f);

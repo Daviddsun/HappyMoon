@@ -214,6 +214,19 @@ Vector3f_t GetVisualOdometryRefPos(void){
   return RefPosition;
 }
 /**********************************************************************************************************
+*函 数 名: GetVisualOdometryRefVel
+*功能说明: 获取航向规划里面的速度
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryRefVel(void){
+	Vector3f_t RefVelocity;
+	RefVelocity.x = reference_velx.fvalue;
+	RefVelocity.y = reference_vely.fvalue;
+	RefVelocity.z = reference_velz.fvalue;
+  return RefVelocity;
+}
+/**********************************************************************************************************
 *函 数 名: GetVisualOdometryStatus
 *功能说明: 获取视觉里程计的状态
 *形    参: 无

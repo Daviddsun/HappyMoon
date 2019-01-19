@@ -20,8 +20,9 @@
 //定义硬件飞控板
 void Board_Init(void);
 
-#define SpeedyBeeF4 //定义飞控型号 BirdFlight  SpeedyBeeF4
-#define T_Motor     //定义电机动力 T_Motor     Hoppywing
+#define SpeedyBeeF4            //定义飞控型号 BirdFlight  SpeedyBeeF4
+#define T_Motor                //定义电机动力 T_Motor     Hoppywing
+
 
 #endif
 

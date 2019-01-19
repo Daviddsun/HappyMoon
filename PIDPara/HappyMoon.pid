@@ -21,14 +21,14 @@
     <Kd>0</Kd>
   </Height>
   <ratePitch>
-    <Kp>0.8</Kp>
+    <Kp>0.9</Kp>
     <Ki>0</Ki>
-    <Kd>0.01</Kd>
+    <Kd>0.02</Kd>
   </ratePitch>
   <rateRoll>
-    <Kp>0.8</Kp>
+    <Kp>0.9</Kp>
     <Ki>0</Ki>
-    <Kd>0.01</Kd>
+    <Kd>0.02</Kd>
   </rateRoll>
   <rateYaw>
     <Kp>1</Kp>

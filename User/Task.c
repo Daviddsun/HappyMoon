@@ -74,7 +74,7 @@ void IMUSensorPreDeal_task(void *p_arg){
 		//陀螺仪校准
 		GyroCalibration(gyroRawData);
 		//IMU安装误差校准
-    ImuLevelCalibration();
+		ImuLevelCalibration();
 		//加速计数据处理
 		AccDataPreTreat(accRawData, accCalibData,OffsetData.level_scale);
 		//陀螺仪数据处理
@@ -123,7 +123,7 @@ void FlightControl_task(void *p_arg){
 	CPU_SR_ALLOC();
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust,Expect_Pos;
+	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust;
 	Vector3angle_t Expect_Angle;
 	Vector4PosController DesiredControlCommands;
 	static uint64_t count = 0;
@@ -141,8 +141,6 @@ void FlightControl_task(void *p_arg){
 		}
 		//起飞检测
 		if(GetCopterStatus() == Drone_Off){
-			//置位期望位置
-			ResetExpectPosition(&Expect_Pos);
 			//置位位置参数
 			ResetPositionPara();
 			//电机停止
@@ -161,11 +159,8 @@ void FlightControl_task(void *p_arg){
 				}
 				//200hz
 				if(count % 5 == 0){
-					//接收期望位置
-//					Expect_Pos = GetStepSignalValue();
-					Expect_Pos = GetVisualOdometryRefPos();
 					//飞行位置控制
-					Position_Controller(Expect_Pos);
+					Position_Controller();
 					//期望角度选择
 					if(GetCopterTest() == Drone_Mode_Pitch || 
 											GetCopterTest() == Drone_Mode_Roll){
@@ -180,8 +175,8 @@ void FlightControl_task(void *p_arg){
 					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;
 					Expect_Gyro.z = (Attitude_OuterController(Expect_Angle)).yaw;
 				}
-				//250hz
-				if(count % 4 == 0){
+				//500hz
+				if(count % 2 == 0){
 					//期望角速率选择
 					if(GetCopterTest() == Drone_Mode_RatePitch || 
 											GetCopterTest() == Drone_Mode_RateRoll){

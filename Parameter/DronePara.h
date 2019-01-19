@@ -6,12 +6,20 @@
 #include <stdbool.h>
 #define TX_LEN  160
 #define RX_LEN  128
-#define ARM_Length 0.190f
-#define Drone_Mass 1.650f
 #define Gravity_Acceleration  9.805f
 #define Inertia_Wx    0.001f
 #define Inertia_Wy    0.001f
 #define Inertia_Wz    0.002f
+
+//定义机型
+#define Model380
+#ifdef Model380
+	#define ARM_Length 0.190f
+	#define Drone_Mass 1.650f
+#else
+	#define ARM_Length 0.105f
+	#define Drone_Mass 0.750f
+#endif
 
 typedef enum{ 
 	Drone_Mode_None = 0,
@@ -139,8 +147,6 @@ typedef union{
 	float fvalue;
 	unsigned char cv[4];
 }float_union;
-
-
 
 #endif
 
