@@ -31,8 +31,8 @@ static void KalmanVelInit(void)
 													{0, 0.003, 0, 0, 0, 0},
 													{0, 0, 0.003, 0, 0, 0}};
 
-	float rMatInit[6][6] = {{0.7, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
-													{0, 0.7, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
+	float rMatInit[6][6] = {{1.0, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
+													{0, 1.0, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
 													{0, 0, 8.0, 0, 0, 0},          //VIO速度z轴数据噪声方差
 													{0, 0, 0, 2500, 0, 0},          //气压速度数据噪声方差
 													{0, 0, 0, 0, 2000, 0},          //TOF速度数据噪声方差
@@ -103,7 +103,7 @@ static void KalmanVelInit(void)
 static void KalmanPosInit(void)
 {
 	float qMatInit[9] = {0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1};
-	float rMatInit[9] = {0.6, 0,  0, 0, 0.6, 0, 0, 0, 8.0};
+	float rMatInit[9] = {2.0, 0,  0, 0, 2.0, 0, 0, 0, 8.0};
 	float pMatInit[9] = {8, 0, 0, 0, 8, 0, 0, 0, 8};
 	float fMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 	float hMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};

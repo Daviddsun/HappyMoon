@@ -24,7 +24,7 @@ void IMUSensorRead_task(void *p_arg){
 		//更新消息队列
 		OSQPost(&messageQueue[ACC_SENSOR_READ],accRawData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_SENSOR_READ],gyroRawData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
-		//睡眠一个时钟节拍，1ms
+		//睡眠一个时钟节拍1ms
 		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }

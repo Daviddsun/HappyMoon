@@ -146,17 +146,6 @@ Vector3f_t GetVisualOdometryPos(void){
   return Position;
 }
 /**********************************************************************************************************
-*函 数 名: GetVisualOdometryPosTrans
-*功能说明: 获取视觉里程计的Pos 
-*形    参: 无
-*返 回 值: Position
-**********************************************************************************************************/
-Vector3f_t GetVisualOdometryPosTrans(void){
-	Vector3f_t TransPosition;
-
-  return TransPosition;
-}
-/**********************************************************************************************************
 *函 数 名: GetVisualOdometryVel
 *功能说明: 获取视觉里程计的Vel
 *形    参: 无
@@ -225,6 +214,18 @@ Vector3f_t GetVisualOdometryRefVel(void){
 	RefVelocity.y = reference_vely.fvalue;
 	RefVelocity.z = reference_velz.fvalue;
   return RefVelocity;
+}
+
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryRefVelTrans
+*功能说明: 获取航向规划里面的速度转化到机体坐标系
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryRefVelTrans(void){
+	Vector3f_t RefVelocityTrans;
+	TransVelToBodyFrame(GetVisualOdometryRefVel(),&RefVelocityTrans,GetVisualOdometryAngle().yaw);
+  return RefVelocityTrans;
 }
 /**********************************************************************************************************
 *函 数 名: GetVisualOdometryStatus

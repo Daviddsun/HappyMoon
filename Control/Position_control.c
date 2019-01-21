@@ -10,16 +10,14 @@ FPS_PositionControl FPSPositionControl;
 **********************************************************************************************************/
 void Position_Controller(void){
 	OS_ERR err;
-	Vector3f_t ExpectPos,ExpectVel,ErrorVel;	
+	Vector3f_t ExpectPos,ExpectVel,ErrorVel,PosPID,VelPID,PosPIDTrans;	
 	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
   FPSPositionControl.LastTime = OSTimeGet(&err);
 	// 期望获取
 	ExpectPos = GetVisualOdometryRefPos();
-	ExpectVel = GetVisualOdometryRefVel();
-	TransVelToBodyFrame(ExpectPos, &ExpectPos, GetVisualOdometryAngle().yaw);
-	TransVelToBodyFrame(ExpectVel, &ExpectVel, GetVisualOdometryAngle().yaw);
+	ExpectVel = GetVisualOdometryRefVelTrans();
 /******* 降落控制 ********/	
 	if(GetCopterFlyMode() == Land){
 		ExpectVel.z = -0.25f;
@@ -31,8 +29,8 @@ void Position_Controller(void){
 /******* 高度原始串级PID控制 ********/	
 	// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
 	// 来自自身卡尔曼滤波
-	EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
-	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
+	EstimatePosLpf.x = EstimatePosLpf.x * 0.9f + GetCopterPosition().x * 0.1f;
+	EstimatePosLpf.y = EstimatePosLpf.y * 0.9f + GetCopterPosition().y * 0.1f;
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.9f + GetCopterPosition().z * 0.1f;
 	// 计算速度期望
 	if(GetCopterFlyMode() == Nothing){
@@ -54,18 +52,36 @@ void Position_Controller(void){
 	// x轴加速度
 	float x_pos_error = ExpectPos.x - EstimatePosLpf.x;
 	x_pos_error = ConstrainFloat(x_pos_error,-0.6,0.6);	
+	PosPID.x = PID_GetPID(&OriginalPosX, x_pos_error, FPSPositionControl.CurrentTime); 																						//位移PID
 	float x_vel_error = ExpectVel.x - EstimateVelLpf.x;
 	x_vel_error = ConstrainFloat(x_vel_error,-1.0,1.0);	
-//	PosControllerOut.ExpectAngle.pitch = (OriginalPosX.kP * x_pos_error + OriginalPosX.kD * x_vel_error) * PI/180;
+	VelPID.x = PID_GetPID(&OriginalVelX, x_vel_error, FPSPositionControl.CurrentTime);                                            //速度PID
+	
+
 	// y轴加速度
 	float y_pos_error = ExpectPos.y - EstimatePosLpf.y;
 	y_pos_error = ConstrainFloat(y_pos_error,-0.6,0.6);
+	PosPID.y = PID_GetPID(&OriginalPosY, y_pos_error, FPSPositionControl.CurrentTime);																						//位移PID
 	float y_vel_error = ExpectVel.y - EstimateVelLpf.y;
 	y_vel_error = ConstrainFloat(y_vel_error,-1.0,1.0);
-//	PosControllerOut.ExpectAngle.roll = - (OriginalPosY.kP * y_pos_error + OriginalPosY.kD * y_vel_error) * PI/180;	
+	VelPID.y = PID_GetPID(&OriginalVelY, y_vel_error, FPSPositionControl.CurrentTime);																						//速度PID
 	
-	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
-	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+	//将位置的控制量转成机体坐标系
+  TransVelToBodyFrame(PosPID, &PosPIDTrans, GetVisualOdometryAngle().yaw);
+	
+	PosControllerOut.ExpectAngle.pitch = (PosPIDTrans.x + VelPID.x) * PI/180;
+	
+	PosControllerOut.ExpectAngle.roll = (PosPIDTrans.y + VelPID.y) * PI/180;
+	
+	PosControllerOut.ExpectAngle.yaw = 0;
+	
+//	PosControllerOut.ExpectAngle.pitch = (PID_GetPID(&OriginalPosX, x_pos_error, FPSPositionControl.CurrentTime) 									//位移PID
+//																					+ PID_GetPID(&OriginalVelX, x_vel_error, FPSPositionControl.CurrentTime)) * PI/180;   //速度PID
+//	PosControllerOut.ExpectAngle.roll = - (PID_GetPID(&OriginalPosY, y_pos_error, FPSPositionControl.CurrentTime)                  //位移PID
+//																						+ PID_GetPID(&OriginalVelY, y_vel_error, FPSPositionControl.CurrentTime)) * PI/180;	 //速度PID
+																						
+//	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+//	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
 	
 /******* 苏黎世控制框架暂不使用，因为没有解决视觉里程计与自身飞控板之间的四元数对齐问题 ********/
 //	Vector3f_t acc_error,EstimatePos,EstimateVel,ExpectVel;
@@ -126,10 +142,18 @@ Vector3angle_t GetDesiredControlAngle(void){
 *返 回 值: 无
 **********************************************************************************************************/	
 void ResetPositionPara(void){
+	//位移积分归零
+	OriginalPosX.integrator = 0;
+	OriginalPosY.integrator = 0;
+	OriginalPosZ.integrator = 0;
+	//位置积分最大
+	OriginalPosX.imax = 5;
+	OriginalPosY.imax = 5;
+	//速度积分归零
 	OriginalVelX.integrator = 0;
 	OriginalVelY.integrator = 0;
 	OriginalVelZ.integrator = 0;
-	//roll pitch 最大积分角度 5°
+	//速度积分最大 5
 	OriginalVelX.imax = 5;
 	OriginalVelY.imax = 5;
 	//height 最大积分加速度 5m/s^2

@@ -23,6 +23,7 @@ Vector3f_t GetVisualOdometryVelTrans(void);
 Vector3angle_t GetVisualOdometryAngle(void);
 Vector3f_t GetVisualOdometryRefPos(void);
 Vector3f_t GetVisualOdometryRefVel(void);
+Vector3f_t GetVisualOdometryRefVelTrans(void);
 float GetFPSVisualOdometry(void);
 #endif
 
