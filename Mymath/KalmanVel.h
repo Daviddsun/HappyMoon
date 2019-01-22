@@ -12,7 +12,7 @@ typedef struct {
     //滑动窗口大小
     int16_t slidWindowSize;
     //状态滑动窗口
-    Vector3f_t stateSlidWindow[200];
+    Vector3f_t stateSlidWindow[100];
     //观测信号相位补偿值
     int16_t fuseDelay[6];
     //残差矩阵

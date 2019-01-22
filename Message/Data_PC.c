@@ -130,6 +130,7 @@ void SendRTInfo(void)
 	//各个数据获取
 	Vector3angle_t AHRSAngle = GetCopterAngle();
 	Vector3angle_t VIOAngle = GetVisualOdometryAngle();
+	Vector3f_t VIOVel = GetVisualOdometryVelTrans();
 	Vector3f_t RefVel = GetVisualOdometryRefVelTrans();
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
@@ -159,7 +160,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = RefVel.y * 100.0f;
+	temp = -VIOVel.x * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	

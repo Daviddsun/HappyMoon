@@ -22,7 +22,7 @@ float PID_GetP(PID_t* pid, float error)
 **********************************************************************************************************/
 float PID_GetI(PID_t* pid, float error, float dt)
 {
-	if((pid->kI != 0) && (dt != 0))
+	if((pid->kI != 0) && (dt != 0)) 
 	{
 		pid->integrator += ((float)error * pid->kI) * dt;
 		pid->integrator = ConstrainFloat(pid->integrator, -pid->imax, +pid->imax);

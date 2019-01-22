@@ -33,7 +33,7 @@ static void KalmanVelInit(void)
 
 	float rMatInit[6][6] = {{1.0, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
 													{0, 1.0, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
-													{0, 0, 8.0, 0, 0, 0},          //VIO速度z轴数据噪声方差
+													{0, 0, 5.0, 0, 0, 0},          //VIO速度z轴数据噪声方差
 													{0, 0, 0, 2500, 0, 0},          //气压速度数据噪声方差
 													{0, 0, 0, 0, 2000, 0},          //TOF速度数据噪声方差
 													{0, 0, 0, 0, 0, 500000}};       //z轴速度高通滤波系数
@@ -75,17 +75,17 @@ static void KalmanVelInit(void)
 	KalmanVelBMatSet(&kalmanVel, bMatInit);
 													
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanVel.slidWindowSize = 200;
-	for(int i =0;i<200;i++){
+	kalmanVel.slidWindowSize = 100;
+	for(int i =0;i<100;i++){
 		kalmanVel.stateSlidWindow[i].x=0;
 		kalmanVel.stateSlidWindow[i].y=0;
 		kalmanVel.stateSlidWindow[i].z=0;
 	}
-	kalmanVel.fuseDelay[VIO_VEL_X] = 200;    //VIO速度x轴数据延迟参数：0.2s
-	kalmanVel.fuseDelay[VIO_VEL_Y] = 200;    //VIO速度y轴数据延迟参数：0.2s
-	kalmanVel.fuseDelay[VIO_VEL_Z] = 200;    //VIO速度z轴数据延迟参数：0.2s
-	kalmanVel.fuseDelay[BARO_VEL]  = 100;    //气压速度数据延迟参数：0.1s
-	kalmanVel.fuseDelay[TOF_VEL]   = 100;    //TOF速度数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_X] = 100;    //VIO速度x轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_Y] = 100;    //VIO速度y轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_Z] = 100;    //VIO速度z轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[BARO_VEL]  = 50;    //气压速度数据延迟参数：0.05s
+	kalmanVel.fuseDelay[TOF_VEL]   = 30;    //TOF速度数据延迟参数：0.03s
 	
 	kalmanVel.state[0] = 0;
   kalmanVel.state[1] = 0;
@@ -103,7 +103,7 @@ static void KalmanVelInit(void)
 static void KalmanPosInit(void)
 {
 	float qMatInit[9] = {0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1};
-	float rMatInit[9] = {2.0, 0,  0, 0, 2.0, 0, 0, 0, 8.0};
+	float rMatInit[9] = {1.0, 0,  0, 0, 1.0, 0, 0, 0, 5.0};
 	float pMatInit[9] = {8, 0, 0, 0, 8, 0, 0, 0, 8};
 	float fMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 	float hMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
@@ -118,15 +118,15 @@ static void KalmanPosInit(void)
 	KalmanObserveMapMatSet(&kalmanPos, hMatInit);
 
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanPos.slidWindowSize = 200;
-	for(int i =0;i<200;i++){
+	kalmanPos.slidWindowSize = 100;
+	for(int i =0;i<100;i++){
 		kalmanPos.statusSlidWindow[i].x=0;
 		kalmanPos.statusSlidWindow[i].y=0;
 		kalmanPos.statusSlidWindow[i].z=0;
 }
-	kalmanPos.fuseDelay.x = 200;    //0.2s延时
-	kalmanPos.fuseDelay.y = 200;    //0.2s延时
-	kalmanPos.fuseDelay.z = 200;    //0.2s延时
+	kalmanPos.fuseDelay.x = 100;    //0.1s延时
+	kalmanPos.fuseDelay.y = 100;    //0.1s延时
+	kalmanPos.fuseDelay.z = 100;    //0.1s延时
 	
 	kalmanPos.state.x = 0;
 	kalmanPos.state.y = 0;
