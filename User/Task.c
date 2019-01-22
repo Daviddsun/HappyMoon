@@ -194,7 +194,7 @@ void FlightControl_task(void *p_arg){
 }
 
 /**
- * @Description 全项数据融合 1000Hz
+ * @Description 全项数据融合 500Hz
  */
 void OmniFusion_task(void *p_arg){
 	OS_ERR err;
@@ -211,7 +211,7 @@ void OmniFusion_task(void *p_arg){
 		VelocityEstimate();
 		//飞行位移估计
 		PositionEstimate();
-		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err);
+		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 
