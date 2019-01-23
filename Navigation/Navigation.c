@@ -24,15 +24,15 @@ void NavigationInit(void)
 **********************************************************************************************************/
 static void KalmanVelInit(void)
 {
-	float qMatInit[6][6] = {{0.05, 0, 0, 0, 0, 0},
-													{0, 0.05, 0, 0, 0, 0},
-													{0, 0, 0.05, 0, 0, 0},      
+	float qMatInit[6][6] = {{0.1, 0, 0, 0, 0, 0},
+													{0, 0.1, 0, 0, 0, 0},
+													{0, 0, 0.03, 0, 0, 0},      
 													{0.003, 0, 0, 0, 0, 0},
 													{0, 0.003, 0, 0, 0, 0},
 													{0, 0, 0.003, 0, 0, 0}};
 
-	float rMatInit[6][6] = {{1.0, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
-													{0, 1.0, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
+	float rMatInit[6][6] = {{0.1, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
+													{0, 0.1, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
 													{0, 0, 5.0, 0, 0, 0},          //VIO速度z轴数据噪声方差
 													{0, 0, 0, 2500, 0, 0},          //气压速度数据噪声方差
 													{0, 0, 0, 0, 2000, 0},          //TOF速度数据噪声方差
@@ -75,17 +75,17 @@ static void KalmanVelInit(void)
 	KalmanVelBMatSet(&kalmanVel, bMatInit);
 													
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanVel.slidWindowSize = 100;
-	for(int i =0;i<100;i++){
+	kalmanVel.slidWindowSize = 50;
+	for(int i =0;i<50;i++){
 		kalmanVel.stateSlidWindow[i].x=0;
 		kalmanVel.stateSlidWindow[i].y=0;
 		kalmanVel.stateSlidWindow[i].z=0;
 	}
-	kalmanVel.fuseDelay[VIO_VEL_X] = 100;    //VIO速度x轴数据延迟参数：0.1s
-	kalmanVel.fuseDelay[VIO_VEL_Y] = 100;    //VIO速度y轴数据延迟参数：0.1s
-	kalmanVel.fuseDelay[VIO_VEL_Z] = 100;    //VIO速度z轴数据延迟参数：0.1s
-	kalmanVel.fuseDelay[BARO_VEL]  = 50;    //气压速度数据延迟参数：0.05s
-	kalmanVel.fuseDelay[TOF_VEL]   = 30;    //TOF速度数据延迟参数：0.03s
+	kalmanVel.fuseDelay[VIO_VEL_X] = 50;    //VIO速度x轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_Y] = 50;    //VIO速度y轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_Z] = 50;    //VIO速度z轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[BARO_VEL]  = 30;    //气压速度数据延迟参数：0.06s
+	kalmanVel.fuseDelay[TOF_VEL]   = 20;    //TOF速度数据延迟参数：0.04s
 	
 	kalmanVel.state[0] = 0;
   kalmanVel.state[1] = 0;
@@ -118,15 +118,15 @@ static void KalmanPosInit(void)
 	KalmanObserveMapMatSet(&kalmanPos, hMatInit);
 
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanPos.slidWindowSize = 100;
-	for(int i =0;i<100;i++){
+	kalmanPos.slidWindowSize = 50;
+	for(int i =0;i<50;i++){
 		kalmanPos.statusSlidWindow[i].x=0;
 		kalmanPos.statusSlidWindow[i].y=0;
 		kalmanPos.statusSlidWindow[i].z=0;
 }
-	kalmanPos.fuseDelay.x = 100;    //0.1s延时
-	kalmanPos.fuseDelay.y = 100;    //0.1s延时
-	kalmanPos.fuseDelay.z = 100;    //0.1s延时
+	kalmanPos.fuseDelay.x = 50;    //0.1s延时
+	kalmanPos.fuseDelay.y = 50;    //0.1s延时
+	kalmanPos.fuseDelay.z = 50;    //0.1s延时
 	
 	kalmanPos.state.x = 0;
 	kalmanPos.state.y = 0;
@@ -153,8 +153,7 @@ void VelocityEstimate(void){
 	//获取运动加速度
 	nav.accel = EarthAccGetData();
 
-	//加速度数据更新频率1000 Hz，VIO数据只有10Hz
-	//这里强制统一为20Hz
+	//加速度数据更新频率500 Hz，VIO数据只有10Hz
 	if(count++ % 50 == 0){
 		//获取视觉里程计数据
 		VIOVel = GetVisualOdometryVelTrans();
@@ -167,8 +166,8 @@ void VelocityEstimate(void){
 		nav.velMeasure[5] = 0;       
 	
 		//禁用气压传感器：未安装
-		KalmanVelUseMeasurement(&kalmanVel, TOF_VEL, false);
-		//禁用TOF速度观测量：尚未装备TOF传感器
+		KalmanVelUseMeasurement(&kalmanVel, BARO_VEL, false);
+		//禁用TOF传感器：未安装
 		KalmanVelUseMeasurement(&kalmanVel, TOF_VEL, false);
 		
 		fuseFlag = true;

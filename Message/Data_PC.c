@@ -135,24 +135,28 @@ void SendRTInfo(void)
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
 	float BatteryVoltage = GetBatteryVoltage();
+	float Thrust = GetDesiredControlAcc();
 	
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0X01;
 		
-	temp = AHRSAngle.pitch * 180/PI;
+//	temp = AHRSAngle.pitch * 180/PI;
+	temp = KalmanVel.x * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-	temp = AHRSAngle.roll * 180/PI;
+//	temp = AHRSAngle.roll * 180/PI;
+	temp = KalmanVel.z * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = VIOAngle.yaw * 180/PI;
+//	temp = VIOAngle.yaw * 180/PI;
+	temp = VIOVel.y * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
-	temp = KalmanVel.y;
+	temp = KalmanPos.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
@@ -160,7 +164,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = -VIOVel.x * 100.0f;
+	temp = VIOVel.z * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	

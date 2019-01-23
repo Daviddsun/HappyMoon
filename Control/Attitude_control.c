@@ -24,6 +24,7 @@ Vector3f_t Attitude_InnerController(Vector3f_t ExpectGyro, Vector3f_t EstimateGy
 												+ (-(EstimateGyro.x * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.z));//考虑轴间耦合现象
 	Thrust.z = PID_GetPID(&OriginalWzRate, ErrorGyro.z, FPSAttitudeControl.CurrentTime)
 												+ EstimateGyro.x * (Inertia_Wy * EstimateGyro.y) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.y;//考虑轴间耦合现象
+	
 	return Thrust;
 }
 
@@ -41,8 +42,8 @@ Vector3angle_t Attitude_OuterController(Vector3angle_t ExpectAngle){
 	//获取视觉里程计姿态
 	VIOAngle = GetVisualOdometryAngle();
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
-	AngleLpf.roll = AngleLpf.roll * 0.92f + Angle.roll * 0.08f;
-	AngleLpf.pitch = AngleLpf.pitch * 0.92f + Angle.pitch * 0.08f;
+	AngleLpf.roll = AngleLpf.roll * 0.95f + Angle.roll * 0.05f;
+	AngleLpf.pitch = AngleLpf.pitch * 0.95f + Angle.pitch * 0.05f;
 	AngleLpf.yaw = VIOAngle.yaw;
 	//计算姿态外环控制误差：目标角度 - 实际角度
 	ErrorAngle.roll = ExpectAngle.roll - AngleLpf.roll;

@@ -12,7 +12,6 @@ void Position_Controller(void){
 	OS_ERR err;
 	Vector3f_t ExpectPos,ExpectVel,ErrorVel,PosPID,VelPID,PosPIDTrans;	
 	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
-	static uint64_t count = 0;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
   FPSPositionControl.LastTime = OSTimeGet(&err);
@@ -33,15 +32,12 @@ void Position_Controller(void){
 	EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
 	EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
 	EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
-	if(count++ %2 == 0){
-		// 计算速度期望
-		if(GetCopterFlyMode() == Nothing){
-			//速度限幅在0.5m/s
-			ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
-			ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
-		}
+	// 计算速度期望
+	if(GetCopterFlyMode() == Nothing){
+		//速度限幅在0.5m/s
+		ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
+		ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
 	}
-
 	// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
 	// 来自自身卡尔曼滤波
 	EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
@@ -70,18 +66,18 @@ void Position_Controller(void){
 	//将位置的控制量转成机体坐标系
   TransVelToBodyFrame(PosPID, &PosPIDTrans, GetVisualOdometryAngle().yaw);
 	
-	PosControllerOut.ExpectAngle.pitch = (PosPIDTrans.x + VelPID.x) * PI/180;
-	
-	PosControllerOut.ExpectAngle.roll = -(PosPIDTrans.y + VelPID.y) * PI/180;
-	
-	PosControllerOut.ExpectAngle.yaw = 0;
-	
-//	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+//	PosControllerOut.ExpectAngle.pitch = (PosPIDTrans.x + VelPID.x) * PI/180;
 //	
-//	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+//	PosControllerOut.ExpectAngle.roll = -(PosPIDTrans.y + VelPID.y) * PI/180;
 //	
-//	PosControllerOut.ExpectAngle.yaw = 0;	
-//	
+//	PosControllerOut.ExpectAngle.yaw = 0;
+	
+	PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+	
+	PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+	
+	PosControllerOut.ExpectAngle.yaw = 0;	
+	
 
 	
 //	PosControllerOut.ExpectAngle.pitch = (PID_GetPID(&OriginalPosX, x_pos_error, FPSPositionControl.CurrentTime) 									//位移PID

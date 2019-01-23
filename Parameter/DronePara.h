@@ -40,9 +40,9 @@ typedef enum{
 	Land  	= 0x01,
 }DroneFlightStatus_TypeDef;
 
-typedef enum{  
+typedef enum{
+  Report_RESET    = 0x00,   
 	Report_SET      = 0x01,
-  Report_RESET    = 0x00, 		 	
 }DroneReportSW_TypeDef;
 
 typedef struct{

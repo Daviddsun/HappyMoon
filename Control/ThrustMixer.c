@@ -7,7 +7,10 @@ ThrustUav UavThrust;
 *形    参: 四旋翼臂长arm_length . 转轴扭矩RotateThrust
 *返 回 值: 无
 ************************************************************************************************/
-void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThrust){
+void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
+	
+	static float HeightThrustLpf;
+	HeightThrustLpf = HeightThrustLpf * 0.995f + GetDesiredControlAcc() * 0.005f;
 	
 	if(GetCopterTest()==Drone_Mode_Pitch || GetCopterTest()==Drone_Mode_RatePitch){
 		UavThrust.f1 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_Acceleration * Drone_Mass / 4.0f;	
@@ -23,22 +26,22 @@ void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThr
 		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
 										+1.414f / (arm_length * 4.0f) * RotateThrust.y                                  	//pitch
 											+ 14.2f * RotateThrust.z                                                        //yaw	
-												+ DesiredAcceleration * Drone_Mass / 4.0f;			  											  		//mass		 																									
+												+ HeightThrustLpf * Drone_Mass / 4.0f;			  											  		//mass		 																									
 		
 		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.x
 										-1.414f / (arm_length * 4.0f) * RotateThrust.y
 											- 14.2f * RotateThrust.z
-												+ DesiredAcceleration * Drone_Mass / 4.0f;									
+												+ HeightThrustLpf * Drone_Mass / 4.0f;									
 
 		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.x
 										+1.414f / (arm_length * 4.0f) * RotateThrust.y
 											- 14.2f * RotateThrust.z
-												+ DesiredAcceleration * Drone_Mass / 4.0f;
+												+ HeightThrustLpf * Drone_Mass / 4.0f;
 
 		UavThrust.f4 = +1.414f / (arm_length * 4.0f) * RotateThrust.x 
 										-1.414f / (arm_length * 4.0f) * RotateThrust.y
 											+ 14.2f * RotateThrust.z
-											  + DesiredAcceleration * Drone_Mass / 4.0f;
+											  + HeightThrustLpf * Drone_Mass / 4.0f;
 		
 	}
 	MotorThrust(UavThrust.f1,UavThrust.f2,UavThrust.f3,UavThrust.f4);
@@ -52,7 +55,6 @@ void ThrustMixer(float arm_length,float DesiredAcceleration,Vector3f_t RotateThr
 void PreTakeOff(uint16_t Time){
 	float ThurstValue = sqrt(Time/35) * Drone_Mass / 4.0f;
 	MotorThrust(ThurstValue,ThurstValue,ThurstValue,ThurstValue);
-	
 }
 /***********************************************************************************************
 *函 数 名: MotorThrust

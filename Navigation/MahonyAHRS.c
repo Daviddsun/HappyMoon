@@ -4,7 +4,7 @@
 // Definitions
 #define sampleFreq	1000.0f			// sample frequency in Hz
 #define twoKpDef	(2.0f * 1.2f)		// 2 * proportional gain
-#define twoKiDef	(2.0f * 0.02f)	// 2 * integral gain
+#define twoKiDef	(2.0f * 0.0f)		// 2 * integral gain
 
 //---------------------------------------------------------------------------------------------------
 // Variable definitions
@@ -209,7 +209,7 @@ float invSqrt(float x) {
 	return y;
 }
 
-/**********************************************************************************************************
+/*********************************************************************************************************
 *函 数 名: GetCopterAngle
 *功能说明: 获取表示飞行器姿态的欧拉角
 *形    参: 无

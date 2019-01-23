@@ -253,7 +253,7 @@ void start_task(void *p_arg){
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
 		);	
-	OSTaskCreate(																				// 地面站数据处理任务
+	OSTaskCreate(																				// 其他传感器数据读取
 		(OS_TCB*)&OtherSensorUpdateTaskTCB,
 		(CPU_CHAR*)"OtherSensorUpdate task",
 		(OS_TASK_PTR )OtherSensorUpdate_task,

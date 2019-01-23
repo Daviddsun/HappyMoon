@@ -80,7 +80,7 @@ void IMUSensorPreDeal_task(void *p_arg){
 		//陀螺仪数据处理
 		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData,OffsetData.level_scale);
 		
-		//更新消息队列
+		//更新下一级消息队列
 		OSQPost(&messageQueue[ACC_DATA_PRETREAT],accCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],gyroCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_FOR_CONTROL],gyroLpfData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);	
@@ -125,7 +125,6 @@ void FlightControl_task(void *p_arg){
 	CPU_TS       ts;
 	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust;
 	Vector3angle_t Expect_Angle;
-	Vector4PosController DesiredControlCommands;
 	static uint64_t count = 0;
 	//进入临界区
 	OS_CRITICAL_ENTER();
@@ -181,12 +180,10 @@ void FlightControl_task(void *p_arg){
 										GetCopterTest() == Drone_Mode_RateRoll){
 					Expect_Gyro = GetRemoteControlAngleVel();
 				}
-				//期望高度加速度
-				DesiredControlCommands.ExpectAcc = GetDesiredControlAcc();
 				//飞行角速率控制
 				Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
 				//推力融合
-				ThrustMixer(ARM_Length,DesiredControlCommands.ExpectAcc,Rotate_Thrust);
+				ThrustMixer(ARM_Length,Rotate_Thrust);
 			}
 			count++;
 		}
