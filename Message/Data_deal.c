@@ -1,7 +1,8 @@
 #include "Data_deal.h"
 DroneFlightControl FlightControl;                          
 DroneTargetInfo Target_Info;           
-RemoteControl RockerControl;   
+RemoteControl RockerControl;  
+DroneFlightMethod Flight_Method;
 Vector3f_t StepSignal;
 /**********************************************************************************************************
 *函 数 名: GroundStationDataDeal
@@ -314,7 +315,26 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					OriginalVelY.kD=PID_ParaInfo.VelY.Kd=pidParaTemp[2];
 					Write_Config();	
 					FlightControl.ReportSW=Report_SET;
-					break;
+				break;
+				/* 飞行模式确定 */
+				case 22:
+					switch(rx.buf[3]){
+						case 0:
+							Flight_Method = PurePosture;
+							break;
+						case 1:
+							Flight_Method = FixedHeight;
+							break;
+						case 2:
+							Flight_Method = FixedPoint;
+							break;
+						case 3:
+							Flight_Method = TrajectoryTracking;
+							break;
+						default:
+							break;
+					}	
+				break;
 				
 				default:
 					break;
@@ -435,4 +455,23 @@ Vector3f_t GetStepSignalValue(void){
 		StepSignal.z = 0.5f;
 	}
 	return StepSignal;
+}
+/**********************************************************************************************************
+*函 数 名: GetCopterFlightMethod
+*功能说明: 获取飞行器调试实验
+*形    参: 无
+*返 回 值: uint8_t 类型
+**********************************************************************************************************/
+uint8_t GetCopterFlightMethod(void){
+  return Flight_Method;
+}
+
+/**********************************************************************************************************
+*函 数 名: SetCopterFlightMethod
+*功能说明: 获取飞行器调试实验
+*形    参: 无
+*返 回 值: uint8_t 类型
+**********************************************************************************************************/
+void SetCopterFlightMethod(void){
+   Flight_Method = PurePosture;
 }

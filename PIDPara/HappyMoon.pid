@@ -37,7 +37,7 @@
   </rateYaw>
   <accHeight>
     <Kp>10</Kp>
-    <Ki>5</Ki>
-    <Kd>2</Kd>
+    <Ki>4</Ki>
+    <Kd>1.5</Kd>
   </accHeight>
 </pidPara>

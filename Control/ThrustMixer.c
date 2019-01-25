@@ -26,7 +26,7 @@ void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
 		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
 										+1.414f / (arm_length * 4.0f) * RotateThrust.y                                  	//pitch
 											+ 14.2f * RotateThrust.z                                                        //yaw	
-												+ HeightThrustLpf * Drone_Mass / 4.0f;			  											  		//mass		 																									
+												+ HeightThrustLpf * Drone_Mass / 4.0f;			  											  				//mass		 																									
 		
 		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.x
 										-1.414f / (arm_length * 4.0f) * RotateThrust.y

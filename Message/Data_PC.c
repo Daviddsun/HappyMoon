@@ -131,7 +131,7 @@ void SendRTInfo(void)
 	Vector3angle_t AHRSAngle = GetCopterAngle();
 	Vector3angle_t VIOAngle = GetVisualOdometryAngle();
 	Vector3f_t VIOVel = GetVisualOdometryVelTrans();
-	Vector3f_t RefVel = GetVisualOdometryRefVelTrans();
+	Vector3f_t VIOPos = GetVisualOdometryPos();
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
 	float BatteryVoltage = GetBatteryVoltage();
@@ -141,18 +141,15 @@ void SendRTInfo(void)
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0X01;
 		
-//	temp = AHRSAngle.pitch * 180/PI;
-	temp = KalmanVel.x * 100;
+	temp = AHRSAngle.pitch * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-//	temp = AHRSAngle.roll * 180/PI;
-	temp = KalmanVel.z * 100;
+	temp = AHRSAngle.roll * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-//	temp = VIOAngle.yaw * 180/PI;
-	temp = VIOVel.y * 100;
+	temp = VIOAngle.yaw * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4);
 	
@@ -164,7 +161,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = VIOVel.z * 100;
+	temp = KalmanVel.z * 100;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	

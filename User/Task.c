@@ -130,6 +130,8 @@ void FlightControl_task(void *p_arg){
 	OS_CRITICAL_ENTER();
 	//控制参数读取 
 	Load_PIDConfig();
+	//默认飞行模式
+	SetCopterFlightMethod();
 	//离开临界区 	
 	OS_CRITICAL_EXIT();	
 	while(1){
