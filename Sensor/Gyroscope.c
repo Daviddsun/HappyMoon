@@ -50,7 +50,7 @@ void GyroCalibration(Vector3f_t gyroRaw)
 		OffsetData.gyro_scalex = 1.0;
 		OffsetData.gyro_scaley = 1.0;
 		OffsetData.gyro_scalez = 1.0;
-		Write_Config();
+//		Write_Config();
 		OffsetData.gyro_success = false;
 	}
 }

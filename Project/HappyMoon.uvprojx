@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1, __FPU_USED =1, __CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Libraries\CMSIS\Include;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Sensor;..\Hardware;..\Message;..\Parameter;..\Mymath;..\Control;..\Navigation</IncludePath>
+              <IncludePath>..\Core;..\Driver;..\Libraries\inc;..\System;..\User;..\uCOS-III\Bsp;..\uCOS-III\Config;..\uCOS-III\Core;..\uCOS-III\CPU;..\uCOS-III\Lib;..\uCOS-III\Port;..\Libraries\CMSIS\Include;..\Libraries\USB;..\Libraries\USB\STM32_USB_OTG_Driver\inc;..\Libraries\USB\STM32_USB_Device_Library\Class\cdc\inc;..\Libraries\USB\STM32_USB_Device_Library\Core\inc;..\Sensor;..\Hardware;..\Message;..\Parameter;..\Mymath</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -770,48 +770,8 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Control</GroupName>
-          <Files>
-            <File>
-              <FileName>Attitude_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\Attitude_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>Position_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\Position_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>PID_control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\PID_control.c</FilePath>
-            </File>
-            <File>
-              <FileName>ThrustMixer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\ThrustMixer.c</FilePath>
-            </File>
-            <File>
-              <FileName>SafeControl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Control\SafeControl.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Message</GroupName>
           <Files>
-            <File>
-              <FileName>Data_PC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Message\Data_PC.c</FilePath>
-            </File>
-            <File>
-              <FileName>Data_deal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Message\Data_deal.c</FilePath>
-            </File>
             <File>
               <FileName>Visiondata_deal.c</FileName>
               <FileType>1</FileType>
@@ -897,16 +857,6 @@
               <FileType>1</FileType>
               <FilePath>..\Sensor\MPU6500.c</FilePath>
             </File>
-            <File>
-              <FileName>Accelerometer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Sensor\Accelerometer.c</FilePath>
-            </File>
-            <File>
-              <FileName>Gyroscope.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Sensor\Gyroscope.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -967,11 +917,6 @@
               <FileType>5</FileType>
               <FilePath>..\Parameter\DronePara.h</FilePath>
             </File>
-            <File>
-              <FileName>Parameter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Parameter\Parameter.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -981,21 +926,6 @@
               <FileName>Mission.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Mission\Mission.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Navigation</GroupName>
-          <Files>
-            <File>
-              <FileName>MahonyAHRS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Navigation\MahonyAHRS.c</FilePath>
-            </File>
-            <File>
-              <FileName>Navigation.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Navigation\Navigation.c</FilePath>
             </File>
           </Files>
         </Group>

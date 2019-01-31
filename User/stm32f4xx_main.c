@@ -9,7 +9,7 @@
 
 //Start任务
 #define START_TASK_PRIO 3						                     // 任务优先级
-#define START_STK_SIZE 512						                   // 任务堆栈大小
+#define START_STK_SIZE 256						                   // 任务堆栈大小
 OS_TCB StartTaskTCB;							                       // 任务控制块
 CPU_STK START_TASK_STK[START_STK_SIZE];					         // 任务堆栈
 void start_task(void *p_arg);						                 // 任务函数
@@ -21,12 +21,12 @@ OS_TCB IMUSensorReadTaskTCB;
 CPU_STK IMUSensorRead_TASK_STK[IMUSensorRead_STK_SIZE];					
 void IMUSensorRead_task(void *p_arg);
 
-//IMU预处理任务
-#define IMUSensorPreDeal_TASK_PRIO 5					
-#define IMUSensorPreDeal_STK_SIZE 512						
-OS_TCB IMUSensorPreDealTaskTCB;				
-CPU_STK IMUSensorPreDeal_TASK_STK[IMUSensorPreDeal_STK_SIZE];					
-void IMUSensorPreDeal_task(void *p_arg);
+//CameraIMU数据发送
+#define CameraIMUSend_TASK_PRIO 5					
+#define CameraIMUSend_STK_SIZE 512						
+OS_TCB CameraIMUSendTaskTCB;				
+CPU_STK CameraIMUSend_TASK_STK[CameraIMUSend_STK_SIZE];					
+void CameraIMUSend_task(void *p_arg);
 
 /**
  * @Description 主函数启动操作系统 
@@ -106,14 +106,14 @@ void start_task(void *p_arg){
 		(OS_ERR*)&err
 		);
 	OSTaskCreate(																				// 传感器数据预处理
-		(OS_TCB*)&IMUSensorPreDealTaskTCB,
-		(CPU_CHAR*)"IMUSensorPreDeal task",
-		(OS_TASK_PTR )IMUSensorPreDeal_task,
+		(OS_TCB*)&CameraIMUSendTaskTCB,
+		(CPU_CHAR*)"CameraIMUSend task",
+		(OS_TASK_PTR )CameraIMUSend_task,
 		(void*)0,
-		(OS_PRIO)IMUSensorPreDeal_TASK_PRIO,
-		(CPU_STK*)&IMUSensorPreDeal_TASK_STK[0],
-		(CPU_STK_SIZE)IMUSensorPreDeal_STK_SIZE/10,
-		(CPU_STK_SIZE)IMUSensorPreDeal_STK_SIZE,
+		(OS_PRIO)CameraIMUSend_TASK_PRIO,
+		(CPU_STK*)&CameraIMUSend_TASK_STK[0],
+		(CPU_STK_SIZE)CameraIMUSend_STK_SIZE/10,
+		(CPU_STK_SIZE)CameraIMUSend_STK_SIZE,
 		(OS_MSG_QTY)0,
 		(OS_TICK)0,
 		(void*)0,

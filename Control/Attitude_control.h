@@ -5,7 +5,6 @@
 #include "Task.h"
 #include "Vector3.h"
 #include "PID_control.h"
-#include "MahonyAHRS.h"
 #include <math.h>
 //线程FPS读取
 typedef struct {
