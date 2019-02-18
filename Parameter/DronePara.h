@@ -12,6 +12,7 @@
 #define Inertia_Wz    0.002f
 
 //定义机型
+#define Model380
 #ifdef Model380
 	#define ARM_Length 0.190f
 	#define Drone_Mass 1.750f

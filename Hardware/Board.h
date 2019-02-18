@@ -21,7 +21,7 @@
 void Board_Init(void);
 
 #define SpeedyBeeF4            //定义飞控型号 BirdFlight  SpeedyBeeF4
-#define Hoppywing              //定义电机动力 T_Motor     Hoppywing
+#define T_Motor              //定义电机动力 T_Motor     Hoppywing
 
 
 #endif
