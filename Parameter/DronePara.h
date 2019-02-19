@@ -53,10 +53,11 @@ typedef struct{
 }DroneFlightControl;
 
 typedef enum{
-	PurePosture = 0x00,
-	FixedHeight = 0x01,
-	FixedPoint = 0x02,
-	TrajectoryTracking = 0X03,
+	PurePosture,
+	FixedHeight,
+	FixedPoint,
+	StepResponse,
+	TrajectoryTracking,
 }DroneFlightMethod;
 
 typedef struct
