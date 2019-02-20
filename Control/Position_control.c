@@ -35,15 +35,6 @@ FPS_PositionControl FPSPositionControl;
 			break;
 		//定高飞行
 		case 1:
-			
-			break;
-		//定点模式
-		case 2:
-			
-			break;
-		//阶跃响应
-		case 3:
-			//期望获取
 			ExpectPos = GetStepSignalValue();
 			/******* 降落控制 ********/	
 			if(GetCopterFlyMode() == Land){
@@ -54,38 +45,31 @@ FPS_PositionControl FPSPositionControl;
 				}
 			}
 			// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
-			// 来自自身卡尔曼滤波
-			EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
-			EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
 			EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
-			/******* 串级PID控制算法  比例环节 2.0参数 之后改为可写入参数 *******/
-			// 计算期望速度
-			ExpectVel.x = 2.0f * (ExpectPos.x - EstimatePosLpf.x);
-			ExpectVel.x = ConstrainFloat(ExpectVel.x,-0.5,0.5);
-			ExpectVel.y = 2.0f * (ExpectPos.y - EstimatePosLpf.y);
-			ExpectVel.y = ConstrainFloat(ExpectVel.y,-0.5,0.5);
+			// 计算速度期望
 			if(GetCopterFlyMode() == Nothing){
 				//速度限幅在0.5m/s
-				ExpectVel.z = 2.0f * (ExpectPos.z - EstimatePosLpf.z); 
+				ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
 				ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
 			}
-			TransVelToBodyFrame(ExpectVel, &ExpectVel, GetVisualOdometryAngle().yaw);
-			/******* 内环PID速度环 *******/
 			// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
 			// 来自自身卡尔曼滤波
-			EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
-			EstimateVelLpf.y = EstimateVelLpf.y * 0.9f + GetCopterVelocity().y * 0.1f;
 			EstimateVelLpf.z = EstimateVelLpf.z * 0.9f + GetCopterVelocity().z * 0.1f;
 			//速度误差计算
-			ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
-			ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
 			ErrorVel.z = ExpectVel.z - EstimateVelLpf.z;
-//			//PID计算
-//			PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
-//			//角度转化为rad弧度
-//			PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;	
-//			PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
-//			PosControllerOut.ExpectAngle.yaw = 0;	
+			//PID计算
+			PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
+			//姿态
+			PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+			PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+			PosControllerOut.ExpectAngle.yaw = 0;	
+			break;
+		//定点模式
+		case 2:
+			
+			break;
+		//阶跃响应
+		case 3:
 			
 			break;
 		//轨迹追踪

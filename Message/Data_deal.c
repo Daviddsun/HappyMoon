@@ -329,6 +329,9 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 							Flight_Method = FixedPoint;
 							break;
 						case 3:
+							Flight_Method = StepResponse;
+							break;
+						case 4:
 							Flight_Method = TrajectoryTracking;
 							break;
 						default:
@@ -473,5 +476,5 @@ uint8_t GetCopterFlightMethod(void){
 *返 回 值: uint8_t 类型
 **********************************************************************************************************/
 void SetCopterFlightMethod(void){
-   Flight_Method = FixedPoint;
+   Flight_Method = TrajectoryTracking;
 }

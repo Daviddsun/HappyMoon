@@ -15,7 +15,7 @@
 #define Model380
 #ifdef Model380
 	#define ARM_Length 0.190f
-	#define Drone_Mass 1.750f
+	#define Drone_Mass 1.800f
 #else
 	#define ARM_Length 0.125f
 	#define Drone_Mass 1.500f          //实际质量只有一半，但好盈这个单级官方参数表不正确  只能依靠提高质量来弥补悬停油门
