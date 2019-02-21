@@ -21,9 +21,9 @@ Vector3f_t GetVisualOdometryVel(void);
 Vector3f_t GetVisualOdometryPosTrans(void);
 Vector3f_t GetVisualOdometryVelTrans(void);
 Vector3angle_t GetVisualOdometryAngle(void);
-Vector3f_t GetVisualOdometryRefPos(void);
-Vector3f_t GetVisualOdometryRefVel(void);
-Vector3f_t GetVisualOdometryRefVelTrans(void);
+Vector3f_t GetWayPointRefPos(void);
+Vector3f_t GetWayPointRefVel(void);
+Vector3f_t GetWayPointRefVelTrans(void);
 float GetFPSVisualOdometry(void);
 #endif
 

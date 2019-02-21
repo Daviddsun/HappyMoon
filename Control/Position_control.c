@@ -23,6 +23,7 @@ FPS_PositionControl FPSAltitudeControl;
 	float x_pos_error,x_vel_error,y_pos_error,y_vel_error;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
+	FPSPositionControl.CurrentTime = ConstrainFloat(FPSPositionControl.CurrentTime, 0.005, 0.02);
   FPSPositionControl.LastTime = OSTimeGet(&err);
 	//获取飞行模式
 	FlightMethod = GetCopterFlightMethod();
@@ -58,8 +59,8 @@ FPS_PositionControl FPSAltitudeControl;
 		//轨迹追踪
 		case 4:
 			// 期望获取
-			ExpectPos = GetVisualOdometryRefPos();
-			ExpectVel = GetVisualOdometryRefVelTrans();
+			ExpectPos = GetWayPointRefPos();
+			ExpectVel = GetWayPointRefVelTrans();
 
 			// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
 			// 来自自身卡尔曼滤波

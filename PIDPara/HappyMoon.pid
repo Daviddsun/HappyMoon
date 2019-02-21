@@ -23,12 +23,12 @@
   <ratePitch>
     <Kp>0.8</Kp>
     <Ki>0</Ki>
-    <Kd>0.02</Kd>
+    <Kd>0.01</Kd>
   </ratePitch>
   <rateRoll>
     <Kp>0.8</Kp>
     <Ki>0</Ki>
-    <Kd>0.02</Kd>
+    <Kd>0.01</Kd>
   </rateRoll>
   <rateYaw>
     <Kp>1</Kp>
@@ -36,8 +36,8 @@
     <Kd>0</Kd>
   </rateYaw>
   <accHeight>
-    <Kp>8</Kp>
-    <Ki>1</Ki>
-    <Kd>2</Kd>
+    <Kp>10</Kp>
+    <Ki>7</Ki>
+    <Kd>1</Kd>
   </accHeight>
 </pidPara>
