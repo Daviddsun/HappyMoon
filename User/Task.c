@@ -1,3 +1,10 @@
+/******************* (C) COPYRIGHT 2015-20~~ HappyMoon **************************
+ * @文件     Task.c
+ * @说明     任务编写函数
+ * @作者     YuyingJin
+ * @网站     https://yuyingjin0111.github.io/
+ * @日期     2018 ~
+*********************************************************************************/
 #include "Task.h"
 /* 全局变量初始化 */ 
 PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
@@ -153,13 +160,13 @@ void FlightControl_task(void *p_arg){
 				PreTakeOff(count);
 			}
 			else{
-				//100hz
-				if(count % 10 == 0){
+				//50hz
+				if(count % 20 == 0){
 					//安全保护
 					SafeControl();
 				}
-				//200hz
-				if(count % 5 == 0){
+				//100hz
+				if(count % 10 == 0){
 					//飞行位置控制
 					Position_Controller();
 					//期望角度选择
@@ -171,6 +178,11 @@ void FlightControl_task(void *p_arg){
 						//位置控制
 						Expect_Angle = GetDesiredControlAngle();
 					}
+				}
+				//500hz
+				if(count % 2 == 0){
+					//飞行高度控制
+					Altitude_Controller();
 					//飞行角度控制
 					Expect_Gyro.x = (Attitude_OuterController(Expect_Angle)).roll;
 					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;

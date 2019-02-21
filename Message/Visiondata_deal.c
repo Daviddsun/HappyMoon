@@ -1,3 +1,10 @@
+/**********************************************************************************************************
+ * @文件     Visiondata_deal.c
+ * @说明     视觉数据接收
+ * @作者     YuyingJin
+ * @网站     https://yuyingjin0111.github.io/
+ * @日期     2018 ~
+**********************************************************************************************************/
 #include "Visiondata_deal.h"
 FPS_VisualOdometry FPSVisualOdometry;
 FPS_ReferenceRoute FPSReferenceRoute;

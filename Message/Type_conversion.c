@@ -1,9 +1,12 @@
+/**********************************************************************************************************
+ * @æ–‡ä»¶     Type_conversion.c
+ * @è¯´æ˜     æ•°æ®ç±»å‹è½¬åŒ–
+ * @ä½œè€…     YuyingJin
+ * @ç½‘ç«™     https://yuyingjin0111.github.io/
+ * @æ—¥æœŸ     2018 ~
+**********************************************************************************************************/
 #include "Type_conversion.h"
 
-
-/* ¸¡µãÊıµ½Ê®Áù½øÖÆ×ª»» */
-/* floatNum£º¸¡µãĞÍ±äÁ¿  */
-/* byteArry£º·Ö½â³É4¸ö×Ö½ÚµÄÊ×µØÖ·  */
 void FloatToByte(float floatNum,unsigned char* byteArry)
 {
 	int i;
@@ -16,9 +19,7 @@ void FloatToByte(float floatNum,unsigned char* byteArry)
 	}
 }
 
-/* 16Î»ÕûĞÍµ½Ê®Áù½øÖÆ×ª»» */
-/* intNum£ºÕûĞÍ±äÁ¿  */
-/* byteArry£º·Ö½â³É2¸ö×Ö½ÚµÄÊ×µØÖ·  */
+
 void IntToByte(int intNum,unsigned char* byteArry)
 {
 	int i;
@@ -31,9 +32,7 @@ void IntToByte(int intNum,unsigned char* byteArry)
 	}
 }
 
-/* 16Î»ÎŞ·ûºÅÕûĞÍµ½Ê®Áù½øÖÆ×ª»» */
-/* uintNum£ºÎŞ·ûºÅÕûĞÍ±äÁ¿  */
-/* byteArry£º·Ö½â³É2¸ö×Ö½ÚµÄÊ×µØÖ·  */
+
 void UintToByte(unsigned int uintNum,unsigned char* byteArry)
 {
 	int i;
@@ -46,9 +45,7 @@ void UintToByte(unsigned int uintNum,unsigned char* byteArry)
 	}
 }
 
-/* Ê®Áù½øÖÆµ½¸¡µãÊı     */
-/* Byte£º×Ö½ÚµÄÊ×µØÖ·   */
-/* num£ººÏ²¢µÄ×Ö½ÚÊıÁ¿  */
+
 float Hex_To_Decimal(unsigned char *Byte,int num)
 {
 	int i;
@@ -61,9 +58,7 @@ float Hex_To_Decimal(unsigned char *Byte,int num)
 	return pfValue;
 }
 
-/* Ê®Áù½øÖÆ×ª»»µ½ÕûĞÍ    */
-/* Byte£º×Ö½ÚµÄÊ×µØÖ·   */
-/* num£ººÏ²¢µÄ×Ö½ÚÊıÁ¿  */
+
 int Hex_To_Int(unsigned char *Byte,int num)
 {
 	int i;
@@ -76,9 +71,7 @@ int Hex_To_Int(unsigned char *Byte,int num)
 	return pfValue;
 }
 
-/* Ê®Áù½øÖÆµ½ÎŞ·ûºÅÕûĞÍ */
-/* Byte£º×Ö½ÚµÄÊ×µØÖ·   */
-/* num£ººÏ²¢µÄ×Ö½ÚÊıÁ¿  */
+
 unsigned int Hex_To_Uint(unsigned char *Byte,int num)
 {
 	int i;
@@ -101,13 +94,7 @@ void arrycat(u8 *dst,u8 index,u8 *src,u8 len)
 	}
 }
 
-/**************************ÊµÏÖº¯Êı********************************************
-*º¯ÊıÔ­ĞÍ:		float ,(volatile unsigned char *str)
-*¹¦¡¡¡¡ÄÜ:		ÌáÈ¡×Ö·û´®ÖĞµÄ ÓĞĞ§Êı×Ö
-ÊäÈë²ÎÊı£º
-		unsigned char *str    ×Ö·û´®Êı×é
-		·µ»ØÊı×é±íÊ¾µÄÖµ¡£  ±ÈÈç×Ö·û´® "1230.01"  ¾­¹ıÕâ¸ö³ÌĞòºó£¬·µ»Ø¸¡µãµÄÖµÎª1230.01
-*******************************************************************************/
+
 float Asc_to_f(volatile unsigned char *str)
 {
   signed char temp,flag1,flag2; 
@@ -117,7 +104,7 @@ float Asc_to_f(volatile unsigned char *str)
   value = 0;
   count = 1;
   temp = *str;
-  while(((*str>='0')&&(*str<='9'))||(*str=='-')||(*str=='.')) //Êı×Ö»òÕßÊÇ·ûºÅ
+  while(((*str>='0')&&(*str<='9'))||(*str=='-')||(*str=='.')) 
   { 
 			temp=*str++;
 			if(temp=='-')
@@ -125,7 +112,7 @@ float Asc_to_f(volatile unsigned char *str)
 					if(flag1)
 					flag1=-1;
 					else
-					return(0x00); //³öÏÖÁ½´Î'-' ½á¹ûÎŞĞ§
+					return(0x00); 
 			}
 			else if(temp=='.')
 			{ 
@@ -138,7 +125,7 @@ float Asc_to_f(volatile unsigned char *str)
 		    	count*=0.1f;
 		  }
   }
-  value*=count*flag1; //·ûºÅÎ»
+  value*=count*flag1; 
   return(value);
 }
 
