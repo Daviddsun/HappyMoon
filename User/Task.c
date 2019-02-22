@@ -179,8 +179,8 @@ void FlightControl_task(void *p_arg){
 						Expect_Angle = GetDesiredControlAngle();
 					}
 				}
-				//500hz
-				if(count % 2 == 0){
+				//250hz
+				if(count % 4 == 0){
 					//飞行高度控制
 					Altitude_Controller();
 					//飞行角度控制
@@ -188,16 +188,18 @@ void FlightControl_task(void *p_arg){
 					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;
 					Expect_Gyro.z = (Attitude_OuterController(Expect_Angle)).yaw;
 				}
-				//1000hz
-				//期望角速率选择
-				if(GetCopterTest() == Drone_Mode_RatePitch || 
-										GetCopterTest() == Drone_Mode_RateRoll){
-					Expect_Gyro = GetRemoteControlAngleVel();
+				//500hz
+				if(count % 2 == 0){
+					//期望角速率选择
+					if(GetCopterTest() == Drone_Mode_RatePitch || 
+											GetCopterTest() == Drone_Mode_RateRoll){
+						Expect_Gyro = GetRemoteControlAngleVel();
+					}
+					//飞行角速率控制
+					Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
+					//推力融合
+					ThrustMixer(ARM_Length,Rotate_Thrust);
 				}
-				//飞行角速率控制
-				Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
-				//推力融合
-				ThrustMixer(ARM_Length,Rotate_Thrust);
 			}
 			count++;
 		}

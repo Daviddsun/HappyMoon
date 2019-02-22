@@ -1,4 +1,4 @@
-/******************* (C) COPYRIGHT 2015-20~~ HappyMoon **************************
+/******************* (C) COPYRIGHT 2018-20~~ HappyMoon **************************
  * @文件     main.c
  * @说明     程序入口
  * @作者     YuyingJin
@@ -178,7 +178,7 @@ void start_task(void *p_arg){
 		(OS_OPT)OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
 		(OS_ERR*)&err
 		);
-	OSTaskCreate(																				// 导航任务读取任务
+	OSTaskCreate(																				// 姿态滤波任务
 		(OS_TCB*)&AttitudeFilterTaskTCB,
 		(CPU_CHAR*)"AttitudeFilter task",
 		(OS_TASK_PTR )AttitudeFilter_task,

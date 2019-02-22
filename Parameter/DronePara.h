@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #define TX_LEN  160
 #define RX_LEN  128
-#define Gravity_Acceleration  9.805f
+#define Gravity_Acceleration  9.794f   //上海的重力加速度
 #define Inertia_Wx    0.001f
 #define Inertia_Wy    0.001f
 #define Inertia_Wz    0.002f
@@ -126,9 +126,9 @@ typedef struct{
 
 
 typedef struct{
-    float XaxisPos;
-    float YaxisPos;
-    float ZaxisPos;
+    float Xaxis;
+    float Yaxis;
+    float Zaxis;
     float Navigation;
 }RemoteControl;
 

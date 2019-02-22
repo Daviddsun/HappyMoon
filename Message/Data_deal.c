@@ -250,12 +250,12 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					for(i=0;i<4;i++){
 						HexToFloat[i]=rx.buf[3+i];
 					}
-					RockerControl.XaxisPos = Hex_To_Decimal(HexToFloat,4); 
+					RockerControl.Xaxis = Hex_To_Decimal(HexToFloat,4); 
 					/* YaxisPos */
 					for(i=0;i<4;i++){
 						HexToFloat[i]=rx.buf[7+i];
 					}
-					RockerControl.YaxisPos = Hex_To_Decimal(HexToFloat,4); 					
+					RockerControl.Yaxis = Hex_To_Decimal(HexToFloat,4); 					
 					/* Navigation */
 					for(i=0;i<4;i++){
 						HexToFloat[i]=rx.buf[11+i];
@@ -265,7 +265,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					for(i=0;i<4;i++){
 						HexToFloat[i]=rx.buf[15+i];
 					}
-					RockerControl.ZaxisPos = Hex_To_Decimal(HexToFloat,4);
+					RockerControl.Zaxis = Hex_To_Decimal(HexToFloat,4);
 					break;
 				/* 写入PositionX PID参数 */
 				case 18:
@@ -478,10 +478,10 @@ uint8_t GetCopterFlightMethod(void){
 
 /**********************************************************************************************************
 *函 数 名: SetCopterFlightMethod
-*功能说明: 获取飞行器调试实验
+*功能说明: 设置飞行模式
 *形    参: 无
-*返 回 值: uint8_t 类型
+*返 回 值: 无
 **********************************************************************************************************/
 void SetCopterFlightMethod(void){
-   Flight_Method = TrajectoryTracking;
+  Flight_Method = StepResponse;
 }

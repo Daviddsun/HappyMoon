@@ -142,7 +142,6 @@ void SendRTInfo(void)
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
 	float BatteryVoltage = GetBatteryVoltage();
-	float Thrust = GetDesiredControlAcc();
 	
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
