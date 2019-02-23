@@ -23,11 +23,11 @@
 
 typedef enum{ 
 	Drone_Mode_None = 0,
-  Drone_Mode_Pitch = 1,		 	
-  Drone_Mode_Roll = 2, 
-	Drone_Mode_4Axis = 3,	
-	Drone_Mode_RatePitch = 4, 
-  Drone_Mode_RateRoll = 5, 	
+	Drone_Mode_RatePitch = 1, 
+  Drone_Mode_RateRoll = 2, 
+  Drone_Mode_Pitch = 3,		 	
+  Drone_Mode_Roll = 4, 
+	Drone_Mode_4Axis = 5,	
 }DroneFlightMode_TypeDef;
 
 typedef enum{  

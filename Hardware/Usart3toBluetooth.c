@@ -1,6 +1,6 @@
 #include "Usart3toBluetooth.h"
 
-unsigned char Tx_Buf_Uart3[160];
+unsigned char Tx_Buf_Uart3[250];
 unsigned char Rx_Buf_Uart3[32];
 
 int Flag_Tx_Uart3_Busy=0;

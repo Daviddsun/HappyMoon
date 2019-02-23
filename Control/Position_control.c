@@ -92,9 +92,7 @@ void Position_Controller(void){
 			ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
 			//角度转化为rad弧度
 			PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;
-			PosControllerOut.ExpectAngle.roll = ConstrainFloat(PosControllerOut.ExpectAngle.roll,-15.0,15.0);	
 			PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
-			PosControllerOut.ExpectAngle.pitch = ConstrainFloat(PosControllerOut.ExpectAngle.pitch,-15.0,15.0);	
 			PosControllerOut.ExpectAngle.yaw = 0;	
 			break;
 		//轨迹追踪
@@ -172,18 +170,18 @@ void Altitude_Controller(void){
 				SetCopterStatus(Drone_Off);
 			}
 		}
-		// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
+		//获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
 		EstimateAltitudeLpf = EstimateAltitudeLpf * 0.95f + GetCopterPosition().z * 0.05f;
 		if(count++ % 2 == 0){
-			// 计算速度期望
+			//计算速度期望
 			if(GetCopterFlyMode() == Nothing){
 				//速度限幅在0.75m/s
 				ExpectAltitudeVel = OriginalPosZ.kP * (ExpectAltitude - EstimateAltitudeLpf);
 				ExpectAltitudeVel = ConstrainFloat(ExpectAltitudeVel,-0.75,0.75);
 			}
 		}
-		// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
-		// 来自自身卡尔曼滤波
+		//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
+		//来自自身卡尔曼滤波
 		EstimateAltitudeVelLpf = EstimateAltitudeVelLpf * 0.9f + GetCopterVelocity().z * 0.1f;
 		//速度误差计算
 		ErrorAltitude = ExpectAltitudeVel - EstimateAltitudeVelLpf;
@@ -209,7 +207,7 @@ float GetDesiredControlAcc(void){
 Vector3angle_t GetDesiredControlAngle(void){
 	return PosControllerOut.ExpectAngle;
 }
-/**********************************************************************************************************
+/*********************************************************************************************************
 *函 数 名: ResetPositionPara
 *功能说明: 置位位置参数
 *形    参: 无
