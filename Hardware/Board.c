@@ -28,6 +28,9 @@ void Board_Init(void){
 	// 蓝牙串口打开，用于与地面站通信
 	Usart3toBluetooth_Init(115200);
 	delay_ms(100);
+	// TOF传感器串口打开
+	Uart4toTOF_Init(115200);
+	delay_ms(100);
 	// GPIO初始化 一些通用GPIO口可以在这里配置
 	GeneralGpio_Init(); 	
 	delay_ms(100);

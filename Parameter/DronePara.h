@@ -149,6 +149,10 @@ typedef struct{
 	unsigned char buf[64];
 }Receive_VisualOdometry;
 
+typedef struct{
+	unsigned char buf[18];
+}Receive_TOFData;
+
 typedef union{
 	float fvalue;
 	unsigned char cv[4];

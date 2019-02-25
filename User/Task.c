@@ -220,10 +220,20 @@ void OmniFusion_task(void *p_arg){
 void OtherSensorUpdate_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
+	void   *p_msg;
+	OS_MSG_SIZE  msg_size;
+	CPU_TS       ts;
+	Receive_TOFData  TOFData;
 	while(1){
+		//消息队列信息提取
+		p_msg = OSQPend(&messageQueue[TIMEOFFLY_DATA],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
+		if(err == OS_ERR_NONE){
+			TOFData = *((Receive_TOFData *)p_msg);
+		}
+		TOF_DataDeal(TOFData);
 		//电池电压电流采样更新
     BatteryVoltageUpdate();
-		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err);
+		
 	}
 }
 

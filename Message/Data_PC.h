@@ -8,6 +8,7 @@
 #include "Type_conversion.h"
 #include "MahonyAHRS.h"
 #include "Adc_Battery.h"
+#include "TofMiniPlus.h"
 void SendParaInfo(void);
 void SendRTInfo(void);
 

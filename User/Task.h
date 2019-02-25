@@ -26,6 +26,7 @@
 #include "Board.h"
 #include "Navigation.h"
 #include "FlightStatus.h"
+#include "TofMiniPlus.h"
 extern OffsetInfo OffsetData;  										 
 extern PID_t OriginalPitch,OriginalRoll,OriginalYaw,OriginalPosX,OriginalPosY,OriginalPosZ,
 					OriginalWxRate,OriginalWyRate,OriginalWzRate,OriginalVelX,OriginalVelY,OriginalVelZ;
