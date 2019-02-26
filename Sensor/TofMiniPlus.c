@@ -15,12 +15,12 @@ void TOF_DataDeal(Receive_TOFData rx){
 		FPSTimeOfFly.CurrentTime = (OSTimeGet(&err) - FPSTimeOfFly.LastTime) * 1e-3;
 		FPSTimeOfFly.CurrentTime = ConstrainFloat(FPSTimeOfFly.CurrentTime, 0.005, 0.05);
 		FPSTimeOfFly.LastTime = OSTimeGet(&err);
-		uint16_t Distance = (((uint16_t)rx.buf[2]) << 8) + rx.buf[3];
-		uint16_t Strength = (((uint16_t)rx.buf[4]) << 8) + rx.buf[5];
+		uint16_t Distance = (((uint16_t)rx.buf[3]) << 8) + rx.buf[2];
+		uint16_t Strength = (((uint16_t)rx.buf[5]) << 8) + rx.buf[4];
 		//根据数据手册强度在这个范围内有效
 		if(Strength>100 && Strength<65535){
-			float Height = ((float)Distance) * 0.0183108f; // 1200cm/65535 分辨率
-			TOFHeightLpf = TOFHeightLpf * 0.9f + Height * 0.1f;
+			float Height = ((float)Distance) * 0.01f; // 米制单位
+			TOFHeightLpf = TOFHeightLpf * 0.95f + Height * 0.05f;
 			//速度计算
 			TOFHeightVel = (TOFHeightLpf - TOFHeightLpfLast) / FPSTimeOfFly.CurrentTime;
 			TOFHeightLpfLast = TOFHeightLpf;
@@ -46,3 +46,14 @@ float GetTofHeightData(void){
 float GetTofHeightVel(void){
 	return TOFHeightVel;
 }
+
+/**********************************************************************************************************
+*函 数 名: GetFPSTimeOFfly
+*功能说明: 返回视觉里程计的FPS
+*形    参: 无
+*返 回 值: CurrentTime
+**********************************************************************************************************/
+float GetFPSTimeOFfly(void){
+  return FPSTimeOfFly.CurrentTime;
+}
+

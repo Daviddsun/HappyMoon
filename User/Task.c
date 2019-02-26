@@ -171,6 +171,11 @@ void FlightControl_task(void *p_arg){
 						//位置控制
 						Expect_Angle = GetDesiredControlAngle();
 					}
+				}
+				//500hz
+				if(count % 2 ==0){
+					//飞行高度控制
+					Altitude_Controller();
 					//飞行角度控制
 					Expect_Gyro.x = (Attitude_OuterController(Expect_Angle)).roll;
 					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;
@@ -230,6 +235,7 @@ void OtherSensorUpdate_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			TOFData = *((Receive_TOFData *)p_msg);
 		}
+		//TOF激光传感器更新
 		TOF_DataDeal(TOFData);
 		//电池电压电流采样更新
     BatteryVoltageUpdate();

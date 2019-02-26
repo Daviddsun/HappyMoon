@@ -1,3 +1,10 @@
+/**********************************************************************************************************
+ * @文件     Data_deal.c
+ * @说明     接收PC数据
+ * @作者     YuyingJin
+ * @网站     https://yuyingjin0111.github.io/
+ * @日期     2018 ~
+**********************************************************************************************************/
 #include "Data_deal.h"
 DroneFlightControl FlightControl;                          
 DroneTargetInfo Target_Info;           
@@ -57,19 +64,20 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 								FlightControl.DroneMode=Drone_Mode_None;
 							break;
 						case 1:
-								FlightControl.DroneMode=Drone_Mode_Pitch;
+								FlightControl.DroneMode=Drone_Mode_RatePitch;
 							break;
 						case 2:
-								FlightControl.DroneMode=Drone_Mode_Roll;		
+								FlightControl.DroneMode=Drone_Mode_RateRoll;		
 							break;
 						case 3:
-								FlightControl.DroneMode=Drone_Mode_4Axis; 
+								FlightControl.DroneMode=Drone_Mode_Pitch; 
 							break;
 						case 4:
-								FlightControl.DroneMode=Drone_Mode_RatePitch; 
+								FlightControl.DroneMode=Drone_Mode_Roll; 
 							break;
 						case 5:
-								FlightControl.DroneMode=Drone_Mode_RateRoll;
+								FlightControl.DroneMode=Drone_Mode_4Axis;
+							break;
 						default:
 							break;
 					}
@@ -78,12 +86,48 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 				case 3:
 					FlightControl.ReportSW = Report_SET;
 					break;
-				/* IMU水平校准 */
-				case 4:
-					OffsetData.level_success = true;	
+				/* 打舵角速度 */	
+			  case 4:
+					/* Target_RatePitch */
+					for(i=0;i<4;i++){
+						HexToFloat[i]=rx.buf[3+i];
+					}
+					Target_Info.TargetW.y = Hex_To_Decimal(HexToFloat,4);
+					Target_Info.TargetW.y = Target_Info.TargetW.y * 0.0002f;//2rad/s最高
+					/* Target_RateRoll */
+					for(i=0;i<4;i++){
+						HexToFloat[i]=rx.buf[7+i];
+					}
+					Target_Info.TargetW.x = Hex_To_Decimal(HexToFloat,4);	
+					Target_Info.TargetW.x = Target_Info.TargetW.x * 0.0002f;//2rad/s最高
+					break;
+				/* 遥控器数据 */
+				case 5:
+					/* XaxisPos */
+					for(i=0;i<4;i++){
+						HexToFloat[i]=rx.buf[3+i];
+					}
+					RockerControl.Xaxis = Hex_To_Decimal(HexToFloat,4); 
+					/* YaxisPos */
+					for(i=0;i<4;i++){
+						HexToFloat[i]=rx.buf[7+i];
+					}
+					RockerControl.Yaxis = Hex_To_Decimal(HexToFloat,4); 					
+					break;
+				case 6:
+					/* Navigation */
+					for(i=0;i<4;i++){
+						HexToFloat[i]=rx.buf[11+i];
+					}
+					RockerControl.Navigation = Hex_To_Decimal(HexToFloat,4);
+					/* ZaxisPos */
+					for(i=0;i<4;i++){
+						HexToFloat[i]=rx.buf[15+i];
+					}
+					RockerControl.Zaxis = Hex_To_Decimal(HexToFloat,4);
 					break;
 				/* 写入Pitch PID参数 */	
-				case 5:
+				case 7:
 					for(i=0;i<3;i++)
 					{
 						for(j=0;j<4;j++)
@@ -99,7 +143,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					FlightControl.ReportSW=Report_SET;
 					break;
 				/* 写入Roll PID参数 */	
-				case 6:
+				case 8:
 					for(i=0;i<3;i++){
 						for(j=0;j<4;j++){
 							HexToFloat[j]=rx.buf[3+j+i*4];
@@ -113,7 +157,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					FlightControl.ReportSW=Report_SET;
 					break;
 				/* 写入Yaw PID参数 */	
-				case 7:
+				case 9:
 					for(i=0;i<3;i++){
 						for(j=0;j<4;j++){
 							HexToFloat[j]=rx.buf[3+j+i*4];
@@ -127,7 +171,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					FlightControl.ReportSW=Report_SET;		
 					break;
 				/* 写入PosZ PID参数 */	
-				case 8:
+				case 10:
 					for(i=0;i<3;i++){
 						for(j=0;j<4;j++){
 							HexToFloat[j]=rx.buf[3+j+i*4];
@@ -139,14 +183,6 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					OriginalPosZ.kD=PID_ParaInfo.PosZ.Kd=pidParaTemp[2];
 					Write_Config();		
 					FlightControl.ReportSW=Report_SET;	
-					break;
-				/* 加速计校准 */
-				case 9:
-					OffsetData.acc_success = true;
-					break;
-				/* 陀螺仪校准 */
-				case 10:
-					OffsetData.gyro_success = true;
 					break;
 				/* 写入Wy PID参数 */
 				case 11:
@@ -203,62 +239,16 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					OriginalVelZ.kD=PID_ParaInfo.VelZ.Kd=pidParaTemp[2];
 					Write_Config();
 					FlightControl.ReportSW=Report_SET;
-					break;
-				/* 打舵角速度 */	
+					break;	
+				/* 写入AccZ PID参数 */
 				case 15:
-					/* Target_RatePitch */
-					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[3+i];
+					for(i=0;i<3;i++){
+						for(j=0;j<4;j++){
+							HexToFloat[j]=rx.buf[3+j+i*4];
+						}
+						pidParaTemp[i]=Hex_To_Decimal(HexToFloat,4);
 					}
-					Target_Info.TargetW.y = Hex_To_Decimal(HexToFloat,4);
-					Target_Info.TargetW.y = Target_Info.TargetW.y * 0.0002f;//2rad/s最高
-					/* Target_RateRoll */
-					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[7+i];
-					}
-					Target_Info.TargetW.x = Hex_To_Decimal(HexToFloat,4);	
-					Target_Info.TargetW.x = Target_Info.TargetW.x * 0.0002f;//2rad/s最高
-					break;
-				/* 阶跃信号测试 */	
-				case 16:
-					for(i=0;i<4;i++)
-					{
-						HexToFloat[i]=rx.buf[3+i];
-					}
-					StepSignal.x = Hex_To_Decimal(HexToFloat,4);
-					for(i=0;i<4;i++)
-					{
-						HexToFloat[i]=rx.buf[7+i];
-					}
-					StepSignal.y = Hex_To_Decimal(HexToFloat,4); 
-					for(i=0;i<4;i++)
-					{
-						HexToFloat[i]=rx.buf[11+i];
-					}
-					StepSignal.z = Hex_To_Decimal(HexToFloat,4);
-					break;
-				/* 遥控器数据 */
-				case 17:
-					/* XaxisPos */
-					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[3+i];
-					}
-					RockerControl.XaxisPos = Hex_To_Decimal(HexToFloat,4); 
-					/* YaxisPos */
-					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[7+i];
-					}
-					RockerControl.YaxisPos = Hex_To_Decimal(HexToFloat,4); 					
-					/* Navigation */
-					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[11+i];
-					}
-					RockerControl.Navigation = Hex_To_Decimal(HexToFloat,4);
-					/* ZaxisPos */
-					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[15+i];
-					}
-					RockerControl.ZaxisPos = Hex_To_Decimal(HexToFloat,4);
+					FlightControl.ReportSW=Report_SET;
 					break;
 				/* 写入PositionX PID参数 */
 				case 18:
@@ -301,7 +291,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					OriginalVelX.kD=PID_ParaInfo.VelX.Kd=pidParaTemp[2];
 					Write_Config();	
 					FlightControl.ReportSW=Report_SET;
-				break;
+					break;
 				/* 写入SpeedY PID参数 */
 				case 21:
 					for(i=0;i<3;i++){
@@ -315,7 +305,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 					OriginalVelY.kD=PID_ParaInfo.VelY.Kd=pidParaTemp[2];
 					Write_Config();	
 					FlightControl.ReportSW=Report_SET;
-				break;
+					break;
 				/* 飞行模式确定 */
 				case 22:
 					switch(rx.buf[3]){
@@ -329,12 +319,46 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 							Flight_Method = FixedPoint;
 							break;
 						case 3:
+							Flight_Method = StepResponse;
+							break;
+						case 4:
 							Flight_Method = TrajectoryTracking;
 							break;
 						default:
 							break;
 					}	
-				break;
+					break;
+				/* 陀螺仪校准 */
+				case 48:
+					OffsetData.gyro_success = true;
+					break;
+				/* 加速计校准 */
+				case 49:
+					OffsetData.acc_success = true;
+					break;
+				/* IMU水平校准 */
+				case 50:
+					OffsetData.level_success = true;	
+					break;
+//				/* 阶跃信号测试 */	
+//				case 16:
+//					for(i=0;i<4;i++)
+//					{
+//						HexToFloat[i]=rx.buf[3+i];
+//					}
+//					StepSignal.x = Hex_To_Decimal(HexToFloat,4);
+//					for(i=0;i<4;i++)
+//					{
+//						HexToFloat[i]=rx.buf[7+i];
+//					}
+//					StepSignal.y = Hex_To_Decimal(HexToFloat,4); 
+//					for(i=0;i<4;i++)
+//					{
+//						HexToFloat[i]=rx.buf[11+i];
+//					}
+//					StepSignal.z = Hex_To_Decimal(HexToFloat,4);
+//					break;
+
 				
 				default:
 					break;
@@ -342,6 +366,7 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 		}
 	}
 }
+
 
 /**********************************************************************************************************
 *函 数 名: GetCopterStatus
@@ -444,16 +469,16 @@ RemoteControl GetRemoteControlFlyData(void){
 }
 
 /**********************************************************************************************************
-*函 数 名: GetRemoteControlFlyData
-*功能说明: 获取遥控器飞行数据
+*函 数 名: GetStepSignalValue
+*功能说明: 获取阶跃信号
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
 Vector3f_t GetStepSignalValue(void){
 	//期望高度不低于0.5m
-	if(StepSignal.z < 0.5f){
-		StepSignal.z = 0.5f;
-	}
+	StepSignal.x = 0;
+	StepSignal.y = 0;
+	StepSignal.z = 1.0f;
 	return StepSignal;
 }
 /**********************************************************************************************************
@@ -468,10 +493,10 @@ uint8_t GetCopterFlightMethod(void){
 
 /**********************************************************************************************************
 *函 数 名: SetCopterFlightMethod
-*功能说明: 获取飞行器调试实验
+*功能说明: 设置飞行模式
 *形    参: 无
-*返 回 值: uint8_t 类型
+*返 回 值: 无
 **********************************************************************************************************/
 void SetCopterFlightMethod(void){
-   Flight_Method = PurePosture;
+  Flight_Method = FixedHeight;
 }

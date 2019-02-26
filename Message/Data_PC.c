@@ -1,15 +1,20 @@
+/**********************************************************************************************************
+ * @文件     Data_PC.c
+ * @说明     数据通向PC
+ * @作者     YuyingJin
+ * @网站     https://yuyingjin0111.github.io/
+ * @日期     2018 ~
+**********************************************************************************************************/
 #include "Data_PC.h"
 
 void SendParaInfo(void)
 {
-	u8 paraToPC[160];
+	u8 paraToPC[207];
 	u8 floatToHex[4];	
-	u8 intToHex[4];
-	int i=0;
 
 	paraToPC[0]=0X55;
 	paraToPC[1]=0XAA;
-	paraToPC[2]=0X02;
+	paraToPC[2]=0XF1;
 
 	/* Pitch PidPara */
 	FloatToByte(OriginalPitch.kP,floatToHex);
@@ -26,45 +31,45 @@ void SendParaInfo(void)
 	arrycat(paraToPC,19,floatToHex,4);
 	FloatToByte(OriginalRoll.kD,floatToHex);
 	arrycat(paraToPC,23,floatToHex,4);
+	
+	/* WyRate PidPara */
+	FloatToByte(OriginalWyRate.kP,floatToHex);
+	arrycat(paraToPC,27,floatToHex,4);
+	FloatToByte(OriginalWyRate.kI,floatToHex);
+	arrycat(paraToPC,31,floatToHex,4);
+	FloatToByte(OriginalWyRate.kD,floatToHex);
+	arrycat(paraToPC,35,floatToHex,4);
+	
+	/* WxRate PidPara */
+	FloatToByte(OriginalWxRate.kP,floatToHex);
+	arrycat(paraToPC,39,floatToHex,4);
+	FloatToByte(OriginalWxRate.kI,floatToHex);
+	arrycat(paraToPC,43,floatToHex,4);
+	FloatToByte(OriginalWxRate.kD,floatToHex);
+	arrycat(paraToPC,47,floatToHex,4);
 
 	/* Yaw PidPara */
 	FloatToByte(OriginalYaw.kP,floatToHex);
-	arrycat(paraToPC,27,floatToHex,4);
+	arrycat(paraToPC,51,floatToHex,4);
 	FloatToByte(OriginalYaw.kI,floatToHex);
-	arrycat(paraToPC,31,floatToHex,4);
+	arrycat(paraToPC,55,floatToHex,4);
 	FloatToByte(OriginalYaw.kD,floatToHex);
-	arrycat(paraToPC,35,floatToHex,4);
+	arrycat(paraToPC,59,floatToHex,4);
+	
+	/* WzRate PidPara */
+	FloatToByte(OriginalWzRate.kP,floatToHex);
+	arrycat(paraToPC,63,floatToHex,4);
+	FloatToByte(OriginalWzRate.kI,floatToHex);
+	arrycat(paraToPC,67,floatToHex,4);
+	FloatToByte(OriginalWzRate.kD,floatToHex);
+	arrycat(paraToPC,71,floatToHex,4);
 	
 	/* PositionZ PidPara */
 	FloatToByte(OriginalPosZ.kP,floatToHex);
-	arrycat(paraToPC,39,floatToHex,4);
-	FloatToByte(OriginalPosZ.kI,floatToHex);
-	arrycat(paraToPC,43,floatToHex,4);
-	FloatToByte(OriginalPosZ.kD,floatToHex);
-	arrycat(paraToPC,47,floatToHex,4);
-			
-	/* WyRate PidPara */
-	FloatToByte(OriginalWyRate.kP,floatToHex);
-	arrycat(paraToPC,51,floatToHex,4);
-	FloatToByte(OriginalWyRate.kI,floatToHex);
-	arrycat(paraToPC,55,floatToHex,4);
-	FloatToByte(OriginalWyRate.kD,floatToHex);
-	arrycat(paraToPC,59,floatToHex,4);
-
-	/* WxRate PidPara */
-	FloatToByte(OriginalWxRate.kP,floatToHex);
-	arrycat(paraToPC,63,floatToHex,4);
-	FloatToByte(OriginalWxRate.kI,floatToHex);
-	arrycat(paraToPC,67,floatToHex,4);
-	FloatToByte(OriginalWxRate.kD,floatToHex);
-	arrycat(paraToPC,71,floatToHex,4);
-
-	/* WzRate PidPara */
-	FloatToByte(OriginalWzRate.kP,floatToHex);
 	arrycat(paraToPC,75,floatToHex,4);
-	FloatToByte(OriginalWzRate.kI,floatToHex);
+	FloatToByte(OriginalPosZ.kI,floatToHex);
 	arrycat(paraToPC,79,floatToHex,4);
-	FloatToByte(OriginalWzRate.kD,floatToHex);
+	FloatToByte(OriginalPosZ.kD,floatToHex);
 	arrycat(paraToPC,83,floatToHex,4);
 
 	/* VelZ PidPara */
@@ -106,27 +111,55 @@ void SendParaInfo(void)
 	arrycat(paraToPC,139,floatToHex,4);
 	FloatToByte(OriginalVelY.kD,floatToHex);
 	arrycat(paraToPC,143,floatToHex,4);
-
-	for(i=147;i<157;i++)
-	{
-		paraToPC[i]=0;
-	}	
-	IntToByte(0.0,intToHex);
-	arrycat(paraToPC,157,intToHex,2);
 	
-	for(i=0;i<159;i++)
-	{
-		paraToPC[159]+=paraToPC[i];
-	}
-	Uart3_tx(paraToPC,160);
+	/* FlowX PidPara */
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,147,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,151,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,155,floatToHex,4);
+	
+	/* FlowY PidPara */
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,159,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,163,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,167,floatToHex,4);
+	
+	/* FlowVelX PidPara */
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,171,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,175,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,179,floatToHex,4);
+	
+	/* FlowVelY PidPara */
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,183,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,187,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,191,floatToHex,4);
+	
+	/* AccZ PidPara */
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,195,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,199,floatToHex,4);
+	FloatToByte(0,floatToHex);
+	arrycat(paraToPC,203,floatToHex,4);
+
+	Uart3_tx(paraToPC,207);
 }
 
 void SendRTInfo(void)
 {
   float temp;
 	u8 floatToHex[4];		
-	u8 dataToPC[64];	
-	u8 i=0;
+	u8 dataToPC[55];	
 	//各个数据获取
 	Vector3angle_t AHRSAngle = GetCopterAngle();
 	Vector3angle_t VIOAngle = GetVisualOdometryAngle();
@@ -135,11 +168,12 @@ void SendRTInfo(void)
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
 	float TOFHeightData = GetTofHeightData();
+	float TOFHeightVelData = GetTofHeightVel();
 	float BatteryVoltage = GetBatteryVoltage();
-	float Thrust = GetDesiredControlAcc();
+	
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
-	dataToPC[2]=0X01;
+	dataToPC[2]=0XF0;
 		
 	temp = AHRSAngle.pitch * 180/PI;
 	FloatToByte(temp,floatToHex);
@@ -151,7 +185,7 @@ void SendRTInfo(void)
 	
 	temp = VIOAngle.yaw * 180/PI;
 	FloatToByte(temp,floatToHex);
-	arrycat(dataToPC,11,floatToHex,4);
+	arrycat(dataToPC,11,floatToHex,4); 
 	
 	temp = KalmanPos.z;
 	FloatToByte(temp,floatToHex);
@@ -161,18 +195,37 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = KalmanVel.z * 100;
+	temp = KalmanVel.z * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	
-	for(i=27;i<47;i++)
-	{
-		dataToPC[i]=0;
-	}
-	for(i=0;i<47;i++)
-	{
-		dataToPC[47]+=dataToPC[i];
-	}
+	temp = KalmanPos.x;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,27,floatToHex,4);
 	
-	Uart3_tx(dataToPC,48);
+	temp = KalmanPos.y;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,31,floatToHex,4);
+	
+	temp = VIOVel.x * 100.0f;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,35,floatToHex,4);
+	
+	temp = VIOVel.y * 100.0f;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,39,floatToHex,4);
+	
+	temp = KalmanVel.x * 100.0f;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,43,floatToHex,4);
+	
+	temp = KalmanVel.y * 100.0f;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,47,floatToHex,4);
+	
+	temp = 0 ;
+	FloatToByte(temp,floatToHex);
+	arrycat(dataToPC,51,floatToHex,4);	
+	
+	Uart3_tx(dataToPC,55);
 }

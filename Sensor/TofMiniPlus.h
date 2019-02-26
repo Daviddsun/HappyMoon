@@ -13,4 +13,5 @@ typedef struct {
 void TOF_DataDeal(Receive_TOFData rx);
 float GetTofHeightData(void);
 float GetTofHeightVel(void);
+float GetFPSTimeOFfly(void);
 #endif

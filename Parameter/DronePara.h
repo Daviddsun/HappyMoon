@@ -17,7 +17,7 @@
 	#define Drone_Mass 1.750f
 #else
 	#define ARM_Length 0.125f
-	#define Drone_Mass 1.500f          //实际质量只有一半，但好盈这个电机官方参数表不正确  只能依靠提高质量来弥补悬停油门
+	#define Drone_Mass 1.600f          //实际质量只有一半，但好盈这个电机官方参数表不正确  只能依靠提高质量来弥补悬停油门
 #endif
 
 typedef enum{ 
@@ -52,10 +52,11 @@ typedef struct{
 }DroneFlightControl;
 
 typedef enum{
-	PurePosture = 0x00,
-	FixedHeight = 0x01,
-	FixedPoint = 0x02,
-	TrajectoryTracking = 0X03,
+	PurePosture,
+	FixedHeight,
+	FixedPoint,
+	StepResponse,
+	TrajectoryTracking,
 }DroneFlightMethod;
 
 typedef struct
@@ -124,9 +125,9 @@ typedef struct{
 
 
 typedef struct{
-    float XaxisPos;
-    float YaxisPos;
-    float ZaxisPos;
+    float Xaxis;
+    float Yaxis;
+    float Zaxis;
     float Navigation;
 }RemoteControl;
 
