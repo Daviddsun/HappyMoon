@@ -7,9 +7,9 @@
 #define TX_LEN  160
 #define RX_LEN  128
 #define Gravity_Acceleration  9.805f
-#define Inertia_Wx    0.001f
-#define Inertia_Wy    0.001f
-#define Inertia_Wz    0.002f
+#define Inertia_Wx    0.0001f
+#define Inertia_Wy    0.0001f
+#define Inertia_Wz    0.0005f
 
 //定义机型
 #ifdef Model380

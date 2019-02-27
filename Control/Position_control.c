@@ -158,8 +158,8 @@ void Altitude_Controller(void){
 		ExpectAltitude = GetStepSignalValue().z;
 		/******* 降落控制 ********/	
 		if(GetCopterFlyMode() == Land){
-			ExpectAltitudeVel = -0.25f;
-			if(GetCopterPosition().z < 0.05f){
+			ExpectAltitudeVel = -0.3f;
+			if(GetCopterPosition().z < 0.1f){
 				SetCopterFlyMode(Nothing);
 				SetCopterStatus(Drone_Off);
 			}

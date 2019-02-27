@@ -166,7 +166,7 @@ void VelocityEstimate(void){
 		nav.velMeasure[5] = 0;   
 			
 		//禁用VIO中Z轴的速度
-		KalmanVelUseMeasurement(&kalmanVel, BARO_VEL, false);
+		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_Z, false);
 
 		//禁用气压传感器：未安装
 		KalmanVelUseMeasurement(&kalmanVel, BARO_VEL, false);
