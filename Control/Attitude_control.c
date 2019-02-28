@@ -9,6 +9,7 @@ FPS_AttitudeControl FPSAttitudeControl;
 Vector3f_t Attitude_InnerController(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro){
 	OS_ERR err;
 	Vector3f_t ErrorGyro,Thrust;
+	static Vector3f_t LastEstimateGyro;
 	//计算函数运行时间间隔
 	FPSAttitudeControl.CurrentTime = (OSTimeGet(&err) - FPSAttitudeControl.LastTime) * 1e-3;
   FPSAttitudeControl.LastTime = OSTimeGet(&err);
@@ -19,11 +20,22 @@ Vector3f_t Attitude_InnerController(Vector3f_t ExpectGyro, Vector3f_t EstimateGy
 	ErrorGyro.z = ExpectGyro.z - EstimateGyro.z;
 	//PID算法，计算出角速度环的控制量
 	Thrust.x = PID_GetPID(&OriginalWxRate, ErrorGyro.x, FPSAttitudeControl.CurrentTime)
-												+ EstimateGyro.y * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wy * EstimateGyro.y) * EstimateGyro.z;//考虑轴间耦合现象
+												//轴间耦合
+												+ EstimateGyro.y * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wy * EstimateGyro.y) * EstimateGyro.z
+															//角速度前馈
+															+ Inertia_Wx * (EstimateGyro.x - LastEstimateGyro.x) * 1000.0f;
+	
 	Thrust.y = PID_GetPID(&OriginalWyRate, ErrorGyro.y, FPSAttitudeControl.CurrentTime)
-												+ (-(EstimateGyro.x * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.z));//考虑轴间耦合现象
+												+ (-(EstimateGyro.x * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.z))
+															+ Inertia_Wy * (EstimateGyro.y - LastEstimateGyro.y) * 1000.0f;
+															
 	Thrust.z = PID_GetPID(&OriginalWzRate, ErrorGyro.z, FPSAttitudeControl.CurrentTime)
-												+ EstimateGyro.x * (Inertia_Wy * EstimateGyro.y) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.y;//考虑轴间耦合现象
+												+ EstimateGyro.x * (Inertia_Wy * EstimateGyro.y) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.y
+															+ Inertia_Wz * (EstimateGyro.z - LastEstimateGyro.z) * 1000.0f;
+															
+	LastEstimateGyro.x = EstimateGyro.x;
+	LastEstimateGyro.y = EstimateGyro.y;
+	LastEstimateGyro.z = EstimateGyro.z;
 	
 	return Thrust;
 }

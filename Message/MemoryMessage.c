@@ -36,6 +36,10 @@ void MessageQueueCreate(OS_ERR p_err)
 	//地面站数据
 	OSQCreate((OS_Q *)&messageQueue[GROUND_STATION],
 												(CPU_CHAR *)"GROUND_STATION",(OS_MSG_QTY)36,(OS_ERR *)&p_err);
+	//TOF飞行高度数据
+	OSQCreate((OS_Q *)&messageQueue[TIMEOFFLY_DATA],
+												(CPU_CHAR *)"TIMEOFFLY DATA",(OS_MSG_QTY)18,(OS_ERR *)&p_err);
+	
 }
 
 /**********************************************************************************************************
@@ -68,15 +72,6 @@ void MemoryCreate(OS_ERR p_err)
 								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
 										(OS_MEM_SIZE  )24,					//每个内存块的大小(字节)
 												(OS_ERR      *)&p_err);	
-//	// 滑动窗口内存分配
-//  OSMemCreate((OS_MEM     *)&memoryInfo[VEL_STATE_SlidWindow],(CPU_CHAR *)"VEL_STATE_SlidWindow",(void *)&Vel_stateSlidWindow,//内存分区起始地址
-//								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
-//										(OS_MEM_SIZE  )1500,					//每个内存块的大小(字节)
-//												(OS_ERR      *)&p_err);	
-//  OSMemCreate((OS_MEM     *)&memoryInfo[POS_STATE_SlidWindow],(CPU_CHAR *)"POS_STATE_SlidWindow",(void *)&Pos_stateSlidWindow,//内存分区起始地址
-//								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
-//										(OS_MEM_SIZE  )1500,					//每个内存块的大小(字节)
-//												(OS_ERR      *)&p_err);	
 }
 
 

@@ -23,24 +23,24 @@ void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
 		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_Acceleration * Drone_Mass / 4.0f;
 		UavThrust.f4 = +1.414f / (arm_length * 4.0f) * RotateThrust.x + Gravity_Acceleration * Drone_Mass / 4.0f;
 	}else if(GetCopterTest()==Drone_Mode_4Axis){
-		UavThrust.f1 = -1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
-										+1.414f / (arm_length * 4.0f) * RotateThrust.y                                  	//pitch
-											+ 14.2f * RotateThrust.z                                                        //yaw	
-												+ HeightThrustLpf * Drone_Mass / 4.0f;			  											  				//mass		 																									
+		UavThrust.f1 = - 1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
+										+ 1.414f / (arm_length * 4.0f) * RotateThrust.y                                  		//pitch
+											+ 15.625f * RotateThrust.z                                                        //yaw	
+												+ HeightThrustLpf * Drone_Mass / 4.0f;			  											  					//mass		 																									
 		
-		UavThrust.f2 = -1.414f / (arm_length * 4.0f) * RotateThrust.x
-										-1.414f / (arm_length * 4.0f) * RotateThrust.y
-											- 14.2f * RotateThrust.z
+		UavThrust.f2 = - 1.414f / (arm_length * 4.0f) * RotateThrust.x
+										- 1.414f / (arm_length * 4.0f) * RotateThrust.y
+											- 15.625f * RotateThrust.z
 												+ HeightThrustLpf * Drone_Mass / 4.0f;									
 
-		UavThrust.f3 = +1.414f / (arm_length * 4.0f) * RotateThrust.x
-										+1.414f / (arm_length * 4.0f) * RotateThrust.y
-											- 14.2f * RotateThrust.z
+		UavThrust.f3 = + 1.414f / (arm_length * 4.0f) * RotateThrust.x
+										+ 1.414f / (arm_length * 4.0f) * RotateThrust.y
+											- 15.625f * RotateThrust.z
 												+ HeightThrustLpf * Drone_Mass / 4.0f;
 
-		UavThrust.f4 = +1.414f / (arm_length * 4.0f) * RotateThrust.x 
-										-1.414f / (arm_length * 4.0f) * RotateThrust.y
-											+ 14.2f * RotateThrust.z
+		UavThrust.f4 = + 1.414f / (arm_length * 4.0f) * RotateThrust.x 
+										- 1.414f / (arm_length * 4.0f) * RotateThrust.y
+											+ 15.625f * RotateThrust.z
 											  + HeightThrustLpf * Drone_Mass / 4.0f;
 		
 	}

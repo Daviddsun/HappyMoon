@@ -28,21 +28,21 @@ static void KalmanVelInit(void)
 													{0, 0.2, 0, 0, 0, 0},
 													{0, 0, 0.03, 0, 0, 0},      
 													{0.003, 0, 0, 0, 0, 0},
-													{0, 0.003, 0, 0, 0, 0},
+													{0, 0.03, 0, 0, 0, 0},
 													{0, 0, 0.003, 0, 0, 0}};
 
 	float rMatInit[6][6] = {{0.1, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
 													{0, 0.1, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
 													{0, 0, 5.0, 0, 0, 0},          //VIO速度z轴数据噪声方差
-													{0, 0, 0, 2500, 0, 0},          //气压速度数据噪声方差
-													{0, 0, 0, 0, 2000, 0},          //TOF速度数据噪声方差
-													{0, 0, 0, 0, 0, 500000}};       //z轴速度高通滤波系数
+													{0, 0, 0, 2500, 0, 0},         //气压速度数据噪声方差
+													{0, 0, 0, 0, 1.0, 0},          //TOF速度数据噪声方差
+													{0, 0, 0, 0, 0, 500000}};      //z轴速度高通滤波系数
 
 	float pMatInit[6][6] = {{10, 0, 0, 0, 0, 0},
 													{0, 10, 0, 0, 0, 0},
 													{0, 0, 10, 0, 0, 0},      
-													{2, 0, 0, 2, 0, 0},
-													{0, 2, 0, 0, 2, 0},
+													{5, 0, 0, 10, 0, 0},
+													{0, 5, 0, 0, 10, 0},
 													{0, 0, 2, 0, 0, 2}};    //增大协方差P的初值，可以提高初始化时bias的收敛速度
 
 	float hMatInit[6][6] = {{1, 0, 0, 0, 0, 0},
@@ -75,17 +75,17 @@ static void KalmanVelInit(void)
 	KalmanVelBMatSet(&kalmanVel, bMatInit);
 													
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanVel.slidWindowSize = 50;
-	for(int i =0;i<50;i++){
+	kalmanVel.slidWindowSize = 10;
+	for(int i =0;i<5;i++){
 		kalmanVel.stateSlidWindow[i].x=0;
 		kalmanVel.stateSlidWindow[i].y=0;
 		kalmanVel.stateSlidWindow[i].z=0;
 	}
-	kalmanVel.fuseDelay[VIO_VEL_X] = 50;    //VIO速度x轴数据延迟参数：0.1s
-	kalmanVel.fuseDelay[VIO_VEL_Y] = 50;    //VIO速度y轴数据延迟参数：0.1s
-	kalmanVel.fuseDelay[VIO_VEL_Z] = 50;    //VIO速度z轴数据延迟参数：0.1s
-	kalmanVel.fuseDelay[BARO_VEL]  = 30;    //气压速度数据延迟参数：0.06s
-	kalmanVel.fuseDelay[TOF_VEL]   = 20;    //TOF速度数据延迟参数：0.04s
+	kalmanVel.fuseDelay[VIO_VEL_X] = 10;    //VIO速度x轴数据延迟参数：0.02s
+	kalmanVel.fuseDelay[VIO_VEL_Y] = 10;    //VIO速度y轴数据延迟参数：0.02s
+	kalmanVel.fuseDelay[VIO_VEL_Z] = 10;    //VIO速度z轴数据延迟参数：0.02s
+	kalmanVel.fuseDelay[BARO_VEL]  = 10;    //气压速度数据延迟参数：0.02s
+	kalmanVel.fuseDelay[TOF_VEL]   = 10;    //TOF速度数据延迟参数：0.02s
 	
 	kalmanVel.state[0] = 0;
   kalmanVel.state[1] = 0;
@@ -118,15 +118,15 @@ static void KalmanPosInit(void)
 	KalmanObserveMapMatSet(&kalmanPos, hMatInit);
 
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanPos.slidWindowSize = 50;
-	for(int i =0;i<50;i++){
+	kalmanPos.slidWindowSize = 10;
+	for(int i =0;i<10;i++){
 		kalmanPos.statusSlidWindow[i].x=0;
 		kalmanPos.statusSlidWindow[i].y=0;
 		kalmanPos.statusSlidWindow[i].z=0;
 }
-	kalmanPos.fuseDelay.x = 50;    //0.1s延时
-	kalmanPos.fuseDelay.y = 50;    //0.1s延时
-	kalmanPos.fuseDelay.z = 50;    //0.1s延时
+	kalmanPos.fuseDelay.x = 10;    //0.02s延时
+	kalmanPos.fuseDelay.y = 10;    //0.02s延时
+	kalmanPos.fuseDelay.z = 10;    //0.02s延时
 	
 	kalmanPos.state.x = 0;
 	kalmanPos.state.y = 0;
@@ -153,22 +153,25 @@ void VelocityEstimate(void){
 	//获取运动加速度
 	nav.accel = EarthAccGetData();
 
-	//加速度数据更新频率500 Hz，VIO数据只有10Hz
-	if(count++ % 50 == 0){
+	//加速度数据更新频率500 Hz
+	if(count++ % 20 == 0){
 		//获取视觉里程计数据
 		VIOVel = GetVisualOdometryVelTrans();
 		
-		nav.velMeasure[0] = VIOVel.y;           //机体速度x轴
-		nav.velMeasure[1] = -VIOVel.x;          //机体速度y轴
-		nav.velMeasure[2] = VIOVel.z;           //机体速度z轴
-		nav.velMeasure[3] = 0;  								//气压速度值
-		nav.velMeasure[4] = 0;                  //TOF速度值
-		nav.velMeasure[5] = 0;       
-	
+		nav.velMeasure[0] = VIOVel.x;           				//机体速度x轴
+		nav.velMeasure[1] = VIOVel.y;          					//机体速度y轴
+		nav.velMeasure[2] = VIOVel.z;          					//机体速度z轴
+		nav.velMeasure[3] = 0;  												//气压速度值
+		nav.velMeasure[4] = GetTofHeightVel();          //TOF速度值
+		nav.velMeasure[5] = 0;   
+			
+		//禁用VIO中Z轴的速度
+		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_Z, false);
+
 		//禁用气压传感器：未安装
 		KalmanVelUseMeasurement(&kalmanVel, BARO_VEL, false);
-		//禁用TOF传感器：未安装
-		KalmanVelUseMeasurement(&kalmanVel, TOF_VEL, false);
+		//已安装TOF传感器
+		KalmanVelUseMeasurement(&kalmanVel, TOF_VEL, true);
 		
 		fuseFlag = true;
 	}
@@ -203,14 +206,14 @@ void PositionEstimate(void){
 	FPSNavigation.PosCurrentTime = ConstrainFloat(FPSNavigation.PosCurrentTime, 0.0005, 0.005);
 	FPSNavigation.PosLastTime = OSTimeGet(&err);
 
-	//速度数据更新频率500khz，vio数据只有10Hz
-	//这里强制统一为20Hz
-	if(count++ % 50 == 0)
+	//速度数据更新频率500hz
+	if(count++ % 20 == 0)
 	{
 			//获取VIO位置
-			nav.posMeasure.x = GetVisualOdometryPos().y;
-			nav.posMeasure.y = -GetVisualOdometryPos().x;
-			nav.posMeasure.z = GetVisualOdometryPos().z;
+			nav.posMeasure.x = GetVisualOdometryPos().x;
+			nav.posMeasure.y = GetVisualOdometryPos().y;
+//			nav.posMeasure.z = GetVisualOdometryPos().z;
+			nav.posMeasure.z = GetTofHeightData();
 			fuseFlag = true;
 	}
 	else

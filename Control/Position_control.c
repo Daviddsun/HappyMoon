@@ -1,7 +1,7 @@
 #include "Position_control.h"
 Vector4PosController PosControllerOut;
 FPS_PositionControl FPSPositionControl;
-
+FPS_PositionControl FPSAltitudeControl;
 /**********************************************************************************************************
 *函 数 名: Position_Controller
 *功能说明: 位置控制器
@@ -10,68 +10,98 @@ FPS_PositionControl FPSPositionControl;
 **********************************************************************************************************/
  void Position_Controller(void){
 	OS_ERR err;
-	Vector3f_t ExpectPos,ExpectVel,ErrorVel,PosPID,VelPID,PosPIDTrans;	
+	Vector3f_t ExpectPos,ExpectVel,PosPID,VelPID,PosPIDTrans,ErrorVel;	
 	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
 	static uint8_t FlightMethod;
+	static uint64_t count = 0;
 	float x_pos_error,x_vel_error,y_pos_error,y_vel_error;
 	//计算函数运行时间间隔
 	FPSPositionControl.CurrentTime = (OSTimeGet(&err) - FPSPositionControl.LastTime) * 1e-3;
+	FPSPositionControl.CurrentTime = ConstrainFloat(FPSPositionControl.CurrentTime, 0.005, 0.02);
   FPSPositionControl.LastTime = OSTimeGet(&err);
 	//获取飞行模式
 	FlightMethod = GetCopterFlightMethod();
 	//模式选择
 	switch(FlightMethod){
+		//姿态飞行控制
 		case 0:
 			//姿态
-			PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().XaxisPos * 0.04f * PI/180;
+			PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().Xaxis * 0.04f * PI/180;
 			
-			PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().YaxisPos * 0.04f * PI/180;
+			PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().Yaxis * 0.04f * PI/180;
 			
-			PosControllerOut.ExpectAngle.yaw = 0;	
-			//高度
-			PosControllerOut.ExpectAcc = GetRemoteControlFlyData().ZaxisPos * 5.0f + Gravity_Acceleration;
-			
+			PosControllerOut.ExpectAngle.yaw = 0;
 			break;
+		//定高飞行
 		case 1:
-			
+			//姿态
+			PosControllerOut.ExpectAngle.pitch = -GetRemoteControlFlyData().Xaxis * 0.04f * PI/180;
+		
+			PosControllerOut.ExpectAngle.roll = GetRemoteControlFlyData().Yaxis * 0.04f * PI/180;
+		
+			PosControllerOut.ExpectAngle.yaw = 0;	
 			break;
+		//遥控飞行
 		case 2:
-			
+			//转化到速度为2.5m/s最高
+			ExpectVel.x = -GetRemoteControlFlyData().Xaxis * 0.004f; 
+			ExpectVel.y = -GetRemoteControlFlyData().Yaxis * 0.004f;
+			//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
+			//来自自身卡尔曼滤波
+			EstimateVelLpf.x = EstimateVelLpf.x * 0.95f + GetCopterVelocity().x * 0.05f;
+			EstimateVelLpf.y = EstimateVelLpf.y * 0.95f + GetCopterVelocity().y * 0.05f;	
+			//速度误差计算
+			ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
+			ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
+			//角度转化为rad弧度
+			PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;
+			PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
+			PosControllerOut.ExpectAngle.yaw = 0;	
 			break;
+		//阶跃响应
 		case 3:
-			// 期望获取
-			ExpectPos = GetVisualOdometryRefPos();
-			ExpectVel = GetVisualOdometryRefVelTrans();
-
-			/******* 降落控制 ********/	
-			if(GetCopterFlyMode() == Land){
-				ExpectVel.z = -0.25f;
-				if(GetCopterPosition().z < 0.05f){
-					SetCopterFlyMode(Nothing);
-					SetCopterStatus(Drone_Off);
-				}
+			//获取阶跃信号
+			ExpectPos = GetStepSignalValue();
+			//获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
+			//来自自身卡尔曼滤波
+			EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
+			EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;	
+			//外环进行二分频
+			if(count++ %2 == 0){ 		
+				//速度限幅在0.5m/s
+				ExpectVel.x = OriginalPosX.kP * (ExpectPos.x - EstimatePosLpf.x);
+				ExpectVel.x = ConstrainFloat(ExpectVel.x,-0.5,0.5);
+				//速度限幅在0.5m/s
+				ExpectVel.y = OriginalPosY.kP * (ExpectPos.y - EstimatePosLpf.y);
+				ExpectVel.y = ConstrainFloat(ExpectVel.y,-0.5,0.5);		
+				TransVelToBodyFrame(ExpectVel, &ExpectVel, GetVisualOdometryAngle().yaw);
 			}
-			/******* 高度原始串级PID控制 ********/	
-			// 获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
-			// 来自自身卡尔曼滤波
+			//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
+			//来自自身卡尔曼滤波
+			EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
+			EstimateVelLpf.y = EstimateVelLpf.y * 0.9f + GetCopterVelocity().y * 0.1f;	
+			//速度误差计算
+			ErrorVel.x = ExpectVel.x - EstimateVelLpf.x;
+			ErrorVel.y = ExpectVel.y - EstimateVelLpf.y;
+			//角度转化为rad弧度
+			PosControllerOut.ExpectAngle.roll = - PID_GetPID(&OriginalVelY, ErrorVel.y, FPSPositionControl.CurrentTime) * PI/180;
+			PosControllerOut.ExpectAngle.pitch = PID_GetPID(&OriginalVelX, ErrorVel.x, FPSPositionControl.CurrentTime) * PI/180;
+			PosControllerOut.ExpectAngle.yaw = 0;	
+			break;
+		//轨迹追踪
+		case 4:
+			// 期望获取
+			ExpectPos = GetWayPointRefPos();
+			ExpectVel = GetWayPointRefVelTrans();
+
+			//获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
+			//来自自身卡尔曼滤波
 			EstimatePosLpf.x = EstimatePosLpf.x * 0.95f + GetCopterPosition().x * 0.05f;
 			EstimatePosLpf.y = EstimatePosLpf.y * 0.95f + GetCopterPosition().y * 0.05f;
-			EstimatePosLpf.z = EstimatePosLpf.z * 0.95f + GetCopterPosition().z * 0.05f;
-			// 计算速度期望
-			if(GetCopterFlyMode() == Nothing){
-				//速度限幅在0.5m/s
-				ExpectVel.z = OriginalPosZ.kP * (ExpectPos.z - EstimatePosLpf.z);
-				ExpectVel.z = ConstrainFloat(ExpectVel.z,-0.5,0.5);
-			}
-			// 对速度测量值进行低通滤波，减少数据噪声对控制器的影响
-			// 来自自身卡尔曼滤波
+			//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
+			//来自自身卡尔曼滤波
 			EstimateVelLpf.x = EstimateVelLpf.x * 0.9f + GetCopterVelocity().x * 0.1f;
 			EstimateVelLpf.y = EstimateVelLpf.y * 0.9f + GetCopterVelocity().y * 0.1f;
-			EstimateVelLpf.z = EstimateVelLpf.z * 0.9f + GetCopterVelocity().z * 0.1f;
-			//速度误差计算
-			ErrorVel.z = ExpectVel.z - EstimateVelLpf.z;
-			//PID计算
-			PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorVel.z, FPSPositionControl.CurrentTime) + Gravity_Acceleration;
 
 			/******* 位置控制 ********/		
 			x_pos_error = ExpectPos.x - EstimatePosLpf.x;
@@ -102,6 +132,58 @@ FPS_PositionControl FPSPositionControl;
 			break;
 		}
 }
+ 
+/**********************************************************************************************************
+*函 数 名: Altitude_Controller
+*功能说明: 高度控制
+*形    参: 无
+*返 回 值: 无
+**********************************************************************************************************/	
+void Altitude_Controller(void){
+	OS_ERR err;
+	static uint8_t AltitudeFlightMethod;
+	static float EstimateAltitudeLpf,EstimateAltitudeVelLpf;
+	float ExpectAltitude,ExpectAltitudeVel,ErrorAltitude;
+	static uint64_t count = 0;
+	//计算函数运行时间间隔
+	FPSAltitudeControl.CurrentTime = (OSTimeGet(&err) - FPSAltitudeControl.LastTime) * 1e-3;
+	FPSAltitudeControl.CurrentTime = ConstrainFloat(FPSAltitudeControl.CurrentTime, 0.0005, 0.005);
+  FPSAltitudeControl.LastTime = OSTimeGet(&err);
+	//获取飞行模式
+	AltitudeFlightMethod = GetCopterFlightMethod();
+	if(AltitudeFlightMethod == PurePosture){
+		//纯姿态
+		PosControllerOut.ExpectAcc = GetRemoteControlFlyData().Zaxis * 5.0f + Gravity_Acceleration;
+	}else{
+		ExpectAltitude = GetStepSignalValue().z;
+		/******* 降落控制 ********/	
+		if(GetCopterFlyMode() == Land){
+			ExpectAltitudeVel = -0.3f;
+			if(GetCopterPosition().z < 0.1f){
+				SetCopterFlyMode(Nothing);
+				SetCopterStatus(Drone_Off);
+			}
+		}
+		//获取当前飞机位置，并低通滤波，减少数据噪声对控制的干扰
+		EstimateAltitudeLpf = EstimateAltitudeLpf * 0.95f + GetCopterPosition().z * 0.05f;
+		if(count++ % 2 == 0){
+			//计算速度期望
+			if(GetCopterFlyMode() == Nothing){
+				//速度限幅在0.75m/s
+				ExpectAltitudeVel = OriginalPosZ.kP * (ExpectAltitude - EstimateAltitudeLpf);
+				ExpectAltitudeVel = ConstrainFloat(ExpectAltitudeVel,-0.75,0.75);
+			}
+		}
+		//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
+		//来自自身卡尔曼滤波
+		EstimateAltitudeVelLpf = EstimateAltitudeVelLpf * 0.9f + GetCopterVelocity().z * 0.1f;
+		//速度误差计算
+		ErrorAltitude = ExpectAltitudeVel - EstimateAltitudeVelLpf;
+		//PID计算
+		PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorAltitude, FPSAltitudeControl.CurrentTime) + Gravity_Acceleration;
+	}
+}
+
 /**********************************************************************************************************
 *函 数 名: GetDesiredControlAcc
 *功能说明: 获取期望加速度
@@ -132,17 +214,17 @@ void ResetPositionPara(void){
 	OriginalPosY.integrator = 0;
 	OriginalPosZ.integrator = 0;
 	//位置积分最大
-	OriginalPosX.imax = 5;
-	OriginalPosY.imax = 5;
+	OriginalPosX.imax = 10;
+	OriginalPosY.imax = 10;
 	//速度积分归零
 	OriginalVelX.integrator = 0;
 	OriginalVelY.integrator = 0;
 	OriginalVelZ.integrator = 0;
-	//速度积分最大
-	OriginalVelX.imax = 5;
-	OriginalVelY.imax = 5;
-	//height 最大积分加速度 5.0m/s^2
-	OriginalVelZ.imax = 5.0;
+	//位置速度积分最大
+	OriginalVelX.imax = 10;
+	OriginalVelY.imax = 10;
+	//高度速度积分最大
+	OriginalVelZ.imax = 10;
 	//位置输出归零
 	PosControllerOut.ExpectAcc = 0;
 	PosControllerOut.ExpectAngle.pitch = 0;

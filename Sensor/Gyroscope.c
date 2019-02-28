@@ -50,7 +50,7 @@ void GyroCalibration(Vector3f_t gyroRaw)
 		OffsetData.gyro_scalex = 1.0;
 		OffsetData.gyro_scaley = 1.0;
 		OffsetData.gyro_scalez = 1.0;
-//		Write_Config();
+		Write_Config();
 		OffsetData.gyro_success = false;
 	}
 }
@@ -97,23 +97,23 @@ void PlaceStausCheck(Vector3f_t gyro)
 
     if(count < 30)
     {
-        count++;
-        //陀螺仪数值变化大于阈值
-        if(abs(gyroDiff.x) > threshold || abs(gyroDiff.y) > threshold || abs(gyroDiff.z) > threshold)
-        {
-            checkNum++;
-        }
+			count++;
+			//陀螺仪数值变化大于阈值
+			if(abs(gyroDiff.x) > threshold || abs(gyroDiff.y) > threshold || abs(gyroDiff.z) > threshold)
+			{
+					checkNum++;
+			}
     }
     else
     {
-        //陀螺仪数据抖动次数大于一定值时认为飞机不处于静止状态
-        if(checkNum > 10)
-            placement = MOTIONAL;
-        else
-            placement = STATIC;
+			//陀螺仪数据抖动次数大于一定值时认为飞机不处于静止状态
+			if(checkNum > 10)
+					placement = MOTIONAL;
+			else
+					placement = STATIC;
 
-        checkNum = 0;
-        count = 0;
+			checkNum = 0;
+			count = 0;
     }
 }
 

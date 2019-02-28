@@ -1,3 +1,10 @@
+/**********************************************************************************************************
+ * @文件     Visiondata_deal.c
+ * @说明     视觉数据接收
+ * @作者     YuyingJin
+ * @网站     https://yuyingjin0111.github.io/
+ * @日期     2018 ~
+**********************************************************************************************************/
 #include "Visiondata_deal.h"
 FPS_VisualOdometry FPSVisualOdometry;
 FPS_ReferenceRoute FPSReferenceRoute;
@@ -7,7 +14,7 @@ float_union position_x,position_y,position_z,                       //估计位�
 								Quaternion0,Quaternion1,Quaternion2,Quaternion3,	  //估计姿态
 									reference_posx,reference_posy,reference_posz,			//参考航点
 										reference_velx,reference_vely,reference_velz,   //参考速度
-											RefQuaternion0,RefQuaternion1,RefQuaternion2,RefQuaternion3; //参考姿态
+											reference_accx,reference_accy,reference_accz; //参考加速度
 /**********************************************************************************************************
 *函 数 名: Vision_datadeal
 *功能说明: 接收视觉里程计数据
@@ -107,26 +114,21 @@ void Vision_DataDeal(Receive_VisualOdometry rx){
 			reference_velz.cv[1] = rx.buf[24];
 			reference_velz.cv[2] = rx.buf[25];
 			reference_velz.cv[3] = rx.buf[26];
-			//期望的航向数据
-			RefQuaternion0.cv[0] = rx.buf[27];
-			RefQuaternion0.cv[1] = rx.buf[28];
-			RefQuaternion0.cv[2] = rx.buf[29];
-			RefQuaternion0.cv[3] = rx.buf[30];
+			//期望的加速度数据
+			reference_accx.cv[0] = rx.buf[27];
+			reference_accx.cv[1] = rx.buf[28];
+			reference_accx.cv[2] = rx.buf[29];
+			reference_accx.cv[3] = rx.buf[30];
 			
-			RefQuaternion1.cv[0] = rx.buf[31];
-			RefQuaternion1.cv[1] = rx.buf[32];
-			RefQuaternion1.cv[2] = rx.buf[33];
-			RefQuaternion1.cv[3] = rx.buf[34];
+			reference_accy.cv[0] = rx.buf[31];
+			reference_accy.cv[1] = rx.buf[32];
+			reference_accy.cv[2] = rx.buf[33];
+			reference_accy.cv[3] = rx.buf[34];
 			
-			RefQuaternion2.cv[0] = rx.buf[35];
-			RefQuaternion2.cv[1] = rx.buf[36];
-			RefQuaternion2.cv[2] = rx.buf[37];
-			RefQuaternion2.cv[3] = rx.buf[38];
-			
-			RefQuaternion3.cv[0] = rx.buf[39];
-			RefQuaternion3.cv[1] = rx.buf[40];
-			RefQuaternion3.cv[2] = rx.buf[41];
-			RefQuaternion3.cv[3] = rx.buf[42];
+			reference_accz.cv[0] = rx.buf[35];
+			reference_accz.cv[1] = rx.buf[36];
+			reference_accz.cv[2] = rx.buf[37];
+			reference_accz.cv[3] = rx.buf[38];
 		}
 	}
 }
@@ -171,8 +173,8 @@ Vector3f_t GetVisualOdometryVelTrans(void){
 }
 
 /**********************************************************************************************************
-*函 数 名: GetVisualOdometryAtt
-*功能说明: 获取视觉里程计的Att
+*函 数 名: GetVisualOdometryAngle
+*功能说明: 获取视觉里程计的Angle
 *形    参: 无
 *返 回 值: Attitude
 **********************************************************************************************************/
@@ -186,12 +188,12 @@ Vector3angle_t GetVisualOdometryAngle(void){
   return Attitude;
 }
 /**********************************************************************************************************
-*函 数 名: GetVisualOdometryRefPos
+*函 数 名: GetWayPointRefPos
 *功能说明: 获取航向规划里面的位移（对其坐标）
 *形    参: 无
 *返 回 值: Velocity
 **********************************************************************************************************/
-Vector3f_t GetVisualOdometryRefPos(void){
+Vector3f_t GetWayPointRefPos(void){
 	Vector3f_t RefPosition;
 	RefPosition.x = reference_posy.fvalue;
 	RefPosition.y = -reference_posx.fvalue;
@@ -203,12 +205,12 @@ Vector3f_t GetVisualOdometryRefPos(void){
   return RefPosition;
 }
 /**********************************************************************************************************
-*函 数 名: GetVisualOdometryRefVel
+*函 数 名: GetWayPointRefVel
 *功能说明: 获取航向规划里面的速度（对其坐标）
 *形    参: 无
 *返 回 值: Velocity
 **********************************************************************************************************/
-Vector3f_t GetVisualOdometryRefVel(void){
+Vector3f_t GetWayPointRefVel(void){
 	Vector3f_t RefVelocity;
 	RefVelocity.x = reference_vely.fvalue;
 	RefVelocity.y = -reference_velx.fvalue;
@@ -217,37 +219,15 @@ Vector3f_t GetVisualOdometryRefVel(void){
 }
 
 /**********************************************************************************************************
-*函 数 名: GetVisualOdometryRefVelTrans
+*函 数 名: GetWayPointRefVelTrans
 *功能说明: 获取航向规划里面的速度转化到机体坐标系
 *形    参: 无
 *返 回 值: Velocity
 **********************************************************************************************************/
-Vector3f_t GetVisualOdometryRefVelTrans(void){
+Vector3f_t GetWayPointRefVelTrans(void){
 	Vector3f_t RefVelocityTrans;
-	TransVelToBodyFrame(GetVisualOdometryRefVel(),&RefVelocityTrans,GetVisualOdometryAngle().yaw);
+	TransVelToBodyFrame(GetWayPointRefVel(),&RefVelocityTrans,GetVisualOdometryAngle().yaw);
   return RefVelocityTrans;
-}
-/**********************************************************************************************************
-*函 数 名: GetVisualOdometryStatus
-*功能说明: 获取视觉里程计的状态
-*形    参: 无
-*返 回 值: Status
-**********************************************************************************************************/
-bool GetVisualOdometryStatus(void){
-	static Vector3f_t lastPosition;
-	Vector3f_t Position;
-	Position = GetVisualOdometryPos();
-	bool status;
-	if(abs(Position.x - lastPosition.x)!=0 
-		|| abs(Position.y - lastPosition.y)!=0 
-			|| abs(Position.z - lastPosition.z)!=0){
-			status = true;
-	}else{
-		status = false;
-	}
-	lastPosition = Position;
-	
-  return status;
 }
 /**********************************************************************************************************
 *函 数 名: GetFPSVisualOdometry
@@ -257,5 +237,14 @@ bool GetVisualOdometryStatus(void){
 **********************************************************************************************************/
 float GetFPSVisualOdometry(void){
   return FPSVisualOdometry.CurrentTime;
+}
+/**********************************************************************************************************
+*函 数 名: GetFPSWayPointNav
+*功能说明: 返回的FPS
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+float GetFPSWayPointNav(void){
+  return FPSReferenceRoute.CurrentTime;
 }
 

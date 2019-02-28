@@ -1,5 +1,5 @@
-#ifndef _USARTTOONBOARDPC_H
-#define _USARTTOONBOARDPC_H
+#ifndef _USART1TOONBOARDPC_H
+#define _USART1TOONBOARDPC_H
 
 #include "stm32f4xx.h"
 #include "DronePara.h"

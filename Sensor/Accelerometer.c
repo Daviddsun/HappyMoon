@@ -190,7 +190,7 @@ void AccCalibration(Vector3f_t accRaw){
 			OffsetData.acc_scalex = new_scale.x;
 			OffsetData.acc_scaley = new_scale.y;
 			OffsetData.acc_scalez = new_scale.z;
-//			Write_Config();
+			Write_Config();
 			OffsetData.acc_calibra_cnt = 0;
 			for(uint8_t i=0; i<6; i++)
 					orientationCaliFlag[i] = 0;
@@ -239,7 +239,7 @@ void ImuLevelCalibration(void){
 			OffsetData.level_scale.x = -caliTemp.x;
 			OffsetData.level_scale.y = -caliTemp.y;
 			OffsetData.level_scale.z = 0;
-//			Write_Config();
+			Write_Config();
 			OffsetData.level_success = false;
 		}
 		else{
@@ -277,5 +277,22 @@ void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData, Vector3f_t AccLevel
 **********************************************************************************************************/
 Vector3f_t AccGetData(void){
     return accValue.data;
+}
+
+/**********************************************************************************************************
+*函 数 名: EarthAccGetData
+*功能说明: 获取经过处理后的加速度数据
+*形    参: 无
+*返 回 值: 加速度
+**********************************************************************************************************/
+Vector3f_t EarthAccGetData(void){
+	Vector3f_t EarthAcc,CopterAngle;
+	//获取自身角度
+	CopterAngle.x = GetCopterAngle().roll;
+	CopterAngle.y = GetCopterAngle().pitch;
+	CopterAngle.z = 0;
+	EarthAcc = VectorRotateToBodyFrame(accValue.data,CopterAngle);
+	EarthAcc.z = EarthAcc.z - 1.0f;
+  return EarthAcc;
 }
 

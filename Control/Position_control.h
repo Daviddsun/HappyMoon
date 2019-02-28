@@ -18,6 +18,7 @@ typedef struct {
 }FPS_PositionControl;
 
 void Position_Controller(void);
+void Altitude_Controller(void);
 float GetDesiredControlAcc(void);
 Vector3angle_t GetDesiredControlAngle(void);
 void ResetPositionPara(void);
