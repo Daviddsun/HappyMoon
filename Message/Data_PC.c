@@ -183,7 +183,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = VIOAngle.yaw * 180/PI;
+	temp = AHRSAngle.yaw * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	

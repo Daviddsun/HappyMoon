@@ -2,8 +2,8 @@
 //---------------------------------------------------------------------------------------------------
 // Definitions
 // Definitions
-#define sampleFreq	1000.0f			// sample frequency in Hz
-#define twoKpDef	(2.0f * 1.2f)		// 2 * proportional gain
+#define sampleFreq	1000.0f				// sample frequency in Hz
+#define twoKpDef	(2.0f * 1.0f)		// 2 * proportional gain
 #define twoKiDef	(2.0f * 0.0f)		// 2 * integral gain
 
 //---------------------------------------------------------------------------------------------------

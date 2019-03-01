@@ -123,8 +123,7 @@ void FlightControl_task(void *p_arg){
 	CPU_SR_ALLOC();
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust;
-	Vector3angle_t Expect_Angle;
+	Vector3f_t Estimate_Gyro,Rotate_Thrust;
 	static uint64_t count = 0;
 	//进入临界区
 	OS_CRITICAL_ENTER();
@@ -153,44 +152,30 @@ void FlightControl_task(void *p_arg){
 				PreTakeOff(count);
 			}
 			else{
-				//100hz
-				if(count % 10 == 0){
+				//50hz
+				if(count % 20 == 0){
 					//安全保护
 					SafeControl();
 				}
-				//200hz
-				if(count % 5 == 0){
+				//100hz
+				if(count % 10 == 0){
 					//飞行位置控制
 					Position_Controller();
-					//期望角度选择
-					if(GetCopterTest() == Drone_Mode_Pitch || 
-											GetCopterTest() == Drone_Mode_Roll){
-						//手柄控制
-						Expect_Angle = GetRemoteControlAngle();
-					}else{
-						//位置控制
-						Expect_Angle = GetDesiredControlAngle();
-					}
 				}
-				//500hz
-				if(count % 2 ==0){
+				//200hz
+				if(count % 5 ==0){
 					//飞行高度控制
 					Altitude_Controller();
 					//飞行角度控制
-					Expect_Gyro.x = (Attitude_OuterController(Expect_Angle)).roll;
-					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;
-					Expect_Gyro.z = (Attitude_OuterController(Expect_Angle)).yaw;
+					Attitude_OuterController();
 				}
-				//1000hz
-				//期望角速率选择
-				if(GetCopterTest() == Drone_Mode_RatePitch || 
-										GetCopterTest() == Drone_Mode_RateRoll){
-					Expect_Gyro = GetRemoteControlAngleVel();
+				//500hz
+				if(count % 2 == 0){
+					//飞行角速率控制
+					Rotate_Thrust = Attitude_InnerController(Estimate_Gyro);
+					//推力融合
+					ThrustMixer(ARM_Length,Rotate_Thrust);
 				}
-				//飞行角速率控制
-				Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
-				//推力融合
-				ThrustMixer(ARM_Length,Rotate_Thrust);
 			}
 			count++;
 		}
