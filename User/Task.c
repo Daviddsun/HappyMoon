@@ -152,30 +152,28 @@ void FlightControl_task(void *p_arg){
 				PreTakeOff(count);
 			}
 			else{
-				//50hz
-				if(count % 20 == 0){
+				//100hz
+				if(count % 10 == 0){
 					//安全保护
 					SafeControl();
 				}
-				//100hz
-				if(count % 10 == 0){
+				//200hz
+				if(count % 5 == 0){
 					//飞行位置控制
 					Position_Controller();
 				}
-				//200hz
-				if(count % 5 ==0){
+				//500hz
+				if(count % 2 ==0){
 					//飞行高度控制
 					Altitude_Controller();
 					//飞行角度控制
 					Attitude_OuterController();
 				}
-				//500hz
-				if(count % 2 == 0){
-					//飞行角速率控制
-					Rotate_Thrust = Attitude_InnerController(Estimate_Gyro);
-					//推力融合
-					ThrustMixer(ARM_Length,Rotate_Thrust);
-				}
+				//1000hz
+				//飞行角速率控制
+				Rotate_Thrust = Attitude_InnerController(Estimate_Gyro);
+				//推力融合
+				ThrustMixer(ARM_Length,Rotate_Thrust);
 			}
 			count++;
 		}
