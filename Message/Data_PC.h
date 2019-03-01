@@ -10,7 +10,7 @@
 #include "Adc_Battery.h"
 void SendParaInfo(void);
 void SendRTInfo(void);
-
+void SendDataToARM(Vector3f_t AccRaw,Vector3f_t GyroRaw,uint64_t TriCount,uint64_t Milli);
 
 #endif 
 

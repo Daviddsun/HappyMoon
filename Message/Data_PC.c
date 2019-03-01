@@ -161,71 +161,127 @@ void SendRTInfo(void)
 	u8 floatToHex[4];		
 	u8 dataToPC[55];	
 	//各个数据获取
-	Vector3angle_t AHRSAngle = GetCopterAngle();
-	Vector3angle_t VIOAngle = GetVisualOdometryAngle();
-	Vector3f_t VIOVel = GetVisualOdometryVelTrans();
-	Vector3f_t VIOPos = GetVisualOdometryPos();
-	Vector3f_t KalmanVel = GetCopterVelocity();
-	Vector3f_t KalmanPos = GetCopterPosition();
-	float TOFHeightData = GetTofHeightData();
-	float TOFHeightVelData = GetTofHeightVel();
-	float BatteryVoltage = GetBatteryVoltage();
-	
+	Vector3f_t GyroData = GyroLpfGetData();
+	Vector3f_t AccData = AccGetData();
 	dataToPC[0]=0X55;
 	dataToPC[1]=0XAA;
 	dataToPC[2]=0XF0;
 		
-	temp = AHRSAngle.pitch * 180/PI;
+	temp = AccData.x * 10.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,3,floatToHex,4);
 	
-	temp = AHRSAngle.roll * 180/PI;
+	temp = AccData.y * 10.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = VIOAngle.yaw * 180/PI;
+	temp = AccData.z * 10.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	
-	temp = KalmanPos.z;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
-	temp = BatteryVoltage;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = KalmanVel.z * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	
-	temp = KalmanPos.x;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,27,floatToHex,4);
 	
-	temp = KalmanPos.y;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,31,floatToHex,4);
 	
-	temp = VIOVel.x * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,35,floatToHex,4);
 	
-	temp = VIOVel.y * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,39,floatToHex,4);
 	
-	temp = KalmanVel.x * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,43,floatToHex,4);
 	
-	temp = KalmanVel.y * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,47,floatToHex,4);
 	
-	temp = 0 ;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,51,floatToHex,4);	
 	
 	Uart3_tx(dataToPC,55);
 }
+
+//发送函数
+void SendDataToARM(Vector3f_t AccRaw,Vector3f_t GyroRaw,uint64_t TriCount,uint64_t Milli){
+	u8 SendData[40];
+	float_union acc_x,acc_y,acc_z,
+							gyro_x,gyro_y,gyro_z;
+	
+	acc_x.fvalue = AccRaw.x;
+	acc_y.fvalue = AccRaw.y;
+	acc_z.fvalue = AccRaw.z;
+	gyro_x.fvalue = GyroRaw.x;
+	gyro_y.fvalue = GyroRaw.y;
+	gyro_z.fvalue = GyroRaw.z;
+	
+	SendData[0]='$';
+	SendData[1]=0x03;
+	
+	SendData[2] = gyro_x.cv[0];
+	SendData[3] = gyro_x.cv[1];
+	SendData[4] = gyro_x.cv[2];
+	SendData[5] = gyro_x.cv[3];
+	
+	SendData[6] = gyro_y.cv[0];
+	SendData[7] = gyro_y.cv[1];
+	SendData[8] = gyro_y.cv[2];
+	SendData[9] = gyro_y.cv[3];
+	
+	SendData[10] = gyro_z.cv[0];
+	SendData[11] = gyro_z.cv[1];
+	SendData[12] = gyro_z.cv[2];
+	SendData[13] = gyro_z.cv[3];
+	
+	SendData[14] = acc_x.cv[0];
+	SendData[15] = acc_x.cv[1];
+	SendData[16] = acc_x.cv[2];
+	SendData[17] = acc_x.cv[3];
+	
+	SendData[18] = acc_y.cv[0];
+	SendData[19] = acc_y.cv[1];
+	SendData[20] = acc_y.cv[2];
+	SendData[21] = acc_y.cv[3];	
+	
+	SendData[22] = acc_z.cv[0];
+	SendData[23] = acc_z.cv[1];
+	SendData[24] = acc_z.cv[2];
+	SendData[25] = acc_z.cv[3];		
+			
+	SendData[26] = Milli>>24;
+	SendData[27] = Milli>>16;
+	SendData[28] = Milli>>8;
+	SendData[29] = Milli;
+	
+	SendData[30] = TriCount>>24;
+	SendData[31] = TriCount>>16;
+	SendData[32] = TriCount>>8;
+	SendData[33] = TriCount;
+	
+	SendData[34] = '\r';
+	SendData[35] = '\n';
+	
+	Uart1_tx(SendData,36);
+	
+}
+
