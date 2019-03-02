@@ -1,10 +1,3 @@
-/**********************************************************************************************************
- * @文件     Position_control.c
- * @说明     位置控制函数
- * @作者     YuyingJin
- * @网站     https://yuyingjin0111.github.io/
- * @日期     2018 ~
-**********************************************************************************************************/
 #include "Position_control.h"
 Vector4PosController PosControllerOut;
 FPS_PositionControl FPSPositionControl;
@@ -12,10 +5,10 @@ FPS_PositionControl FPSAltitudeControl;
 /**********************************************************************************************************
 *函 数 名: Position_Controller
 *功能说明: 位置控制器
-*形    参: 无
+*形    参: 期望位置，期望速度，估计位置，估计数据
 *返 回 值: 无
 **********************************************************************************************************/
-void Position_Controller(void){
+ void Position_Controller(void){
 	OS_ERR err;
 	Vector3f_t ExpectPos,ExpectVel,PosPID,VelPID,PosPIDTrans,ErrorVel;	
 	static Vector3f_t EstimatePosLpf,EstimateVelLpf;
@@ -139,6 +132,7 @@ void Position_Controller(void){
 			break;
 		}
 }
+ 
 /**********************************************************************************************************
 *函 数 名: Altitude_Controller
 *功能说明: 高度控制
@@ -157,15 +151,15 @@ void Altitude_Controller(void){
   FPSAltitudeControl.LastTime = OSTimeGet(&err);
 	//获取飞行模式
 	AltitudeFlightMethod = GetCopterFlightMethod();
-	if(AltitudeFlightMethod == 0){
+	if(AltitudeFlightMethod == PurePosture){
 		//纯姿态
 		PosControllerOut.ExpectAcc = GetRemoteControlFlyData().Zaxis * 5.0f + Gravity_Acceleration;
 	}else{
 		ExpectAltitude = GetStepSignalValue().z;
 		/******* 降落控制 ********/	
 		if(GetCopterFlyMode() == Land){
-			ExpectAltitudeVel = -0.25f;
-			if(GetCopterPosition().z < 0.05f){
+			ExpectAltitudeVel = -0.3f;
+			if(GetCopterPosition().z < 0.1f){
 				SetCopterFlyMode(Nothing);
 				SetCopterStatus(Drone_Off);
 			}
@@ -189,6 +183,7 @@ void Altitude_Controller(void){
 		PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorAltitude, FPSAltitudeControl.CurrentTime) + Gravity_Acceleration;
 	}
 }
+
 /**********************************************************************************************************
 *函 数 名: GetDesiredControlAcc
 *功能说明: 获取期望加速度
@@ -207,7 +202,7 @@ float GetDesiredControlAcc(void){
 Vector3angle_t GetDesiredControlAngle(void){
 	return PosControllerOut.ExpectAngle;
 }
-/*********************************************************************************************************
+/**********************************************************************************************************
 *函 数 名: ResetPositionPara
 *功能说明: 置位位置参数
 *形    参: 无
@@ -218,17 +213,17 @@ void ResetPositionPara(void){
 	OriginalPosX.integrator = 0;
 	OriginalPosY.integrator = 0;
 	OriginalPosZ.integrator = 0;
-	//位置最大积分
+	//位置积分最大
 	OriginalPosX.imax = 10;
 	OriginalPosY.imax = 10;
 	//速度积分归零
 	OriginalVelX.integrator = 0;
 	OriginalVelY.integrator = 0;
 	OriginalVelZ.integrator = 0;
-	//位置速度最大积分
+	//位置速度积分最大
 	OriginalVelX.imax = 10;
 	OriginalVelY.imax = 10;
-	//高度速度最大积分
+	//高度速度积分最大
 	OriginalVelZ.imax = 10;
 	//位置输出归零
 	PosControllerOut.ExpectAcc = 0;
@@ -236,4 +231,5 @@ void ResetPositionPara(void){
 	PosControllerOut.ExpectAngle.roll = 0;
 	PosControllerOut.ExpectAngle.yaw = 0;
 }
+
 

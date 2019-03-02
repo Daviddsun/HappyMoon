@@ -13,8 +13,9 @@ typedef struct {
 	uint64_t LastTime;
 }FPS_AttitudeControl;
 
-Vector3f_t Attitude_InnerController(Vector3f_t ExpectGyro, Vector3f_t EstimateGyro);
-Vector3angle_t Attitude_OuterController(Vector3angle_t ExpectAngle);		
+Vector3f_t Attitude_InnerController(Vector3f_t EstimateGyro);
+void Attitude_OuterController(void);		
 float GetFPSAttitudeControl(void);
+Vector3f_t GetExpectAnguleRate(void);
 #endif
 

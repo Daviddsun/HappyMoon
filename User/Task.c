@@ -75,7 +75,6 @@ void IMUSensorPreDeal_task(void *p_arg){
 		if(err == OS_ERR_NONE){
 			gyroRawData = *((Vector3f_t *)p_msg);
 		}
-		
 		//加速计校准
 		AccCalibration(accRawData);
 		//陀螺仪校准
@@ -86,7 +85,6 @@ void IMUSensorPreDeal_task(void *p_arg){
 		AccDataPreTreat(accRawData, accCalibData,OffsetData.level_scale);
 		//陀螺仪数据处理
 		GyroDataPreTreat(gyroRawData, gyroCalibData, gyroLpfData,OffsetData.level_scale);
-		
 		//更新下一级消息队列
 		OSQPost(&messageQueue[ACC_DATA_PRETREAT],accCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
 		OSQPost(&messageQueue[GYRO_DATA_PRETREAT],gyroCalibData,sizeof(Vector3f_t),OS_OPT_POST_FIFO,&err);
@@ -130,8 +128,7 @@ void FlightControl_task(void *p_arg){
 	CPU_SR_ALLOC();
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t Estimate_Gyro,Expect_Gyro,Rotate_Thrust;
-	Vector3angle_t Expect_Angle;
+	Vector3f_t Estimate_Gyro,Rotate_Thrust;
 	static uint64_t count = 0;
 	//进入临界区
 	OS_CRITICAL_ENTER();
@@ -169,39 +166,23 @@ void FlightControl_task(void *p_arg){
 				if(count % 10 == 0){
 					//飞行位置控制
 					Position_Controller();
-					//期望角度选择
-					if(GetCopterTest() == Drone_Mode_Pitch || 
-											GetCopterTest() == Drone_Mode_Roll){
-						//手柄控制
-						Expect_Angle = GetRemoteControlAngle();
-					}else{
-						//位置控制
-						Expect_Angle = GetDesiredControlAngle();
-					}
 				}
 				//250hz
 				if(count % 4 == 0){
 					//飞行高度控制
 					Altitude_Controller();
 					//飞行角度控制
-					Expect_Gyro.x = (Attitude_OuterController(Expect_Angle)).roll;
-					Expect_Gyro.y = (Attitude_OuterController(Expect_Angle)).pitch;
-					Expect_Gyro.z = (Attitude_OuterController(Expect_Angle)).yaw;
+					Attitude_OuterController();
 				}
 				//500hz
 				if(count % 2 == 0){
-					//期望角速率选择
-					if(GetCopterTest() == Drone_Mode_RatePitch || 
-											GetCopterTest() == Drone_Mode_RateRoll){
-						Expect_Gyro = GetRemoteControlAngleVel();
-					}
 					//飞行角速率控制
-					Rotate_Thrust = Attitude_InnerController(Expect_Gyro,Estimate_Gyro);
+					Rotate_Thrust = Attitude_InnerController(Estimate_Gyro);
 					//推力融合
 					ThrustMixer(ARM_Length,Rotate_Thrust);
 				}
 			}
-			count++;
+			count ++;
 		}
 	}
 }
