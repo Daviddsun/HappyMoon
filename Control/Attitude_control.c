@@ -30,15 +30,15 @@ Vector3f_t Attitude_InnerController(Vector3f_t EstimateGyro){
 												//轴间耦合
 												+ EstimateGyro.y * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wy * EstimateGyro.y) * EstimateGyro.z
 															//角速度前馈
-															+ Inertia_Wx * (EstimateGyro.x - LastEstimateGyro.x) * 500.0f;
+															+ Inertia_Wx * (EstimateGyro.x - LastEstimateGyro.x) * 5.0f;
 	
 	Thrust.y = PID_GetPID(&OriginalWyRate, ErrorGyro.y, FPSAttitudeControl.CurrentTime)
 												+ (-(EstimateGyro.x * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.z))
-															+ Inertia_Wy * (EstimateGyro.y - LastEstimateGyro.y) * 500.0f;
+															+ Inertia_Wy * (EstimateGyro.y - LastEstimateGyro.y) * 5.0f;
 															
 	Thrust.z = PID_GetPID(&OriginalWzRate, ErrorGyro.z, FPSAttitudeControl.CurrentTime)
 												+ EstimateGyro.x * (Inertia_Wy * EstimateGyro.y) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.y
-															+ Inertia_Wz * (EstimateGyro.z - LastEstimateGyro.z) * 500.0f;
+															+ Inertia_Wz * (EstimateGyro.z - LastEstimateGyro.z) * 5.0f;
 															
 	LastEstimateGyro.x = EstimateGyro.x;
 	LastEstimateGyro.y = EstimateGyro.y;

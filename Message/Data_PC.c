@@ -197,11 +197,11 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	
-	temp = KalmanPos.x;
+	temp = KalmanVel.x;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,27,floatToHex,4);
 	
-	temp = KalmanPos.y;
+	temp = KalmanVel.y;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,31,floatToHex,4);
 	
