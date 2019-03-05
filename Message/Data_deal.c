@@ -497,6 +497,6 @@ uint8_t GetCopterFlightMethod(void){
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void SetCopterFlightMethod(void){
-  Flight_Method = FixedHeight;
+void SetCopterFlightMethod(unsigned char Method){
+  Flight_Method = Method;
 }

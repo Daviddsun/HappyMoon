@@ -18,7 +18,7 @@ void Board_Init(void){
 	// 中断分组配置
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
 	// 延时2s等待上电
-	delay_ms(2000);
+	delay_ms(1000);
 	// ADC初始化
 	Adc_Init();
 	delay_ms(100);
