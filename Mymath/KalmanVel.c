@@ -1,4 +1,4 @@
-#include "KalmanVel.h"
+#include "kalmanVel.h"
 
 //单位矩阵
 static float I[6][6] = {{1,0,0,0,0,0},
@@ -9,7 +9,7 @@ static float I[6][6] = {{1,0,0,0,0,0},
     {0,0,0,0,0,1}
 };
 
-static void KalmanVelSlidWindowUpdate(KalmanVel_t* kalman);
+void KalmanVelSlidWindowUpdate(KalmanVel_t* kalman);
 
 /**********************************************************************************************************
 *函 数 名: KalmanVelUpdate
@@ -32,7 +32,7 @@ void KalmanVelUpdate(KalmanVel_t* kalman, Vector3f_t* velocity, Vector3f_t* bias
     input[2] = accel.z;
 
     //更新输入转移矩阵
-    kalman->b[0][0] = kalman->b[1][1] = kalman->b[2][2] = deltaT * Gravity_Acceleration;
+    kalman->b[0][0] = kalman->b[1][1] = kalman->b[2][2] = deltaT * Gravity_Acceleration * 100;
 
     //更新状态转移矩阵
     kalman->f[0][3] = kalman->f[1][4] = kalman->f[2][5] = deltaT;
@@ -224,7 +224,7 @@ void KalmanVelBMatSet(KalmanVel_t* kalman, float b[6][6])
 *形    参: 卡尔曼结构体指针
 *返 回 值: 无
 **********************************************************************************************************/
-static void KalmanVelSlidWindowUpdate(KalmanVel_t* kalman)
+void KalmanVelSlidWindowUpdate(KalmanVel_t* kalman)
 {
     uint16_t i;
 
@@ -275,3 +275,4 @@ void KalmanVelUseMeasurement(KalmanVel_t* kalman, uint8_t num, bool flag)
     //计算观测映射矩阵的转置
     Matrix6_Tran(kalman->h, kalman->h_t);
 }
+

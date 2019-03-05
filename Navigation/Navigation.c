@@ -1,10 +1,8 @@
 #include "Navigation.h"
 NAVGATION_t nav;
-Kalman_t kalmanPos;
 KalmanVel_t kalmanVel;
 FPS_Navigation FPSNavigation;
 static void KalmanVelInit(void);
-static void KalmanPosInit(void);
 /**********************************************************************************************************
 *函 数 名: NavigationInit
 *功能说明: 导航参数初始化
@@ -14,7 +12,6 @@ static void KalmanPosInit(void);
 void NavigationInit(void)
 {
   KalmanVelInit();
-	KalmanPosInit();
 }
 /**********************************************************************************************************
 *函 数 名: KalmanVelInit
@@ -24,25 +21,26 @@ void NavigationInit(void)
 **********************************************************************************************************/
 static void KalmanVelInit(void)
 {
+	OS_ERR err;
 	float qMatInit[6][6] = {{0.2, 0, 0, 0, 0, 0},
 													{0, 0.2, 0, 0, 0, 0},
 													{0, 0, 0.03, 0, 0, 0},      
 													{0.003, 0, 0, 0, 0, 0},
-													{0, 0.03, 0, 0, 0, 0},
+													{0, 0.003, 0, 0, 0, 0},
 													{0, 0, 0.003, 0, 0, 0}};
 
 	float rMatInit[6][6] = {{0.1, 0, 0, 0, 0, 0},          //VIO速度x轴数据噪声方差
 													{0, 0.1, 0, 0, 0, 0},          //VIO速度y轴数据噪声方差
 													{0, 0, 5.0, 0, 0, 0},          //VIO速度z轴数据噪声方差
 													{0, 0, 0, 2500, 0, 0},         //气压速度数据噪声方差
-													{0, 0, 0, 0, 1.0, 0},          //TOF速度数据噪声方差
+													{0, 0, 0, 0, 10.0, 0},       	 //TOF速度数据噪声方差
 													{0, 0, 0, 0, 0, 500000}};      //z轴速度高通滤波系数
 
 	float pMatInit[6][6] = {{10, 0, 0, 0, 0, 0},
 													{0, 10, 0, 0, 0, 0},
 													{0, 0, 10, 0, 0, 0},      
-													{5, 0, 0, 10, 0, 0},
-													{0, 5, 0, 0, 10, 0},
+													{5, 0, 0, 2, 0, 0},
+													{0, 5, 0, 0, 2, 0},
 													{0, 0, 2, 0, 0, 2}};    //增大协方差P的初值，可以提高初始化时bias的收敛速度
 
 	float hMatInit[6][6] = {{1, 0, 0, 0, 0, 0},
@@ -75,17 +73,13 @@ static void KalmanVelInit(void)
 	KalmanVelBMatSet(&kalmanVel, bMatInit);
 													
 	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanVel.slidWindowSize = 10;
-	for(int i =0;i<5;i++){
-		kalmanVel.stateSlidWindow[i].x=0;
-		kalmanVel.stateSlidWindow[i].y=0;
-		kalmanVel.stateSlidWindow[i].z=0;
-	}
-	kalmanVel.fuseDelay[VIO_VEL_X] = 10;    //VIO速度x轴数据延迟参数：0.02s
-	kalmanVel.fuseDelay[VIO_VEL_Y] = 10;    //VIO速度y轴数据延迟参数：0.02s
-	kalmanVel.fuseDelay[VIO_VEL_Z] = 10;    //VIO速度z轴数据延迟参数：0.02s
-	kalmanVel.fuseDelay[BARO_VEL]  = 10;    //气压速度数据延迟参数：0.02s
-	kalmanVel.fuseDelay[TOF_VEL]   = 10;    //TOF速度数据延迟参数：0.02s
+	kalmanVel.slidWindowSize = 50;
+	kalmanVel.stateSlidWindow = OSMemGet(&memoryInfo[KALMAN_VEL],&err);												
+	kalmanVel.fuseDelay[VIO_VEL_X] = 50;    //VIO速度x轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_Y] = 50;    //VIO速度y轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[VIO_VEL_Z] = 50;    //VIO速度z轴数据延迟参数：0.1s
+	kalmanVel.fuseDelay[BARO_VEL]  = 50;    //气压速度数据延迟参数：0.02s
+	kalmanVel.fuseDelay[TOF_VEL]   = 50;    //TOF速度数据延迟参数：0.02s
 	
 	kalmanVel.state[0] = 0;
   kalmanVel.state[1] = 0;
@@ -93,44 +87,6 @@ static void KalmanVelInit(void)
 	kalmanVel.state[3] = 0;
   kalmanVel.state[4] = 0;
   kalmanVel.state[5] = 0;
-}
-/**********************************************************************************************************
-*函 数 名: KalmanPosInit
-*功能说明: 位置估计的卡尔曼结构体初始化
-*形    参: 无
-*返 回 值: 无
-**********************************************************************************************************/
-static void KalmanPosInit(void)
-{
-	float qMatInit[9] = {0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1};
-	float rMatInit[9] = {1.0, 0,  0, 0, 1.0, 0, 0, 0, 5.0};
-	float pMatInit[9] = {8, 0, 0, 0, 8, 0, 0, 0, 8};
-	float fMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
-	float hMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
-	float bMatInit[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
-
-	//初始化卡尔曼滤波器的相关矩阵
-	KalmanQMatSet(&kalmanPos, qMatInit);
-	KalmanRMatSet(&kalmanPos, rMatInit);
-	KalmanBMatSet(&kalmanPos, bMatInit);
-	KalmanCovarianceMatSet(&kalmanPos, pMatInit);
-	KalmanStateTransMatSet(&kalmanPos, fMatInit);
-	KalmanObserveMapMatSet(&kalmanPos, hMatInit);
-
-	//状态滑动窗口，用于解决卡尔曼状态估计量与观测量之间的相位差问题
-	kalmanPos.slidWindowSize = 10;
-	for(int i =0;i<10;i++){
-		kalmanPos.statusSlidWindow[i].x=0;
-		kalmanPos.statusSlidWindow[i].y=0;
-		kalmanPos.statusSlidWindow[i].z=0;
-}
-	kalmanPos.fuseDelay.x = 10;    //0.02s延时
-	kalmanPos.fuseDelay.y = 10;    //0.02s延时
-	kalmanPos.fuseDelay.z = 10;    //0.02s延时
-	
-	kalmanPos.state.x = 0;
-	kalmanPos.state.y = 0;
-	kalmanPos.state.z = 0;
 }
 /**********************************************************************************************************
 *函 数 名: VelocityEstimate
@@ -167,7 +123,6 @@ void VelocityEstimate(void){
 			
 		//禁用VIO中Z轴的速度
 		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_Z, false);
-
 		//禁用气压传感器：未安装
 		KalmanVelUseMeasurement(&kalmanVel, BARO_VEL, false);
 		//已安装TOF传感器
@@ -187,69 +142,6 @@ void VelocityEstimate(void){
 	KalmanVelUpdate(&kalmanVel, &nav.velocity, &nav.accel_bias, nav.accel, nav.velMeasure, FPSNavigation.VelCurrentTime, fuseFlag);
 }
 
-/**********************************************************************************************************
-*函 数 名: PositionEstimate
-*功能说明: 位置估计 
-*          
-*形    参: 无
-*返 回 值: 无
-**********************************************************************************************************/
-void PositionEstimate(void){
-	OS_ERR err;
-	Vector3f_t input;
-	static uint32_t count;
-	static bool fuseFlag;
-	Vector3f_t velocityEf;
-
-	//计算时间间隔，用于积分
-	FPSNavigation.PosCurrentTime = (OSTimeGet(&err) - FPSNavigation.PosLastTime) * 1e-3;
-	FPSNavigation.PosCurrentTime = ConstrainFloat(FPSNavigation.PosCurrentTime, 0.0005, 0.005);
-	FPSNavigation.PosLastTime = OSTimeGet(&err);
-
-	//速度数据更新频率500hz
-	if(count++ % 20 == 0)
-	{
-			//获取VIO位置
-			nav.posMeasure.x = GetVisualOdometryPos().x;
-			nav.posMeasure.y = GetVisualOdometryPos().y;
-//			nav.posMeasure.z = GetVisualOdometryPos().z;
-			nav.posMeasure.z = GetTofHeightData();
-			fuseFlag = true;
-	}
-	else
-	{
-			fuseFlag = false;
-	}
-	
-	TransVelToEarthFrame(nav.velocity,&velocityEf,GetVisualOdometryAngle().yaw);
-	
-	//速度积分
-	input.x = nav.velocity.x * FPSNavigation.PosCurrentTime;
-	input.y = nav.velocity.y * FPSNavigation.PosCurrentTime;
-	input.z = nav.velocity.z * FPSNavigation.PosCurrentTime;
-
-	//位置估计
-	KalmanUpdate(&kalmanPos, input, nav.posMeasure, fuseFlag);
-	nav.position = kalmanPos.state;
-}
-
-
-/**********************************************************************************************************
-*函 数 名: NavigationReset
-*功能说明: 导航相关数据复位
-*形    参: 无
-*返 回 值: 无
-**********************************************************************************************************/
-void NavigationReset(void)
-{
-    kalmanVel.state[0] = 0;
-    kalmanVel.state[1] = 0;
-    kalmanVel.state[2] = 0;
-	
-		kalmanPos.state.x = 0;
-		kalmanPos.state.y = 0;
-		kalmanPos.state.z = 0;
-}
 /**********************************************************************************************************
 *函 数 名: GetCopterAccel
 *功能说明: 获取飞行加速度

@@ -187,39 +187,39 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	
-	temp = KalmanPos.z;
+	temp = TOFHeightData;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
-	temp = BatteryVoltage;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = KalmanVel.z * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	
-	temp = KalmanPos.x;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,27,floatToHex,4);
 	
-	temp = KalmanPos.y;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,31,floatToHex,4);
 	
-	temp = VIOVel.x * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,35,floatToHex,4);
 	
-	temp = VIOVel.y * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,39,floatToHex,4);
 	
-	temp = KalmanVel.x * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,43,floatToHex,4);
 	
-	temp = KalmanVel.y * 100.0f;
+	temp = 0.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,47,floatToHex,4);
 	

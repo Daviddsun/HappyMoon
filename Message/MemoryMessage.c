@@ -1,9 +1,8 @@
 #include "MemoryMessage.h"
 //创建出内存
 OS_MEM memoryInfo[MEM_NUM];
-Vector3f_t accRawData,gyroRawData,accCalibData,
-						gyroCalibData,gyroCalibDataLpf,Vel_stateSlidWindow,Pos_stateSlidWindow;
-
+static Vector3f_t accRawData,gyroRawData,accCalibData,
+						gyroCalibData,gyroCalibDataLpf,VelStateSlidWindow[80],PosStateSlidWindow[80];
 
 //声明消息队列句柄
 OS_Q messageQueue[QUEUE_NUM];
@@ -72,6 +71,15 @@ void MemoryCreate(OS_ERR p_err)
 								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
 										(OS_MEM_SIZE  )24,					//每个内存块的大小(字节)
 												(OS_ERR      *)&p_err);	
+	// Kalman滤波队列的内存分配
+	OSMemCreate((OS_MEM     *)&memoryInfo[KALMAN_VEL],(CPU_CHAR *)"KALMAN_VEL",(void *)&VelStateSlidWindow[0],//内存分区起始地址
+								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
+										(OS_MEM_SIZE  )80 * sizeof(Vector3f_t),					//每个内存块的大小(字节)
+												(OS_ERR      *)&p_err);
+  OSMemCreate((OS_MEM     *)&memoryInfo[KALMAN_POS],(CPU_CHAR *)"KALMAN_POS",(void *)&PosStateSlidWindow[0],//内存分区起始地址
+								(OS_MEM_QTY   )2,								//内存分区里的内存块数量
+										(OS_MEM_SIZE  )80 * sizeof(Vector3f_t),					//每个内存块的大小(字节)
+												(OS_ERR      *)&p_err);
 }
 
 
