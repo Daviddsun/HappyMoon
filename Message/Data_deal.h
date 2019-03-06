@@ -21,6 +21,6 @@ Vector3f_t GetRemoteControlAngleVel(void);
 RemoteControl GetRemoteControlFlyData(void);
 Vector3f_t GetStepSignalValue(void);
 uint8_t GetCopterFlightMethod(void);
-void SetCopterFlightMethod(unsigned char Method);
+void SetCopterFlightMethod(void);
 #endif 
 

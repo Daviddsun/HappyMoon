@@ -167,6 +167,8 @@ void SendRTInfo(void)
 	Vector3f_t VIOPos = GetVisualOdometryPos();
 	Vector3f_t KalmanVel = GetCopterVelocity();
 	Vector3f_t KalmanPos = GetCopterPosition();
+	Vector3f_t EarthAcc = EarthAccGetData();
+	Vector3f_t BodyAcc = AccGetData();
 	float TOFHeightData = GetTofHeightData();
 	float TOFHeightVelData = GetTofHeightVel();
 	float BatteryVoltage = GetBatteryVoltage();
@@ -187,7 +189,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	
-	temp = KalmanPos.z;
+	temp = VIOVel.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
@@ -199,6 +201,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
 	
+	//暂时没有使用的两位
 	temp = TOFHeightData;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,27,floatToHex,4);
@@ -207,19 +210,19 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,31,floatToHex,4);
 	
-	temp = 0.0f;
+	temp = VIOVel.x * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,35,floatToHex,4);
 	
-	temp = 0.0f;
+	temp = VIOVel.y * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,39,floatToHex,4);
 	
-	temp = 0.0f;
+	temp = KalmanVel.x * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,43,floatToHex,4);
 	
-	temp = 0.0f;
+	temp = KalmanVel.y * 100.0f;;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,47,floatToHex,4);
 	

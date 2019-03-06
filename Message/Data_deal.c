@@ -490,13 +490,12 @@ Vector3f_t GetStepSignalValue(void){
 uint8_t GetCopterFlightMethod(void){
   return Flight_Method;
 }
-
 /**********************************************************************************************************
 *函 数 名: SetCopterFlightMethod
 *功能说明: 设置飞行模式
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void SetCopterFlightMethod(unsigned char Method){
-  Flight_Method = Method;
+void SetCopterFlightMethod(void){
+  Flight_Method = FixedPoint;
 }

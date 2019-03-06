@@ -75,7 +75,7 @@ void Attitude_OuterController(void){
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
 	AngleLpf.roll = AngleLpf.roll * 0.95f + Angle.roll * 0.05f;
 	AngleLpf.pitch = AngleLpf.pitch * 0.95f + Angle.pitch * 0.05f;
-	AngleLpf.yaw = AngleLpf.yaw * 0.95f + Angle.yaw * 0.05f;
+	AngleLpf.yaw = VIOAngle.yaw;
 	//计算姿态外环控制误差：目标角度 - 实际角度
 	ErrorAngle.roll = Expect_Angle.roll - AngleLpf.roll;
 	ErrorAngle.pitch = Expect_Angle.pitch - AngleLpf.pitch;

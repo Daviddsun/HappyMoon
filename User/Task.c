@@ -132,7 +132,7 @@ void FlightControl_task(void *p_arg){
 	CPU_TS       ts;
 	Vector3f_t Estimate_Gyro,Rotate_Thrust;
 	static uint64_t count = 0;
-	SetCopterFlightMethod(FixedHeight);
+	SetCopterFlightMethod();
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[GYRO_FOR_CONTROL],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
