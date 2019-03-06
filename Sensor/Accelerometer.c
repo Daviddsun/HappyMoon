@@ -275,7 +275,6 @@ void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData, Vector3f_t AccLevel
 	*accData = accdata;
 }
 
-
 /**********************************************************************************************************
 *函 数 名: AccGetData
 *功能说明: 获取经过处理后的加速度数据
@@ -285,6 +284,86 @@ void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData, Vector3f_t AccLevel
 Vector3f_t AccGetData(void){
     return accValue.data;
 }
+
+/**********************************************************************************************************
+*函 数 名: BodyFrameToEarthFrame
+*功能说明: 转换向量到地理坐标系
+*形    参: 转动角度 转动向量 转动后的向量指针
+*返 回 值: 无
+**********************************************************************************************************/
+void BodyFrameToEarthFrame(Vector3f_t angle, Vector3f_t vector, Vector3f_t* vectorEf)
+{
+    Vector3f_t anglerad;
+
+    anglerad.x = angle.x;
+    anglerad.y = angle.y;
+    anglerad.z = 0;
+    *vectorEf  = VectorRotateToEarthFrame(vector, anglerad);
+}
+
+/**********************************************************************************************************
+*函 数 名: EarthFrameToBodyFrame
+*功能说明: 转换向量到机体坐标系
+*形    参: 转动角度 转动向量 转动后的向量指针
+*返 回 值: 无
+**********************************************************************************************************/
+void EarthFrameToBodyFrame(Vector3f_t angle, Vector3f_t vector, Vector3f_t* vectorBf)
+{
+    Vector3f_t anglerad;
+
+    anglerad.x = angle.x;
+    anglerad.y = angle.y;
+    anglerad.z = 0;
+    *vectorBf  = VectorRotateToBodyFrame(vector, anglerad);
+}
+
+/**********************************************************************************************************
+*函 数 名: TransAccToEarthFrame
+*功能说明: 转换加速度到地理坐标系，并去除重力加速度
+*形    参: 当前飞机姿态 加速度 地理系加速度 地理系加速度低通滤波 加速度零偏
+*返 回 值: 无
+**********************************************************************************************************/
+void TransAccToEarthFrame(Vector3f_t angle, Vector3f_t acc, Vector3f_t* accEf, Vector3f_t* accEfLpf, Vector3f_t* accBfOffset){
+	
+	Vector3f_t gravityBf;
+
+	//计算重力加速度在机体坐标系的投影
+	gravityBf.x = 0;
+	gravityBf.y = 0;
+	gravityBf.z = 1;
+	EarthFrameToBodyFrame(angle, gravityBf, &gravityBf);
+
+	//减去重力加速度和加速度零偏
+	acc.x -= (gravityBf.x + accBfOffset->x);
+	acc.y -= (gravityBf.y + accBfOffset->y);
+	acc.z -= (gravityBf.z + accBfOffset->z);
+
+	//转化加速度到地理坐标系
+	BodyFrameToEarthFrame(angle, acc, accEf);
+
+	//地理系加速度低通滤波
+	accEfLpf->x = accEfLpf->x * 0.998f + accEf->x * 0.002f;
+	accEfLpf->y = accEfLpf->y * 0.998f + accEf->y * 0.002f;
+	accEfLpf->z = accEfLpf->z * 0.998f + accEf->z * 0.002f;
+
+}
+
+
+/**********************************************************************************************************
+*函 数 名: GetCopterAccEf
+*功能说明: 获取地理坐标系下的运动加速度
+*形    参: 无
+*返 回 值: 加速度
+**********************************************************************************************************/
+Vector3f_t GetCopterAccEf(void){
+	Vector3f_t AccEfValue,AccEfLpfValue,AngleValue;
+	AngleValue.x = GetCopterAngle().roll;
+	AngleValue.y = GetCopterAngle().pitch;
+	AngleValue.z = 0;
+	TransAccToEarthFrame(AngleValue,accValue.data,&AccEfValue,&AccEfLpfValue,0);
+	return AccEfValue;
+}
+
 
 /**********************************************************************************************************
 *函 数 名: EarthAccGetData

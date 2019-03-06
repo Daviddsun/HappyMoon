@@ -185,7 +185,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	
-	temp = KalmanPos.z;
+	temp = KalmanVel.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
@@ -193,10 +193,11 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,19,floatToHex,4);
 	
-	temp = KalmanVel.z * 100.0f;
+	temp = VIOVel.z * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,23,floatToHex,4);
-	
+
+	//这两位暂时无用
 	temp = KalmanVel.x;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,27,floatToHex,4);
@@ -205,7 +206,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,31,floatToHex,4);
 	
-	temp = VIOVel.x * 100.0f;
+	temp = -VIOVel.x * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,35,floatToHex,4);
 	

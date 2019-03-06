@@ -52,6 +52,7 @@ typedef struct {
 
 typedef struct {
 	Vector3angle_t ExpectAngle;
+	Vector3f_t ExpectVel;
 	float ExpectAcc;
 }Vector4PosController;
 

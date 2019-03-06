@@ -476,8 +476,8 @@ RemoteControl GetRemoteControlFlyData(void){
 **********************************************************************************************************/
 Vector3f_t GetStepSignalValue(void){
 	//期望高度不低于0.5m
-	StepSignal.x = 0;
-	StepSignal.y = 0;
+	StepSignal.x = 0.0f;
+	StepSignal.y = 0.0f;
 	StepSignal.z = 0.5f;
 	return StepSignal;
 }

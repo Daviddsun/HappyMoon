@@ -196,5 +196,3 @@ static void KalmanSlidWindowUpdate(Kalman_t* kalman)
 
 
 
-
-

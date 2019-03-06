@@ -19,4 +19,5 @@ void AccDataPreTreat(Vector3f_t accRaw, Vector3f_t* accData, Vector3f_t AccLevel
 void ImuLevelCalibration(void);
 Vector3f_t AccGetData(void);
 Vector3f_t EarthAccGetData(void);
+Vector3f_t GetCopterAccEf(void);
 #endif

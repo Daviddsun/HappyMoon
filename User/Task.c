@@ -57,8 +57,6 @@ void IMUSensorPreDeal_task(void *p_arg){
 	OffsetData.level_success = false;
 	//进入临界区
 	OS_CRITICAL_ENTER();
-	//IMU传感器校准参数读取 
-	Load_SensorConfig();
 	//陀螺仪预处理初始化
 	GyroPreTreatInit();
 	//加速度预处理初始化
@@ -93,15 +91,21 @@ void IMUSensorPreDeal_task(void *p_arg){
 }
 
 /**
- * @Description 姿态解算 Mahony 滤波
+ * @Description 全局导航任务（姿态解算，速度融合，位置融合）
  */
-void AttitudeFilter_task(void *p_arg){
+void Navigation_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	void   *p_msg;
+	CPU_SR_ALLOC();
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
 	Vector3f_t accCalibData,gyroCalibData;
+	OS_CRITICAL_ENTER();
+	//导航参数初始化
+	NavigationInit();
+	//离开临界区 	
+	OS_CRITICAL_EXIT();		
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[ACC_DATA_PRETREAT],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -115,6 +119,10 @@ void AttitudeFilter_task(void *p_arg){
 		//飞行姿态估计
 		MahonyAHRSupdateIMU(gyroCalibData.x,gyroCalibData.y,gyroCalibData.z,
 															accCalibData.x,accCalibData.y,accCalibData.z);
+		//飞行速度估计
+		VelocityEstimate();
+		//飞行位置估计
+		PositionEstimate();
 	}
 }
 
@@ -125,19 +133,12 @@ void FlightControl_task(void *p_arg){
 	OS_ERR err;
 	p_arg = p_arg;
 	void   *p_msg;
-	CPU_SR_ALLOC();
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
 	Vector3f_t Estimate_Gyro,Rotate_Thrust;
 	static uint64_t count = 0;
-	//进入临界区
-	OS_CRITICAL_ENTER();
-	//控制参数读取 
-	Load_PIDConfig();
 	//默认飞行模式
 	SetCopterFlightMethod();
-	//离开临界区 	
-	OS_CRITICAL_EXIT();	
 	while(1){
 		//消息队列信息提取
 		p_msg = OSQPend(&messageQueue[GYRO_FOR_CONTROL],0,OS_OPT_PEND_BLOCKING,&msg_size,&ts,&err);
@@ -161,11 +162,13 @@ void FlightControl_task(void *p_arg){
 				if(count % 20 == 0){
 					//安全保护
 					SafeControl();
+					//位置外环控制
+					Position_OuterController();
 				}
 				//100hz
 				if(count % 10 == 0){
 					//飞行位置控制
-					Position_Controller();
+					Position_InnerController();
 				}
 				//250hz
 				if(count % 4 == 0){
@@ -184,28 +187,6 @@ void FlightControl_task(void *p_arg){
 			}
 			count ++;
 		}
-	}
-}
-
-/**
- * @Description 全项数据融合 500Hz
- */
-void OmniFusion_task(void *p_arg){
-	OS_ERR err;
-	p_arg = p_arg;
-	CPU_SR_ALLOC();
-	//进入临界区
-	OS_CRITICAL_ENTER();
-	//导航参数初始化
-	NavigationInit();
-	//离开临界区 	
-	OS_CRITICAL_EXIT();	
-	while(1){
-		//飞行速度估计
-		VelocityEstimate();
-		//飞行位移估计
-		PositionEstimate();
-		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err);
 	}
 }
 

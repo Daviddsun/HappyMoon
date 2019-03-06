@@ -161,18 +161,6 @@ Vector3f_t GetVisualOdometryVel(void){
   return Velocity;
 }
 /**********************************************************************************************************
-*函 数 名: GetVisualOdometryVelTrans
-*功能说明: 将VIO坐标系下的速度转化到机体坐标系
-*形    参: 无
-*返 回 值: Velocity
-**********************************************************************************************************/
-Vector3f_t GetVisualOdometryVelTrans(void){
-	Vector3f_t TransVelocity;
-	TransVelToBodyFrame(GetVisualOdometryVel(),&TransVelocity,GetVisualOdometryAngle().yaw);
-  return TransVelocity;
-}
-
-/**********************************************************************************************************
 *函 数 名: GetVisualOdometryAngle
 *功能说明: 获取视觉里程计的Angle
 *形    参: 无
@@ -186,6 +174,17 @@ Vector3angle_t GetVisualOdometryAngle(void){
 	Attitude.yaw = atan2(2.0f*Quaternion1.fvalue*Quaternion2.fvalue + 2.0f*Quaternion0.fvalue*Quaternion3.fvalue, 
 											-2.0f*Quaternion2.fvalue*Quaternion2.fvalue - 2.0f*Quaternion3.fvalue*Quaternion3.fvalue + 1);
   return Attitude;
+}
+/**********************************************************************************************************
+*函 数 名: GetVisualOdometryVelTrans
+*功能说明: 将VIO坐标系下的速度转化到机体坐标系
+*形    参: 无
+*返 回 值: Velocity
+**********************************************************************************************************/
+Vector3f_t GetVisualOdometryVelTrans(void){
+	Vector3f_t TransVelocity;
+	TransVelToBodyFrame(GetVisualOdometryVel(),&TransVelocity,GetVisualOdometryAngle().yaw);
+  return TransVelocity;
 }
 /**********************************************************************************************************
 *函 数 名: GetWayPointRefPos

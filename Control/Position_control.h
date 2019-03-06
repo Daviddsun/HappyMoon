@@ -17,10 +17,13 @@ typedef struct {
 	uint64_t LastTime;
 }FPS_PositionControl;
 
-void Position_Controller(void);
+void Position_InnerController(void);
+void Position_OuterController(void);
 void Altitude_Controller(void);
 float GetDesiredControlAcc(void);
 Vector3angle_t GetDesiredControlAngle(void);
+Vector3f_t GetDesiredControlVel(void);
+void PureAttitude_Control(void);
 void ResetPositionPara(void);
 #endif
 
