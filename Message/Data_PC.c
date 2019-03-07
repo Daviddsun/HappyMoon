@@ -189,7 +189,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	
-	temp = VIOVel.z;
+	temp = KalmanPos.z;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,15,floatToHex,4);
 
