@@ -185,7 +185,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,7,floatToHex,4);
 	
-	temp = AHRSAngle.yaw * 180/PI;
+	temp = VIOAngle.yaw * 180/PI;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,11,floatToHex,4); 
 	
@@ -222,7 +222,7 @@ void SendRTInfo(void)
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,43,floatToHex,4);
 	
-	temp = KalmanVel.y * 100.0f;;
+	temp = KalmanVel.y * 100.0f;
 	FloatToByte(temp,floatToHex);
 	arrycat(dataToPC,47,floatToHex,4);
 	

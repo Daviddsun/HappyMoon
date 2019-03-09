@@ -13,7 +13,7 @@ OS_Q messageQueue[QUEUE_NUM];
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void MessageQueueCreate(OS_ERR p_err)
+void MessageQueueCreate(OS_ERR *p_err)
 {	
 	//传感器原始数据
 	OSQCreate((OS_Q *)&messageQueue[ACC_SENSOR_READ],
@@ -47,7 +47,7 @@ void MessageQueueCreate(OS_ERR p_err)
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
-void MemoryCreate(OS_ERR p_err)
+void MemoryCreate(OS_ERR *p_err)
 {	 
 	// 传感器原始参数内存分配
 	OSMemCreate((OS_MEM     *)&memoryInfo[ACC_SENSOR_RAW],(CPU_CHAR *)"GYRO_SENSOR_RAW",(void *)&accRawData,//内存分区起始地址

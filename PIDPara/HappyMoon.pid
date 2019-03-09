@@ -31,13 +31,13 @@
     <Kd>0</Kd>
   </rateRoll>
   <rateYaw>
-    <Kp>0.25</Kp>
+    <Kp>0.2</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </rateYaw>
   <accHeight>
-    <Kp>10</Kp>
-    <Ki>8</Ki>
+    <Kp>5</Kp>
+    <Ki>3</Ki>
     <Kd>2</Kd>
   </accHeight>
   <accZ>

@@ -29,8 +29,8 @@ enum {
 	MEM_NUM
 };
 
-void MessageQueueCreate(OS_ERR p_err);
-void MemoryCreate(OS_ERR p_err);
+void MessageQueueCreate(OS_ERR *p_err);
+void MemoryCreate(OS_ERR *p_err);
 
 extern OS_Q messageQueue[QUEUE_NUM];
 extern OS_MEM memoryInfo[MEM_NUM];

@@ -18,13 +18,12 @@ void TOF_DataDeal(Receive_TOFData rx){
 		uint16_t Distance = (((uint16_t)rx.buf[3]) << 8) + rx.buf[2];
 		uint16_t Strength = (((uint16_t)rx.buf[5]) << 8) + rx.buf[4];
 		//根据数据手册强度在这个范围内有效
-		if(Strength>100 && Strength<65535){
+		if(Strength>200 && Strength<65535){
 			float Height = ((float)Distance) * 0.01f; // 米制单位
-			TOFHeightLpf = TOFHeightLpf * 0.95f + Height * 0.05f;
+			TOFHeightLpf = TOFHeightLpf * 0.92f + Height * 0.08f;
 			//速度计算
-			TOFHeightVel = (TOFHeightLpf - TOFHeightLpfLast) / FPSTimeOfFly.CurrentTime;
+			TOFHeightVel = (TOFHeightLpf - TOFHeightLpfLast) * 100.0f;
 			TOFHeightLpfLast = TOFHeightLpf;
-			
 		}
 	}
 }

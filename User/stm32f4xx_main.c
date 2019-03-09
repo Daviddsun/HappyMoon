@@ -95,9 +95,9 @@ int main(void)
 	/** 启动操作系统 **/
 	OSInit(&err);	
 	/** 创建一个动态内存 **/
-	MemoryCreate(err);
+	MemoryCreate(&err);
 	/** 创建一个消息队列 **/
-	MessageQueueCreate(err);
+	MessageQueueCreate(&err);
 	OS_CRITICAL_ENTER();										                 // 进入临界区
 	OSTaskCreate(												                     // 创建开始任务
 		(OS_TCB*)&StartTaskTCB,									               // 任务控制块

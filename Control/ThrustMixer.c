@@ -53,7 +53,7 @@ void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
 *返 回 值: 无
 **********************************************************************************************************/
 void PreTakeOff(uint16_t Time){
-	float ThurstValue = sqrt(Time/35) * Drone_Mass / 4.0f;
+	float ThurstValue = sqrt(Time/50) * Drone_Mass / 4.0f;
 	MotorThrust(ThurstValue,ThurstValue,ThurstValue,ThurstValue);
 }
 /***********************************************************************************************
@@ -100,6 +100,22 @@ void PreTakeOff(uint16_t Time){
 	C = 0.012826
 */
 
+/*
+													   HoppyWing 电机
+	%拟合一次函数
+	16.0V
+	x=[0.519665; 4.64994; 8.246005; 11.47185; 15.2958]; %推力数据 单位N
+	y=[0.05; 0.28; 0.52; 0.76; 1.00]; %油门数据 占空比
+	p=fittype('poly1') 
+	f=fit(x,y,p) 
+	plot(f,x,y);
+	
+	p1 = 0.06531
+	p2 = -0.00288
+	
+	f(x) = p1 * x + p2;
+	
+*/
 
 
 void MotorThrust(float f1,float f2,float f3,float f4){
@@ -111,10 +127,10 @@ void MotorThrust(float f1,float f2,float f3,float f4){
 	M3 = -0.0022714f * f3 * f3 + 0.096917f * f3 + 0.11769f;
 	M4 = -0.0022714f * f4 * f4 + 0.096917f * f4 + 0.11769f;
 #else
-	M1 = 0.00044084f * f1 * f1 + 0.05836f * f1 + 0.012826f;
-	M2 = 0.00044084f * f2 * f2 + 0.05836f * f2 + 0.012826f;
-	M3 = 0.00044084f * f3 * f3 + 0.05836f * f3 + 0.012826f;
-	M4 = 0.00044084f * f4 * f4 + 0.05836f * f4 + 0.012826f;
+	M1 = 0.06531f * f1 - 0.00288f;
+	M2 = 0.06531f * f2 - 0.00288f;
+	M3 = 0.06531f * f3 - 0.00288f;
+	M4 = 0.06531f * f4 - 0.00288f;
 #endif
 	
 	ThrottleInfo.M1 = (int)(M1 * 1000.0f);

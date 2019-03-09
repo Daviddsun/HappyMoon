@@ -59,6 +59,7 @@ void Attitude_OuterController(void){
 	static Vector3angle_t AngleLpf;
   Vector3angle_t Angle,VIOAngle,ErrorAngle;
 	Vector3angle_t Expect_Angle;
+	static uint8_t YawMethod;
 	//期望角度选择
 	if(GetCopterTest() == Drone_Mode_Pitch || 
 							GetCopterTest() == Drone_Mode_Roll){
@@ -68,6 +69,7 @@ void Attitude_OuterController(void){
 		//位置控制
 		Expect_Angle = GetDesiredControlAngle();
 	}
+	YawMethod = GetCopterFlightMethod();
 	//获取当前飞机的姿态角(mahany filter)
   Angle = GetCopterAngle();
 	//获取视觉里程计姿态
@@ -75,8 +77,11 @@ void Attitude_OuterController(void){
 	//对姿态测量值进行低通滤波，减少数据噪声对控制器的影响
 	AngleLpf.roll = AngleLpf.roll * 0.95f + Angle.roll * 0.05f;
 	AngleLpf.pitch = AngleLpf.pitch * 0.95f + Angle.pitch * 0.05f;
-//	AngleLpf.yaw = VIOAngle.yaw;
-	AngleLpf.yaw = AngleLpf.yaw * 0.95f + Angle.yaw * 0.05f;
+	if(YawMethod == 0 || YawMethod == 1){
+		AngleLpf.yaw = AngleLpf.yaw * 0.95f + Angle.yaw * 0.05f;
+	}else{
+		AngleLpf.yaw = VIOAngle.yaw;
+	}	
 	//计算姿态外环控制误差：目标角度 - 实际角度
 	ErrorAngle.roll = Expect_Angle.roll - AngleLpf.roll;
 	ErrorAngle.pitch = Expect_Angle.pitch - AngleLpf.pitch;
@@ -91,7 +96,7 @@ void Attitude_OuterController(void){
 }
 /**********************************************************************************************************
 *函 数 名: GetExpectAnguleRate
-*功能说明: 获取姿态控制频率
+*功能说明: 获取期望角速度
 *形    参: 无
 *返 回 值: 无
 **********************************************************************************************************/
