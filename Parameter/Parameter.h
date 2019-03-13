@@ -14,7 +14,7 @@ typedef struct {
 void Load_SensorConfig(void);
 void Load_PIDConfig(void);
 void Write_Config(void);
-void LoadALLConfig(void);
+void Load_ALLConfig(void);
 #endif
 
 

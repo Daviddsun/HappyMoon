@@ -89,7 +89,7 @@ int main(void)
 	/** IMU传感器初始化 **/
 	Sensor_Init();
 	/** 各个参数读取 **/
-	LoadALLConfig();
+	Load_ALLConfig();
 	/** 电机MotorPWM初始化 **/
 	MotorPWM_Init();
 	/** 启动操作系统 **/

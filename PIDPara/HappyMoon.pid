@@ -26,7 +26,7 @@
     <Kd>0.03</Kd>
   </ratePitch>
   <rateRoll>
-    <Kp>0.8</Kp>
+    <Kp>0.6</Kp>
     <Ki>0</Ki>
     <Kd>0.03</Kd>
   </rateRoll>
@@ -36,9 +36,9 @@
     <Kd>0</Kd>
   </rateYaw>
   <accHeight>
-    <Kp>9</Kp>
-    <Ki>5</Ki>
-    <Kd>3</Kd>
+    <Kp>10</Kp>
+    <Ki>6</Ki>
+    <Kd>4</Kd>
   </accHeight>
   <accZ>
     <Kp>0</Kp>

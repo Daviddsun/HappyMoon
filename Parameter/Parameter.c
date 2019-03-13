@@ -203,7 +203,7 @@ void Load_PIDConfig(void){
 *形    参: 无
 *返 回 值: 无
 ************************************************************************************************/
-void LoadALLConfig(void){
+void Load_ALLConfig(void){
 	Load_SensorConfig();
 	delay_ms(100);
 	Load_PIDConfig();

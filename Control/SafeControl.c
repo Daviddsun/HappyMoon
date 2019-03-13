@@ -51,6 +51,5 @@ void SafeControl(void){
 
     //低电量/电压保护
     LowPowerProtect();
-
 }
 
