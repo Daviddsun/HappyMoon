@@ -22,7 +22,7 @@ typedef struct
 }Throttle;
 
 
-void ThrustMixer(float arm_length,Vector3f_t RotateThrust);
+void ThrustMixer(float arm_length);
 void PreTakeOff(uint16_t Time);
 void MotorThrust(float f1,float f2,float f3,float f4);
 void PWM_OUTPUT(unsigned int Motor1,unsigned int Motor2,

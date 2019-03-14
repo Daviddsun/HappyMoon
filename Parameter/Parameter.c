@@ -195,13 +195,25 @@ void Load_PIDConfig(void){
 *形    参: 无
 *返 回 值: 无
 ************************************************************************************************/
-void LoadALLConfig(void){
+void Load_Config(void){
 	Load_SensorConfig();
 	delay_ms(100);
 	Load_PIDConfig();
 	delay_ms(100);
 }
 
+/***********************************************************************************************
+*函 数 名: ResetControlPara
+*功能说明: 置位控制中所有参数
+*形    参: 无
+*返 回 值: 无
+************************************************************************************************/
+void ResetControlPara(void){
+	// 置位姿态参数
+	ResetAttitudeControlValue();
+	// 置位位置参数
+	ResetPositionControlValue();
+}
 
 
 

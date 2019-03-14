@@ -130,7 +130,7 @@ void FlightControl_task(void *p_arg){
 	void   *p_msg;
 	OS_MSG_SIZE  msg_size;
 	CPU_TS       ts;
-	Vector3f_t Estimate_Gyro,Rotate_Thrust;
+	Vector3f_t Estimate_Gyro;
 	static uint64_t count = 0;
 	SetCopterFlightMethod();
 	while(1){
@@ -141,8 +141,8 @@ void FlightControl_task(void *p_arg){
 		}
 		//起飞检测
 		if(GetCopterStatus() == Drone_Off){
-			//置位位置参数
-			ResetPositionPara();
+			//置位所有控制参数
+			ResetControlPara();
 			//电机停止
 			PWM_OUTPUT(0,0,0,0);
 			count = 0;
@@ -173,9 +173,9 @@ void FlightControl_task(void *p_arg){
 				}
 				//1000hz
 				//飞行角速率控制
-				Rotate_Thrust = Attitude_InnerController(Estimate_Gyro);
+				Attitude_InnerController(Estimate_Gyro);
 				//推力融合
-				ThrustMixer(ARM_Length,Rotate_Thrust);
+				ThrustMixer(ARM_Length);
 			}
 			count++;
 		}

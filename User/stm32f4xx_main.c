@@ -37,7 +37,7 @@ void Navigation_task(void *p_arg);
 
 //飞行控制任务
 #define FlightControl_TASK_PRIO 7						
-#define FlightControl_STK_SIZE 1024						
+#define FlightControl_STK_SIZE 512						
 OS_TCB FlightControlTaskTCB;				
 CPU_STK FlightControl_TASK_STK[FlightControl_STK_SIZE];					
 void FlightControl_task(void *p_arg);
@@ -89,7 +89,7 @@ int main(void)
 	/** IMU传感器初始化 **/
 	Sensor_Init();
 	/** 各个参数读取 **/
-	LoadALLConfig();
+	Load_Config();
 	/** 电机MotorPWM初始化 **/
 	MotorPWM_Init();
 	/** 启动操作系统 **/

@@ -6,11 +6,13 @@
 #include "PID_control.h"
 #include "Limits.h"
 
-//#define pxy_error_max 	0.6f
-//#define vxy_error_max 	1.0f
-//#define pz_error_max    0.3f
-//#define vz_error_max    0.75f
+#define pxy_error_max 	0.6f
+#define vxy_error_max 	1.0f
+#define pz_error_max    0.3f
+#define vz_error_max    0.75f
 
+#define kAlmostZeroValueThreshold   0.001f;
+#define kAlmostZeroThrustThreshold  0.01f;
 //线程FPS读取
 typedef struct {
 	float CurrentTime;
@@ -24,7 +26,8 @@ float GetDesiredControlAcc(void);
 Vector3angle_t GetDesiredControlAngle(void);
 Vector3f_t GetDesiredControlVel(void);
 void PureAttitude_Control(void);
-void ResetPositionPara(void);
+void ResetPositionControlValue(void);
+
 #endif
 
 

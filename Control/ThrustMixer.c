@@ -7,10 +7,11 @@ ThrustUav UavThrust;
 *形    参: 四旋翼臂长arm_length . 转轴扭矩RotateThrust
 *返 回 值: 无
 ************************************************************************************************/
-void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
-	
-	static float HeightThrustLpf;
-	HeightThrustLpf = HeightThrustLpf * 0.995f + GetDesiredControlAcc() * 0.005f;
+void ThrustMixer(float arm_length){
+	// 获取期望推力
+	Vector3f_t RotateThrust = GetExpectThrust();
+	// 获取期望加速度
+	float HeightAccValue = GetDesiredControlAcc();
 	
 	if(GetCopterTest()==Drone_Mode_Pitch || GetCopterTest()==Drone_Mode_RatePitch){
 		UavThrust.f1 = +1.414f / (arm_length * 4.0f) * RotateThrust.y + Gravity_Acceleration * Drone_Mass / 4.0f;	
@@ -26,22 +27,22 @@ void ThrustMixer(float arm_length,Vector3f_t RotateThrust){
 		UavThrust.f1 = - 1.414f / (arm_length * 4.0f) * RotateThrust.x  																		//roll
 										+ 1.414f / (arm_length * 4.0f) * RotateThrust.y                                  		//pitch
 											+ 15.625f * RotateThrust.z                                                        //yaw	
-												+ HeightThrustLpf * Drone_Mass / 4.0f;			  											  					//mass		 																									
+												+ HeightAccValue * Drone_Mass / 4.0f;			  											  						//mass		 																									
 		
 		UavThrust.f2 = - 1.414f / (arm_length * 4.0f) * RotateThrust.x
 										- 1.414f / (arm_length * 4.0f) * RotateThrust.y
 											- 15.625f * RotateThrust.z
-												+ HeightThrustLpf * Drone_Mass / 4.0f;									
+												+ HeightAccValue * Drone_Mass / 4.0f;									
 
 		UavThrust.f3 = + 1.414f / (arm_length * 4.0f) * RotateThrust.x
 										+ 1.414f / (arm_length * 4.0f) * RotateThrust.y
 											- 15.625f * RotateThrust.z
-												+ HeightThrustLpf * Drone_Mass / 4.0f;
+												+ HeightAccValue * Drone_Mass / 4.0f;
 
 		UavThrust.f4 = + 1.414f / (arm_length * 4.0f) * RotateThrust.x 
 										- 1.414f / (arm_length * 4.0f) * RotateThrust.y
 											+ 15.625f * RotateThrust.z
-											  + HeightThrustLpf * Drone_Mass / 4.0f;
+											  + HeightAccValue * Drone_Mass / 4.0f;
 		
 	}
 	MotorThrust(UavThrust.f1,UavThrust.f2,UavThrust.f3,UavThrust.f4);

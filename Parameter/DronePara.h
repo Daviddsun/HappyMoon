@@ -6,10 +6,12 @@
 #include <stdbool.h>
 #define TX_LEN  160
 #define RX_LEN  128
+//本地重力及速度
 #define Gravity_Acceleration  9.794f
-#define Inertia_Wx    0.001f
-#define Inertia_Wy    0.001f
-#define Inertia_Wz    0.002f
+//转动惯量设置  转动惯量 = M*R^2  对于质点而言。这里无法测得转动惯量大小，变为一个可调参数设置
+#define Inertia_Wx    0.003f
+#define Inertia_Wy    0.003f
+#define Inertia_Wz    0.005f
 
 //定义机型
 #ifdef Model380

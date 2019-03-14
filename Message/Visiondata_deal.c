@@ -195,8 +195,8 @@ Vector3angle_t GetVisualOdometryAngle(void){
 **********************************************************************************************************/
 Vector3f_t GetWayPointRefPos(void){
 	Vector3f_t RefPosition;
-	RefPosition.x = reference_posy.fvalue;
-	RefPosition.y = -reference_posx.fvalue;
+	RefPosition.x = reference_posx.fvalue;
+	RefPosition.y = reference_posy.fvalue;
 	RefPosition.z = reference_posz.fvalue;
 	//期望高度不低于0.5m
 	if(RefPosition.z < 0.5f){
@@ -212,10 +212,21 @@ Vector3f_t GetWayPointRefPos(void){
 **********************************************************************************************************/
 Vector3f_t GetWayPointRefVel(void){
 	Vector3f_t RefVelocity;
-	RefVelocity.x = reference_vely.fvalue;
-	RefVelocity.y = -reference_velx.fvalue;
+	RefVelocity.x = reference_velx.fvalue;
+	RefVelocity.y = reference_vely.fvalue;
 	RefVelocity.z = reference_velz.fvalue;
   return RefVelocity;
+}
+/**********************************************************************************************************
+*函 数 名: GetWayPointRefAcc
+*功能说明: 获取航向规划里面的速度（对其坐标）
+*形    参: 无
+*返 回 值: Acceleration
+**********************************************************************************************************/
+Vector3f_t GetWayPointRefAcc(void){
+	Vector3f_t RefAcceleration;
+
+  return RefAcceleration;
 }
 
 /**********************************************************************************************************
