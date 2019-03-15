@@ -42,15 +42,15 @@ void Attitude_InnerController(Vector3f_t EstimateGyro){
 												//轴间耦合
 												+ EstimateGyro.y * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wy * EstimateGyro.y) * EstimateGyro.z
 															//角速度前馈
-															+ Inertia_Wx * (EstimateGyro.x - AttitudeControlValue.LastEstimateGyro.x) / FPSAttitudeControl.CurrentTime;
+															+ 0.05f * Inertia_Wx * (EstimateGyro.x - AttitudeControlValue.LastEstimateGyro.x) / FPSAttitudeControl.CurrentTime;
 	
 	AttitudeControlValue.Thrust.y = PID_GetP(&OriginalWyRate, ErrorGyro.y) + OriginalWyRate.kD * ErrorThrust.y
 												+ (-(EstimateGyro.x * (Inertia_Wz * EstimateGyro.z) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.z))
-															+ Inertia_Wy * (EstimateGyro.y - AttitudeControlValue.LastEstimateGyro.y) / FPSAttitudeControl.CurrentTime;
+															+ 0.05f * Inertia_Wy * (EstimateGyro.y - AttitudeControlValue.LastEstimateGyro.y) / FPSAttitudeControl.CurrentTime;
 															
 	AttitudeControlValue.Thrust.z = PID_GetP(&OriginalWzRate, ErrorGyro.z) + OriginalWzRate.kD * ErrorThrust.z
 												+ EstimateGyro.x * (Inertia_Wy * EstimateGyro.y) - (Inertia_Wx * EstimateGyro.x) * EstimateGyro.y
-															+ Inertia_Wz * (EstimateGyro.z - AttitudeControlValue.LastEstimateGyro.z) / FPSAttitudeControl.CurrentTime;
+															+ 0.05f * Inertia_Wz * (EstimateGyro.z - AttitudeControlValue.LastEstimateGyro.z) / FPSAttitudeControl.CurrentTime;
 															
 	AttitudeControlValue.LastEstimateGyro.x = EstimateGyro.x;
 	AttitudeControlValue.LastEstimateGyro.y = EstimateGyro.y;
