@@ -127,7 +127,7 @@ void Altitude_Controller(void){
 	AltitudeFlightMethod = GetCopterFlightMethod();
 	if(AltitudeFlightMethod == PurePosture){
 		//纯姿态
-		PosControllerOut.ExpectAcc = GetRemoteControlFlyData().Zaxis * 5.0f + Gravity_Acceleration;
+		PosControllerOut.ExpectAcc = GetRemoteControlFlyData().Zaxis * 2.0f + Gravity_Acceleration;
 	}else{
 		ExpectAltitude = GetStepSignalValue().z;
 		/******* 降落控制 ********/	

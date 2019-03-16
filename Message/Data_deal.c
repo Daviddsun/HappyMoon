@@ -117,12 +117,12 @@ void GroundStationDataDeal(Receive_GroundStation rx){
 				case 6:
 					/* Navigation */
 					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[11+i];
+						HexToFloat[i]=rx.buf[3+i];
 					}
 					RockerControl.Navigation = Hex_To_Decimal(HexToFloat,4);
 					/* ZaxisPos */
 					for(i=0;i<4;i++){
-						HexToFloat[i]=rx.buf[15+i];
+						HexToFloat[i]=rx.buf[7+i];
 					}
 					RockerControl.Zaxis = Hex_To_Decimal(HexToFloat,4);
 					break;
@@ -497,5 +497,5 @@ uint8_t GetCopterFlightMethod(void){
 *返 回 值: 无
 **********************************************************************************************************/
 void SetCopterFlightMethod(void){
-  Flight_Method = FixedHeight;
+  Flight_Method = PurePosture;
 }
