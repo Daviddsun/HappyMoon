@@ -148,7 +148,7 @@ void VelocityEstimate(void){
 	nav.accel = EarthAccGetData();
 
 	//加速度数据更新频率 1000Hz
-	if(count++ % 40 == 0){
+	if(count++ % 20 == 0){
 		//获取视觉里程计数据
 		VIOVel = GetVisualOdometryVelTrans();
 		
@@ -159,6 +159,10 @@ void VelocityEstimate(void){
 		nav.velMeasure[4] = GetTofHeightVel();          //TOF速度值
 		nav.velMeasure[5] = 0;   
 			
+		//禁用VIO中x轴的速度
+		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_X, false);
+		//禁用VIO中Y轴的速度
+		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_Y, false);
 		//禁用VIO中Z轴的速度
 		KalmanVelUseMeasurement(&kalmanVel, VIO_VEL_Z, false);
 		//禁用气压传感器：未安装

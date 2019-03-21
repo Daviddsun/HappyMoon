@@ -16,29 +16,29 @@
     <Kd>0</Kd>
   </Yaw>
   <Height>
-    <Kp>0</Kp>
+    <Kp>2</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </Height>
   <ratePitch>
-    <Kp>0.12</Kp>
+    <Kp>0.15</Kp>
     <Ki>0</Ki>
     <Kd>0.5</Kd>
   </ratePitch>
   <rateRoll>
-    <Kp>0.12</Kp>
+    <Kp>0.15</Kp>
     <Ki>0</Ki>
     <Kd>0.5</Kd>
   </rateRoll>
   <rateYaw>
-    <Kp>0.05</Kp>
-    <Ki>0</Ki>
-    <Kd>0.1</Kd>
-  </rateYaw>
-  <accHeight>
-    <Kp>0</Kp>
+    <Kp>0.1</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
+  </rateYaw>
+  <accHeight>
+    <Kp>3</Kp>
+    <Ki>1</Ki>
+    <Kd>0.1</Kd>
   </accHeight>
   <accZ>
     <Kp>0</Kp>

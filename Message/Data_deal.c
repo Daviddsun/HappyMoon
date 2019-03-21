@@ -497,5 +497,5 @@ uint8_t GetCopterFlightMethod(void){
 *返 回 值: 无
 **********************************************************************************************************/
 void SetCopterFlightMethod(void){
-  Flight_Method = PurePosture;
+  Flight_Method = FixedHeight;
 }

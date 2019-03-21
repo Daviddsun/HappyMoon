@@ -114,10 +114,10 @@ void Navigation_task(void *p_arg){
 		//飞行姿态估计
 		MahonyAHRSupdateIMU(gyroCalibData.x,gyroCalibData.y,gyroCalibData.z,
 															accCalibData.x,accCalibData.y,accCalibData.z);
-//		//飞行速度估计
-//		VelocityEstimate();
-//		//飞行位置估计
-//		PositionEstimate();
+		//飞行速度估计
+		VelocityEstimate();
+		//飞行位置估计
+		PositionEstimate();
 	}
 }
 

@@ -117,7 +117,7 @@ void Altitude_Controller(void){
 	OS_ERR err;
 	static uint8_t AltitudeFlightMethod;
 	static float EstimateAltitudeLpf,EstimateAltitudeVelLpf;
-	float ExpectAltitude,ExpectAltitudeVel,ErrorAltitude;
+	float ExpectAltitude,ErrorAltitude;
 	static uint64_t count = 0;
 	//计算函数运行时间间隔
 	FPSAltitudeControl.CurrentTime = (OSTimeGet(&err) - FPSAltitudeControl.LastTime) * 1e-3;
@@ -132,7 +132,7 @@ void Altitude_Controller(void){
 		ExpectAltitude = GetStepSignalValue().z;
 		/******* 降落控制 ********/	
 		if(GetCopterFlyMode() == Land){
-			ExpectAltitudeVel = -0.3f;
+			PosControllerOut.ExpectVel.z = -0.3f;
 			if(GetCopterPosition().z < 0.1f){
 				SetCopterFlyMode(Nothing);
 				SetCopterStatus(Drone_Off);
@@ -144,15 +144,15 @@ void Altitude_Controller(void){
 			//计算速度期望
 			if(GetCopterFlyMode() == Nothing){
 				//速度限幅在0.75m/s
-				ExpectAltitudeVel = OriginalPosZ.kP * (ExpectAltitude - EstimateAltitudeLpf);
-				ExpectAltitudeVel = ConstrainFloat(ExpectAltitudeVel,-0.75,0.75);
+				PosControllerOut.ExpectVel.z = OriginalPosZ.kP * (ExpectAltitude - EstimateAltitudeLpf);
+				PosControllerOut.ExpectVel.z = ConstrainFloat(PosControllerOut.ExpectVel.z,-0.75,0.75);
 			}
 		}
 		//对速度测量值进行低通滤波，减少数据噪声对控制器的影响
 		//来自自身卡尔曼滤波
 		EstimateAltitudeVelLpf = EstimateAltitudeVelLpf * 0.9f + GetCopterVelocity().z * 0.1f;
 		//速度误差计算
-		ErrorAltitude = ExpectAltitudeVel - EstimateAltitudeVelLpf;
+		ErrorAltitude = PosControllerOut.ExpectVel.z - EstimateAltitudeVelLpf;
 		//PID计算
 		PosControllerOut.ExpectAcc = PID_GetPID(&OriginalVelZ, ErrorAltitude, FPSAltitudeControl.CurrentTime) + Gravity_Acceleration;
 	}
@@ -345,7 +345,7 @@ void HighLevel_Control(void){
 	desired_acceleration .y = ComputePIDErrorAcc().y + GetWayPointRefAcc().y;
 	desired_acceleration .z = ComputePIDErrorAcc().z + GetWayPointRefAcc().z;
 	
-	PosControllerOut.ExpectAcc = ComputeDesiredCollectiveMassNormalizedThrust();
+//	PosControllerOut.ExpectAcc = ComputeDesiredCollectiveMassNormalizedThrust();
 	
 	ComputeDesiredAttitude(desired_acceleration,0);
 }
