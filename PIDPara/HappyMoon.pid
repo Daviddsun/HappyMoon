@@ -31,7 +31,7 @@
     <Kd>0.5</Kd>
   </rateRoll>
   <rateYaw>
-    <Kp>0.1</Kp>
+    <Kp>0.15</Kp>
     <Ki>0</Ki>
     <Kd>0</Kd>
   </rateYaw>
